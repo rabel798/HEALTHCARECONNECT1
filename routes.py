@@ -1478,6 +1478,7 @@ def delete_prescription(type, prescription_id):
         flash('Access denied. Staff privileges required.', 'danger')
         return redirect(url_for('index'))
 
+    print(f"Delete prescription request: type={type}, id={prescription_id}")  # Debug log
     try:
         if type == 'doctor':
             prescription = DoctorPrescription.query.get_or_404(prescription_id)
