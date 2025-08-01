@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block title %}Server Error - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h1 class="display-1 text-danger mb-3">500</h1>
+                <h2 class="mb-4">Internal Server Error</h2>
+                <p class="lead mb-5">Something went wrong on our servers. We're working to fix the issue and will be back soon.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

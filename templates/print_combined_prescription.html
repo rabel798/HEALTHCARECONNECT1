@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Combined Prescription - {{ patient.full_name }}</title>
+    <style>
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.8cm;
+            }
+            body { 
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 15px;
+                line-height: 1.4;
+                color: #333;
+                font-size: 12px;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .header {
+                text-align: center;
+                padding: 8px 0;
+                border-bottom: 2px solid #1a73e8;
+                margin-bottom: 15px;
+            }
+            .header h1 {
+                color: #1a73e8;
+                margin: 0;
+                font-size: 20px;
+            }
+            .clinic-info {
+                font-size: 11px;
+                color: #666;
+                margin-top: 5px;
+            }
+            .patient-info {
+                background: #f8f9fa;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+            .prescription-section {
+                margin-bottom: 20px;
+                border: 1px solid #dee2e6;
+                padding: 12px;
+                border-radius: 8px;
+            }
+            .findings-section {
+                display: flex;
+                justify-content: space-between;
+                margin: 12px 0;
+                gap: 12px;
+            }
+            .eye-findings {
+                flex: 1;
+                border: 1px solid #dee2e6;
+                padding: 12px;
+                border-radius: 8px;
+            }
+            .section-title {
+                color: #1a73e8;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 8px;
+                border-bottom: 1px solid #dee2e6;
+                padding-bottom: 4px;
+            }
+            .additional-notes {
+                margin: 12px 0;
+                border: 1px solid #dee2e6;
+                padding: 12px;
+                border-radius: 8px;
+            }
+            .signatures {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20px;
+                padding-top: 12px;
+                border-top: 1px solid #dee2e6;
+            }
+            .signature {
+                width: 45%;
+            }
+            .signature p {
+                margin: 4px 0;
+            }
+            .signature-name {
+                font-weight: bold;
+                color: #1a73e8;
+                font-size: 13px;
+            }
+            .no-print {
+                display: none;
+            }
+            p {
+                margin: 4px 0;
+            }
+            .divider {
+                border-top: 2px dashed #1a73e8;
+                margin: 20px 0;
+            }
+            .footer {
+                margin-top: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dr. Richa's Eye Clinic</h1>
+        <div class="clinic-info">
+            First floor, DVR Town Centre, near to IGUS private limited,<br>
+            Mandur, Budigere Road (New Airport Road),<br>
+            Bengaluru, Karnataka 560049
+        </div>
+    </div>
+
+    <div class="patient-info">
+        <div class="section-title">Patient Information</div>
+        <p><strong>Name:</strong> {{ patient.full_name }}</p>
+        <p><strong>Age:</strong> {{ patient.age }} years</p>
+        <p><strong>Contact:</strong> {{ patient.mobile_number }}</p>
+        <p><strong>Date:</strong> {{ now.strftime('%d %B, %Y') }}</p>
+    </div>
+
+    <!-- Doctor's Prescription -->
+    <div class="prescription-section">
+        <div class="section-title">Doctor's Prescription</div>
+        <div class="findings-section">
+            <div class="eye-findings">
+                <div class="section-title">Left Eye</div>
+                <p>{{ doctor_prescription.diagnosis }}</p>
+            </div>
+            <div class="eye-findings">
+                <div class="section-title">Right Eye</div>
+                <p>{{ doctor_prescription.medications }}</p>
+            </div>
+        </div>
+
+        <div class="additional-notes">
+            <div class="section-title">Instructions</div>
+            <p>{{ doctor_prescription.instructions }}</p>
+        </div>
+
+        <div class="additional-notes">
+            <div class="section-title">Follow Up</div>
+            <p>{{ doctor_prescription.follow_up }}</p>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Optometrist's Prescription -->
+    <div class="prescription-section">
+        <div class="section-title">Optometrist's Prescription</div>
+        <div class="findings-section">
+            <div class="eye-findings">
+                <div class="section-title">Left Eye Findings</div>
+                <p>{{ optometrist_prescription.eye_power }}</p>
+            </div>
+            <div class="eye-findings">
+                <div class="section-title">Right Eye Findings</div>
+                <p>{{ optometrist_prescription.recommendations }}</p>
+            </div>
+        </div>
+
+        <div class="additional-notes">
+            <div class="section-title">Additional Notes</div>
+            <p>{{ optometrist_prescription.notes }}</p>
+        </div>
+    </div>
+
+    <div class="signatures">
+        <div class="signature">
+            <p class="signature-name">{{ current_user.full_name }}</p>
+            <p>MBBS, MS, FPOS<br>
+            Dr. Richa's Eye Clinic</p>
+        </div>
+        <div class="signature">
+            <p class="signature-name">{{ current_user.full_name }}</p>
+            <p>Optometrist<br>
+            Dr. Richa's Eye Clinic</p>
+        </div>
+    </div>
+
+    <div class="no-print text-center mt-4">
+        <button onclick="window.print()" class="btn btn-primary">Print Combined Prescription</button>
+    </div>
+</body>
+</html> 

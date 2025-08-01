@@ -1,0 +1,116 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}Medical Records - Dr. Richa's Eye Care Centre{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        <div class="avatar-circle bg-primary text-white mb-3">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                        <h5 class="card-title">{{ current_user.full_name }}</h5>
+                        <p class="card-text text-muted mb-0">{{ current_user.email }}</p>
+                        <p class="card-text text-muted">{{ current_user.mobile_number }}</p>
+                    </div>
+                </div>
+                
+                <div class="list-group shadow-sm">
+                    <a href="{{ url_for('patient_dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('patient_appointments') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-calendar-check me-2"></i> My Appointments
+                    </a>
+                    <a href="{{ url_for('patient_medical_records') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-file-medical me-2"></i> Medical Records
+                    </a>
+                    <a href="{{ url_for('appointment') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus-circle me-2"></i> Book New Appointment
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Doctor Prescriptions -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-user-md me-2"></i>Doctor Prescriptions</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if current_user.doctor_prescriptions %}
+                            <div class="list-group">
+                                {% for prescription in current_user.doctor_prescriptions|sort(attribute='prescription_date', reverse=true) %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ prescription.prescription_date.strftime('%d %B, %Y') }}</h6>
+                                        <a href="{{ url_for('print_prescription', type='doctor', prescription_id=prescription.id) }}" 
+                                           class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="fas fa-print"></i> Print
+                                        </a>
+                                    </div>
+                                    <p class="mb-1"><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
+                                    <p class="mb-1"><strong>Medications:</strong> {{ prescription.medications }}</p>
+                                    <small class="text-muted"><strong>Follow-up:</strong> {{ prescription.follow_up }}</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center my-3">No doctor prescriptions available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Optometrist Prescriptions -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-glasses me-2"></i>Optometrist Prescriptions</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if current_user.optometrist_prescriptions %}
+                            <div class="list-group">
+                                {% for prescription in current_user.optometrist_prescriptions|sort(attribute='prescription_date', reverse=true) %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ prescription.prescription_date.strftime('%d %B, %Y') }}</h6>
+                                        <a href="{{ url_for('print_prescription', type='optometrist', prescription_id=prescription.id) }}" 
+                                           class="btn btn-sm btn-outline-info" target="_blank">
+                                            <i class="fas fa-print"></i> Print
+                                        </a>
+                                    </div>
+                                    <p class="mb-1"><strong>Vision Test:</strong> {{ prescription.vision_test }}</p>
+                                    <p class="mb-1"><strong>Eye Power:</strong> {{ prescription.eye_power }}</p>
+                                    <small class="text-muted"><strong>Recommendations:</strong> {{ prescription.recommendations }}</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center my-3">No optometrist prescriptions available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}

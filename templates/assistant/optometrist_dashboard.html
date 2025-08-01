@@ -1,0 +1,202 @@
+{% extends 'layout.html' %}
+
+{% block title %}Optometrist Dashboard - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('assistant_dashboard') }}">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar"></i> Appointments
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('admin_appointments') }}">View All</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('appointment') }}">Add New</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-users"></i> Patients
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('admin_patients') }}">View All</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('assistant_add_patient') }}">Add Walk-in</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('assistant_prescriptions') }}">
+                            <i class="fas fa-prescription"></i> Prescriptions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_reviews') }}">
+                            <i class="fas fa-star"></i> Reviews
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Stats Cards -->
+            <div class="row mt-5">
+                <div class="col-xl-3 col-sm-6 mb-4">
+                    <div class="card shadow-sm">  <!-- Removed h-100 class -->
+                        <div class="card-body py-4"> <!-- Added py-4 for less vertical padding -->
+                            <div class="row align-items-center"> <!-- Changed back to align-items-center -->
+                                <div class="col-7"> <!-- Added specific column width -->
+                                    <h6 class="text-muted text-nowrap mb-1">Upcoming Appointments</h6>
+                                    <span class="h3 font-weight-bold">{{ upcoming_appointments }}</span>
+                                </div>
+                                <div class="col-5 text-right pe-4"> <!-- Added specific column width and text-end -->
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-calendar-check text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="text-muted mb-2">Total Appointments</h6>
+                                    <span class="h3 font-weight-bold mb-0">{{ total_appointments }}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon-circle bg-info">
+                                        <i class="fas fa-calendar text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="text-muted mb-2">Total Patients</h6>
+                                    <span class="h3 font-weight-bold mb-0">{{ total_patients }}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon-circle bg-success">
+                                        <i class="fas fa-users text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="text-muted mb-2">My Prescriptions</h6>
+                                    <span class="h3 font-weight-bold mb-0">{{ prescriptions_count }}</span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon-circle bg-warning">
+                                        <i class="fas fa-file-medical text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salary Records -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">My Salary Records</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Payment Method</th>
+                                            <th>Status</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for salary in salary_records %}
+                                        <tr>
+                                            <td>{{ salary.payment_date.strftime('%d %B, %Y') }}</td>
+                                            <td>₹{{ "%.2f"|format(salary.amount) }}</td>
+                                            <td>{{ salary.payment_method|title }}</td>
+                                            <td>
+                                                <span class="badge {% if salary.status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                                                    {{ salary.status|title }}
+                                                </span>
+                                            </td>
+                                            <td>{{ salary.description or 'N/A' }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Add this CSS to your stylesheet -->
+<style>
+.icon-circle {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: 15 px;
+    margin-top: auto;
+    margin-bottom: 30 px;
+}
+
+.icon-circle i {
+    font-size: 1.5rem;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(0 px);
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+}
+</style>
+{% endblock %}

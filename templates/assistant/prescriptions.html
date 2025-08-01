@@ -1,0 +1,84 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}Optometrist Prescriptions - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Optometrist Prescriptions</h2>
+        <input type="text" id="searchInput" class="form-control w-auto" placeholder="Search patient..." onkeyup="searchTable()">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="prescriptionTable">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Age</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in all_patients %}
+                <tr>
+                    <td>{{ patient.full_name }}</td>
+                    <td>{{ patient.age }}</td>
+                    <td>{{ patient.mobile_number }}</td>
+                    <td>{{ patient.email }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ url_for('assistant_add_prescription', patient_id=patient.id) }}" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Add Prescription
+                            </a>
+                            {% if patient.optometrist_prescriptions %}
+                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-print"></i> Print Prescription
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% for prescription in patient.optometrist_prescriptions %}
+                                <li>
+                                    <a href="{{ url_for('print_prescription', type='optometrist', prescription_id=prescription.id) }}" 
+                                       class="dropdown-item" target="_blank">
+                                        <i class="fas fa-file-pdf"></i> {{ prescription.prescription_date.strftime('%Y-%m-%d') }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function searchTable() {
+    var input = document.getElementById("searchInput");
+    var filter = input.value.toLowerCase();
+    var table = document.getElementById("prescriptionTable");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) {
+        var td_name = tr[i].getElementsByTagName("td")[0];
+        var td_contact = tr[i].getElementsByTagName("td")[2];
+        var td_email = tr[i].getElementsByTagName("td")[3];
+
+        if (td_name && td_contact && td_email) {
+            var txtValue = td_name.textContent + td_contact.textContent + td_email.textContent;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

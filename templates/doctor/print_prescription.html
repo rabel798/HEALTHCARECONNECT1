@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Prescription - {{ prescription.patient.full_name }}</title>
+    <style>
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.8cm;
+            }
+            body { 
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 20px;
+                line-height: 1.6;
+                color: #333;
+                font-size: 13px;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .header {
+                text-align: center;
+                padding: 20px 0;
+                border-bottom: 2px solid #1a73e8;
+                margin-bottom: 30px;
+            }
+            .header h1 {
+                color: #1a73e8;
+                margin: 0;
+                font-size: 24px;
+            }
+            .clinic-info {
+                font-size: 14px;
+                color: #666;
+                margin-top: 10px;
+            }
+            .patient-info {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 30px;
+            }
+            .findings-section {
+                display: flex;
+                justify-content: space-between;
+                margin: 20px 0;
+                gap: 20px;
+            }
+            .eye-findings {
+                flex: 1;
+                border: 1px solid #dee2e6;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .section-title {
+                color: #1a73e8;
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #dee2e6;
+                padding-bottom: 5px;
+            }
+            .additional-notes {
+                margin: 20px 0;
+                border: 1px solid #dee2e6;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .footer {
+                margin-top: 50px;
+                text-align: right;
+                border-top: 1px solid #dee2e6;
+                padding-top: 20px;
+            }
+            .signature {
+                font-weight: bold;
+                color: #1a73e8;
+                font-size: 14px;
+            }
+            .no-print {
+                display: none;
+            }
+            p {
+                margin: 4px 0;
+                font-size: 13px;
+            }
+            .patient-info p {
+                font-size: 13px;
+            }
+            .eye-findings p {
+                font-size: 13px;
+            }
+            .additional-notes p {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dr. Richa's Eye Clinic</h1>
+        <div class="clinic-info">
+            First floor, DVR Town Centre, near to IGUS private limited,<br>
+            Mandur, Budigere Road (New Airport Road),<br>
+            Bengaluru, Karnataka 560049
+        </div>
+    </div>
+
+    <div class="patient-info">
+        <div class="section-title">Patient Information</div>
+        <p><strong>Name:</strong> {{ prescription.patient.full_name }}</p>
+        <p><strong>Age:</strong> {{ prescription.patient.age }} years</p>
+        <p><strong>Contact:</strong> {{ prescription.patient.mobile_number }}</p>
+        <p><strong>Date:</strong> {{ prescription.prescription_date.strftime('%d %B, %Y') }}</p>
+    </div>
+
+    <div class="findings-section">
+        <div class="eye-findings">
+            <div class="section-title">Left Eye</div>
+            <p>{{ prescription.diagnosis }}</p>
+        </div>
+        <div class="eye-findings">
+            <div class="section-title">Right Eye</div>
+            <p>{{ prescription.medications }}</p>
+        </div>
+    </div>
+
+    <div class="additional-notes">
+        <div class="section-title">Instructions</div>
+        <p>{{ prescription.instructions }}</p>
+    </div>
+
+    <div class="additional-notes">
+        <div class="section-title">Follow Up</div>
+        <p>{{ prescription.follow_up }}</p>
+    </div>
+
+    <div class="footer">
+        <p class="signature">{{ current_user.full_name }}</p>
+        <p>MBBS, MS, FPOS<br>
+        Dr. Richa's Eye Clinic</p>
+    </div>
+
+    <div class="no-print text-center mt-4">
+        <button onclick="window.print()" class="btn btn-primary">Print Prescription</button>
+    </div>
+</body>
+</html>

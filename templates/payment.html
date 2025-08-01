@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% extends 'layout.html' %}
+
+{% block title %}Payment - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-4">Complete Payment</h3>
+
+                        <div class="appointment-details mb-4">
+                            <h5>Appointment Details</h5>
+                            <p><strong>Patient:</strong> {{ appointment.patient.full_name }}</p>
+                            <p><strong>Date:</strong> {{ appointment.appointment_date.strftime('%B %d, %Y') }}</p>
+                            <p><strong>Time:</strong> {{ appointment.appointment_time.strftime('%I:%M %p') }}</p>
+                            <p><strong>Amount:</strong> ₹{{ amount }}</p>
+                        </div>
+
+                        <div class="text-center">
+                            <button id="rzp-button" class="btn btn-primary btn-lg">Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('rzp-button').onclick = function(e) {
+    var options = {
+        "key": "{{ razorpay_key }}",
+        "amount": "{{ amount * 100 }}",
+        "currency": "INR",
+        "name": "Dr. Richa's Eye Clinic",
+        "description": "Consultation Fee",
+        "order_id": "{{ order_id }}",
+        "handler": function (response) {
+            fetch('/payment/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'razorpay_payment_id': response.razorpay_payment_id,
+                    'razorpay_order_id': response.razorpay_order_id,
+                    'razorpay_signature': response.razorpay_signature
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Payment failed: ' + data.message);
+                }
+            });
+        },
+        "prefill": {
+            "name": "{{ appointment.patient.full_name }}",
+            "email": "{{ appointment.patient.email }}",
+            "contact": "{{ appointment.patient.mobile_number }}"
+        },
+        "theme": {
+            "color": "#007bff"
+        }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+{% endblock %}
