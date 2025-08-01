@@ -43,8 +43,25 @@
                                 <li>
                                     <a href="{{ url_for('print_prescription', type='doctor', prescription_id=prescription.id) }}" 
                                        class="dropdown-item" target="_blank">
-                                        {{ prescription.prescription_date.strftime('%Y-%m-%d') }}
+                                        <i class="fas fa-print"></i> {{ prescription.prescription_date.strftime('%Y-%m-%d') }}
                                     </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-trash"></i> Delete Previous
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% for prescription in patient.doctor_prescriptions %}
+                                <li>
+                                    <form method="POST" action="{{ url_for('delete_prescription', type='doctor', prescription_id=prescription.id) }}" 
+                                          onsubmit="return confirm('Are you sure you want to delete this prescription from {{ prescription.prescription_date.strftime('%Y-%m-%d') }}?')" 
+                                          style="margin: 0;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-trash"></i> {{ prescription.prescription_date.strftime('%Y-%m-%d') }}
+                                        </button>
+                                    </form>
                                 </li>
                                 {% endfor %}
                             </ul>

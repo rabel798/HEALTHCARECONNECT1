@@ -81,10 +81,20 @@
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1">{{ prescription.prescription_date.strftime('%d %B, %Y') }}</h6>
-                                            <a href="{{ url_for('print_prescription', type='doctor', prescription_id=prescription.id) }}" 
-                                               class="btn btn-sm btn-outline-primary" target="_blank">
-                                                <i class="fas fa-print"></i> Print
-                                            </a>
+                                            <div class="btn-group">
+                                                <a href="{{ url_for('print_prescription', type='doctor', prescription_id=prescription.id) }}" 
+                                                   class="btn btn-sm btn-outline-primary" target="_blank">
+                                                    <i class="fas fa-print"></i> Print
+                                                </a>
+                                                <form method="POST" action="{{ url_for('delete_prescription', type='doctor', prescription_id=prescription.id) }}" 
+                                                      onsubmit="return confirm('Are you sure you want to delete this prescription?')" 
+                                                      style="display: inline;">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                         <p class="mb-1"><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
                                         <p class="mb-1"><strong>Medications:</strong> {{ prescription.medications }}</p>
@@ -113,10 +123,20 @@
                                     <div class="list-group-item">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1">{{ prescription.prescription_date.strftime('%d %B, %Y') }}</h6>
-                                            <a href="{{ url_for('print_prescription', type='optometrist', prescription_id=prescription.id) }}" 
-                                               class="btn btn-sm btn-outline-info" target="_blank">
-                                                <i class="fas fa-print"></i> Print
-                                            </a>
+                                            <div class="btn-group">
+                                                <a href="{{ url_for('print_prescription', type='optometrist', prescription_id=prescription.id) }}" 
+                                                   class="btn btn-sm btn-outline-info" target="_blank">
+                                                    <i class="fas fa-print"></i> Print
+                                                </a>
+                                                <form method="POST" action="{{ url_for('delete_prescription', type='optometrist', prescription_id=prescription.id) }}" 
+                                                      onsubmit="return confirm('Are you sure you want to delete this prescription?')" 
+                                                      style="display: inline;">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                         <p class="mb-1"><strong>Issue:</strong> {{ prescription.vision_test }}</p>
                                         <p class="mb-1"><strong>Left Eye Findings:</strong> {{ prescription.eye_power }}</p>

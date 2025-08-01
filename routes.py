@@ -1469,6 +1469,53 @@ def print_combined_prescription(patient_id):
                          doctor_prescription=doctor_prescription,
                          optometrist_prescription=optometrist_prescription)
 
+@app.route('/delete-prescription/<string:type>/<int:prescription_id>', methods=['POST'])
+@login_required
+def delete_prescription(type, prescription_id):
+    """Delete prescription route"""
+    # Ensure only staff members can access this page
+    if not (isinstance(current_user, Doctor) or isinstance(current_user, Assistant) or isinstance(current_user, Admin)):
+        flash('Access denied. Staff privileges required.', 'danger')
+        return redirect(url_for('index'))
+
+    try:
+        if type == 'doctor':
+            prescription = DoctorPrescription.query.get_or_404(prescription_id)
+            prescription_type = "Doctor"
+            redirect_route = 'doctor_prescriptions' if isinstance(current_user, Doctor) else 'admin_dashboard'
+        elif type == 'optometrist':
+            prescription = OptometristPrescription.query.get_or_404(prescription_id)
+            prescription_type = "Optometrist"
+            redirect_route = 'assistant_prescriptions' if isinstance(current_user, Assistant) else 'admin_dashboard'
+        else:
+            flash('Invalid prescription type', 'danger')
+            return redirect(url_for('admin_dashboard'))
+
+        # Store patient info for redirect if needed
+        patient_id = prescription.patient_id
+        
+        # Delete the prescription
+        db.session.delete(prescription)
+        db.session.commit()
+        
+        flash(f'{prescription_type} prescription deleted successfully!', 'success')
+        
+        # Check where to redirect based on referer
+        referer = request.referrer
+        if referer and 'patient_view' in referer:
+            return redirect(url_for('admin_patient_view', patient_id=patient_id))
+        elif isinstance(current_user, Doctor) and type == 'doctor':
+            return redirect(url_for('doctor_prescriptions'))
+        elif isinstance(current_user, Assistant) and type == 'optometrist':
+            return redirect(url_for('assistant_prescriptions'))
+        else:
+            return redirect(url_for('admin_dashboard'))
+            
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error deleting prescription: {str(e)}', 'danger')
+        return redirect(request.referrer or url_for('admin_dashboard'))
+
 @app.route('/patient/google-login')
 def patient_google_login():
     """Patient Google OAuth login route"""
