@@ -80,11 +80,8 @@ class Payment(db.Model):
     appointment_id = db.Column(db.Integer, db.ForeignKey('appointment.id'), nullable=False)
     appointment = db.relationship('Appointment', backref='payment', uselist=False)
     amount = db.Column(db.Float, nullable=False)
-    payment_method = db.Column(db.String(50), nullable=False)  # upi, bank_transfer, credit_card, debit_card, cash
+    payment_method = db.Column(db.String(50), nullable=False)  # cash, bank_transfer, upi
     transaction_id = db.Column(db.String(100), nullable=True)
-    razorpay_order_id = db.Column(db.String(100), nullable=True)
-    razorpay_payment_id = db.Column(db.String(100), nullable=True)
-    razorpay_signature = db.Column(db.String(200), nullable=True)
     upi_id = db.Column(db.String(100), nullable=True)
     status = db.Column(db.String(20), default='pending')  # pending, completed, failed
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

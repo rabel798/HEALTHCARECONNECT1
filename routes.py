@@ -150,7 +150,7 @@ def appointment():
 
     return render_template('appointment.html', form=form, default_date=default_date)
 
-import razorpay
+
 
 @app.route('/payment', methods=['GET', 'POST'])
 def payment():
@@ -162,89 +162,29 @@ def payment():
 
     try:
         appointment = Appointment.query.get_or_404(appointment_id)
+        consultation_fee = 500.00
 
-        # Get previous visits/payments count for this patient
-        previous_payments = Payment.query.join(Appointment).filter(
-            Appointment.patient_id == appointment.patient_id,
-            Payment.status == 'completed'
-        ).count()
-
-        consultation_fee = 500.00  # Each visit costs 500
-
-        # Create payment record
+        # Create payment record - cash payment at clinic
         new_payment = Payment(
             appointment_id=appointment_id,
             amount=consultation_fee,
-            payment_method='free',
-            status='completed'
+            payment_method='cash',
+            status='pending'
         )
         db.session.add(new_payment)
 
         # Update appointment payment status
-        appointment.payment_status = 'paid'
+        appointment.payment_status = 'pending'
         db.session.commit()
 
+        flash('Appointment booked successfully! Please pay ₹500 at the clinic.', 'success')
         return redirect(url_for('success'))
     except Exception as e:
         db.session.rollback()
         flash(f'Error processing appointment: {str(e)}', 'danger')
         return redirect(url_for('appointment'))
 
-@app.route('/payment/verify', methods=['POST'])
-def verify_payment():
-    """Verify Razorpay payment"""
-    try:
-        payment_id = request.form.get('razorpay_payment_id')
-        order_id = request.form.get('razorpay_order_id')
-        signature = request.form.get('razorpay_signature')
 
-        if not all([payment_id, order_id, signature]):
-            return jsonify({'status': 'error', 'message': 'Missing payment parameters'}), 400
-
-        # Get payment record
-        payment = Payment.query.filter_by(razorpay_order_id=order_id).first()
-        if not payment:
-            return jsonify({'status': 'error', 'message': 'Payment not found'}), 404
-
-        try:
-            # Initialize Razorpay client
-            client = razorpay.Client(auth=(app.config['RAZORPAY_KEY_ID'], app.config['RAZORPAY_KEY_SECRET']))
-
-            # Verify signature
-            params_dict = {
-                'razorpay_payment_id': payment_id,
-                'razorpay_order_id': order_id,
-                'razorpay_signature': signature
-            }
-            client.utility.verify_payment_signature(params_dict)
-
-            # Update payment record
-            payment.razorpay_payment_id = payment_id
-            payment.razorpay_signature = signature
-            payment.status = 'completed'
-
-            # Update appointment payment status
-            appointment = payment.appointment
-            appointment.payment_status = 'paid'
-
-            db.session.commit()
-
-            return jsonify({'status': 'success', 'redirect_url': url_for('success')})
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'status': 'error', 'message': f'Payment verification failed: {str(e)}'}), 400
-
-        # Update payment record
-        payment.razorpay_payment_id = payment_id
-        payment.razorpay_signature = signature
-        payment.status = 'completed'
-        db.session.commit()
-
-        return jsonify({'status': 'success', 'redirect_url': url_for('success')})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 400
-
-    return render_template('payment.html', form=form, appointment=appointment)
 
 @app.route('/success')
 def success():
@@ -1347,57 +1287,7 @@ def assistant_add_patient():
 
     return render_template('assistant/add_patient.html', form=form)
 
-@app.route('/admin/verify-salary-payment', methods=['POST'])
-@login_required
-def verify_salary_payment():
-    """Verify Razorpay salary payment"""
-    if not isinstance(current_user, Doctor):
-        return jsonify({'status': 'error', 'message': 'Unauthorized'}), 403
 
-    try:
-        payment_id = request.form.get('razorpay_payment_id')
-        order_id = request.form.get('razorpay_order_id')
-        signature = request.form.get('razorpay_signature')
-
-        # Get salary record
-        salary = Salary.query.filter_by(transaction_id=order_id).first()
-        if not salary:
-            return jsonify({'status': 'error', 'message': 'Salary record not found'}), 404
-
-        # Verify signature
-        client = razorpay.Client(auth=(app.config['RAZORPAY_KEY_ID'], app.config['RAZORPAY_KEY_SECRET']))
-        params_dict = {
-            'razorpay_payment_id': payment_id,
-            'razorpay_order_id': order_id,
-            'razorpay_signature': signature
-        }
-
-        client.utility.verify_payment_signature(params_dict)
-
-        # Update salary record
-        salary.status = 'completed'
-        db.session.commit()
-
-        # Send email notification
-        assistant = Assistant.query.get(salary.assistant_id)
-        if assistant:
-            subject = "Salary Payment Processed"
-            message = f"""
-            Dear {assistant.full_name},
-
-            Your salary payment has been processed:
-            Amount: ₹{salary.amount}
-            Date: {salary.payment_date}
-            Transaction ID: {payment_id}
-
-            Best regards,
-            Dr. Richa's Eye Clinic
-            """
-            send_email_notification(assistant.email, subject, message)
-
-        return jsonify({'status': 'success', 'redirect_url': url_for('admin_assistant_salary')})
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 400
 
 @app.route('/doctor/prescriptions')
 @login_required
