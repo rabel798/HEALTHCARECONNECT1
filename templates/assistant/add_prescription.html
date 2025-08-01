@@ -1,10 +1,14 @@
-
 {% extends 'layout.html' %}
 
 {% block title %}Add Optometrist Prescription - Dr. Richa's Eye Clinic{% endblock %}
 
 {% block content %}
 <div class="container py-5">
+    <div class="d-flex justify-content-start mb-4">
+        <a href="{{ url_for('assistant_prescriptions') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Prescriptions
+        </a>
+    </div>
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
             <h3 class="mb-0">Add Prescription for {{ patient.full_name }}</h3>
@@ -12,7 +16,7 @@
         <div class="card-body">
             <form method="POST" class="needs-validation" novalidate>
                 {{ form.hidden_tag() }}
-                
+
                 <div class="mb-4">
                     <label class="form-label fw-bold">Issue/Complaint</label>
                     {{ form.vision_test(class="form-control", placeholder="Enter patient's main issue or complaint") }}
