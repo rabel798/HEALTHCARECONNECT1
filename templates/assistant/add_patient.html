@@ -23,12 +23,34 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     {{ form.full_name.label(class="form-label") }}
-                                    {{ form.full_name(class="form-control") }}
+                                    {{ form.full_name(class="form-control", required=True) }}
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     {{ form.age.label(class="form-label") }}
-                                    {{ form.age(class="form-control") }}
+                                    {{ form.age(class="form-control", required=True) }}
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.mobile_number.label(class="form-label") }}
+                                    {{ form.mobile_number(class="form-control", required=True) }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.email.label(class="form-label") }}
+                                    {{ form.email(class="form-control", placeholder="Optional") }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form.primary_issue.label(class="form-label") }}
+                                {{ form.primary_issue(class="form-control", rows="3", placeholder="Describe the patient's main complaint or reason for visit") }}
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <strong>Note:</strong> This will automatically record a ₹500 consultation fee and mark the appointment as completed.
+                            </div>
+                            
+                            <div class="text-center">
+                                {{ form.submit(class="btn btn-primary btn-lg") }}
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">

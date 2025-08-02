@@ -1269,21 +1269,61 @@ def assistant_add_patient():
 
     form = PatientRegistrationForm()
     if form.validate_on_submit():
-        new_patient = Patient(
-            full_name=form.full_name.data,
-            mobile_number=form.mobile_number.data,
-            email=form.email.data,
-            age=form.age.data,
-            is_registered=False
-        )
-        db.session.add(new_patient)
         try:
+            # Create new patient
+            new_patient = Patient(
+                full_name=form.full_name.data,
+                mobile_number=form.mobile_number.data,
+                email=form.email.data,
+                age=form.age.data,
+                is_registered=False
+            )
+            db.session.add(new_patient)
+            db.session.flush()  # Get patient ID
+            
+            # Create walk-in appointment for today
+            today = datetime.now().date()
+            current_time = datetime.now().time()
+            
+            walk_in_appointment = Appointment(
+                patient_id=new_patient.id,
+                appointment_date=today,
+                appointment_time=current_time,
+                primary_issue=form.primary_issue.data or "Walk-in consultation",
+                status='completed',  # Mark as completed since it's walk-in
+                consultation_fee=500.0,
+                payment_status='paid'
+            )
+            db.session.add(walk_in_appointment)
+            db.session.flush()  # Get appointment ID
+            
+            # Create payment record for revenue tracking
+            walk_in_payment = Payment(
+                appointment_id=walk_in_appointment.id,
+                amount=500.0,
+                payment_method='cash',
+                status='completed'
+            )
+            db.session.add(walk_in_payment)
+            
+            # Create treatment record for revenue tracking
+            walk_in_treatment = Treatment(
+                patient_id=new_patient.id,
+                treatment_name='Walk-in Consultation',
+                treatment_date=today,
+                amount=500.0,
+                notes=f'Walk-in patient added by {current_user.full_name}'
+            )
+            db.session.add(walk_in_treatment)
+            
             db.session.commit()
-            flash('Patient added successfully!', 'success')
+            flash('Walk-in patient added successfully and ₹500 consultation fee recorded!', 'success')
             return redirect(url_for('assistant_dashboard'))
+            
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding patient: {str(e)}', 'danger')
+            print(f"Error adding walk-in patient: {str(e)}")
 
     return render_template('assistant/add_patient.html', form=form)
 

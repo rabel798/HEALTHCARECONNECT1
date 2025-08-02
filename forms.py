@@ -78,11 +78,11 @@ class PatientLoginForm(FlaskForm):
 class PatientRegistrationForm(FlaskForm):
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=3, max=100)])
     mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
-    email = StringField('Email', validators=[Optional(), Email(), Length(max=100)])
+    email = StringField('Email', validators=[Optional(), Length(max=100)])  # Removed Email() validator
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
     primary_issue = TextAreaField('Primary Issue', validators=[Optional()])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=128)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    password = PasswordField('Password', validators=[Optional(), Length(min=8, max=128)])  # Made optional for walk-ins
+    confirm_password = PasswordField('Confirm Password', validators=[Optional(), EqualTo('password')])  # Made optional
     submit = SubmitField('Register')
 
 class OTPVerificationForm(FlaskForm):
