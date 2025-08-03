@@ -101,10 +101,37 @@ class PrescriptionForm(FlaskForm):
     submit = SubmitField('Save Prescription')
 
 class DoctorPrescriptionForm(FlaskForm):
+    # Examination findings
+    left_eye_findings = TextAreaField('Left Eye Findings', validators=[Optional()])
+    right_eye_findings = TextAreaField('Right Eye Findings', validators=[Optional()])
+    
+    # Clinical information
     diagnosis = TextAreaField('Diagnosis', validators=[DataRequired()])
+    complaints = TextAreaField('Chief Complaints', validators=[Optional()])
+    history = TextAreaField('History', validators=[Optional()])
+    examination_notes = TextAreaField('Examination Notes', validators=[Optional()])
+    
+    # Investigation and tests
+    investigation = TextAreaField('Investigation', validators=[Optional()])
+    fall_risk = TextAreaField('Fall Risk Assessment', validators=[Optional()])
+    immunization = TextAreaField('Immunization Status', validators=[Optional()])
+    
+    # Treatment plan
     medications = TextAreaField('Medications', validators=[DataRequired()])
+    prognosis = TextAreaField('Prognosis', validators=[Optional()])
+    nutritional_advice = TextAreaField('Nutritional Advice', validators=[Optional()])
+    plan_of_care = TextAreaField('Plan of Care', validators=[Optional()])
+    
+    # Instructions and follow-up
     instructions = TextAreaField('Instructions', validators=[DataRequired()])
     follow_up = TextAreaField('Follow Up', validators=[Optional()])
+    referral_reason = TextAreaField('Referral Reason', validators=[Optional()])
+    referred_to_cc = StringField('Referred to CC', validators=[Optional()])
+    
+    # Additional notes
+    comments = TextAreaField('Comments', validators=[Optional()])
+    remarks_for_counselor = TextAreaField('Remarks for Counselor', validators=[Optional()])
+    
     submit = SubmitField('Save Prescription')
 
 class OptometristPrescriptionForm(FlaskForm):

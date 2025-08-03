@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Add Doctor Prescription - Dr. Richa's Eye Clinic{% endblock %}
@@ -10,145 +11,279 @@
                 <i class="fas fa-arrow-left me-1"></i> Back to Prescriptions
             </a>
         </div>
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Add Prescription for {{ patient.full_name }}</h5>
-        </div>
-        <div class="card-body">
-            <div class="alert alert-info mb-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p class="mb-1"><strong>Patient:</strong> {{ patient.full_name }}</p>
-                        <p class="mb-1"><strong>Age:</strong> {{ patient.age }} years</p>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <p class="mb-1"><strong>Date:</strong> {{ now.strftime('%d %B, %Y') }}</p>
-                    </div>
-                </div>
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Add Comprehensive Prescription for {{ patient.full_name }}</h5>
             </div>
-
-            <form method="POST" id="prescriptionForm">
-                {{ form.hidden_tag() }}
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Diagnosis</label>
-                    {{ form.diagnosis(class="form-control", rows=3) }}
-                </div>
-
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Left Eye Findings</label>
-                        {{ form.left_eye_findings(class="form-control", rows=3) }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">Right Eye Findings</label>
-                        {{ form.right_eye_findings(class="form-control", rows=3) }}
+            <div class="card-body">
+                <div class="alert alert-info mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Patient:</strong> {{ patient.full_name }}</p>
+                            <p class="mb-1"><strong>Age:</strong> {{ patient.age }} years</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <p class="mb-1"><strong>Date:</strong> {{ now.strftime('%d %B, %Y') }}</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Prescribed Medications</label>
-                    {{ form.medications(class="form-control", rows=3) }}
-                </div>
+                <form method="POST" id="prescriptionForm">
+                    {{ form.hidden_tag() }}
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Instructions</label>
-                    {{ form.instructions(class="form-control", rows=3) }}
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Follow Up</label>
-                    {{ form.follow_up(class="form-control") }}
-                </div>
-
-                <div class="d-flex justify-content-between">
-                    <div>
-                        {{ form.submit(class="btn btn-primary") }}
-                        <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-secondary ms-2">Cancel</a>
+                    <!-- Clinical Information Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">Clinical Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Chief Complaints</label>
+                                    {{ form.complaints(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">History</label>
+                                    {{ form.history(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Examination Notes</label>
+                                {{ form.examination_notes(class="form-control", rows=3) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Diagnosis *</label>
+                                {{ form.diagnosis(class="form-control", rows=3) }}
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-info" onclick="printPrescription()">
-                        <i class="fas fa-print me-1"></i> Print Preview
-                    </button>
-                </div>
-            </form>
+
+                    <!-- Eye Examination Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">Eye Examination Findings</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Left Eye Findings</label>
+                                    {{ form.left_eye_findings(class="form-control", rows=4) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Right Eye Findings</label>
+                                    {{ form.right_eye_findings(class="form-control", rows=4) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investigation & Assessment Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0">Investigation & Assessment</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Investigation</label>
+                                    {{ form.investigation(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fall Risk Assessment</label>
+                                    {{ form.fall_risk(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Immunization Status</label>
+                                {{ form.immunization(class="form-control", rows=2) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Treatment Plan Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">Treatment Plan</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Prescribed Medications *</label>
+                                {{ form.medications(class="form-control", rows=4) }}
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Prognosis</label>
+                                    {{ form.prognosis(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Nutritional Advice</label>
+                                    {{ form.nutritional_advice(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Plan of Care</label>
+                                {{ form.plan_of_care(class="form-control", rows=3) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instructions & Follow-up Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0">Instructions & Follow-up</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Instructions *</label>
+                                {{ form.instructions(class="form-control", rows=3) }}
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Follow Up</label>
+                                    {{ form.follow_up(class="form-control", rows=2) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Referred to CC</label>
+                                    {{ form.referred_to_cc(class="form-control") }}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Referral Reason</label>
+                                {{ form.referral_reason(class="form-control", rows=2) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h6 class="mb-0">Additional Notes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Comments</label>
+                                    {{ form.comments(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Remarks for Counselor</label>
+                                    {{ form.remarks_for_counselor(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                            <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+                        </div>
+                        <button type="button" class="btn btn-info btn-lg" onclick="printPrescription()">
+                            <i class="fas fa-print me-1"></i> Print Preview
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Print Template (Hidden) -->
-<div id="printTemplate" style="display: none;">
-    <div style="padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h2>Dr. Richa's Eye Clinic</h2>
-            <p>First floor, DVR Town Centre, Mandur, Budigere Road</p>
-            <p>Bengaluru, Karnataka 560049</p>
-        </div>
-
-        <div style="margin-bottom: 30px;">
-            <div style="float: left;">
-                <p><strong>Patient:</strong> {{ patient.full_name }}</p>
-                <p><strong>Age:</strong> {{ patient.age }} years</p>
+    <!-- Print Template (Hidden) -->
+    <div id="printTemplate" style="display: none;">
+        <div style="padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2>Dr. Richa's Eye Clinic</h2>
+                <p>First floor, DVR Town Centre, Mandur, Budigere Road</p>
+                <p>Bengaluru, Karnataka 560049</p>
             </div>
-            <div style="float: right;">
-                <p><strong>Date:</strong> {{ now.strftime('%d-%m-%Y') }}</p>
+
+            <div style="margin-bottom: 30px;">
+                <div style="float: left;">
+                    <p><strong>Patient:</strong> {{ patient.full_name }}</p>
+                    <p><strong>Age:</strong> {{ patient.age }} years</p>
+                </div>
+                <div style="float: right;">
+                    <p><strong>Date:</strong> {{ now.strftime('%d-%m-%Y') }}</p>
+                </div>
+                <div style="clear: both;"></div>
             </div>
-            <div style="clear: both;"></div>
-        </div>
 
-        <div id="printContent"></div>
+            <div id="printContent"></div>
 
-        <div style="margin-top: 50px; text-align: right;">
-            <p>Dr. Richa Sharma</p>
-            <p style="font-size: 14px;">MBBS, MS, FPOS</p>
+            <div style="margin-top: 50px; text-align: right;">
+                <p>Dr. Richa Sharma</p>
+                <p style="font-size: 14px;">MBBS, MS, FPOS</p>
+            </div>
         </div>
     </div>
-</div>
 </section>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 function printPrescription() {
-    // Get form values
+    // Get all form values
+    const complaints = document.querySelector('#complaints').value;
+    const history = document.querySelector('#history').value;
+    const examination = document.querySelector('#examination_notes').value;
     const diagnosis = document.querySelector('#diagnosis').value;
     const leftEye = document.querySelector('#left_eye_findings').value;
     const rightEye = document.querySelector('#right_eye_findings').value;
+    const investigation = document.querySelector('#investigation').value;
+    const fallRisk = document.querySelector('#fall_risk').value;
+    const immunization = document.querySelector('#immunization').value;
     const medications = document.querySelector('#medications').value;
+    const prognosis = document.querySelector('#prognosis').value;
+    const nutritional = document.querySelector('#nutritional_advice').value;
+    const planOfCare = document.querySelector('#plan_of_care').value;
     const instructions = document.querySelector('#instructions').value;
     const followUp = document.querySelector('#follow_up').value;
+    const referralReason = document.querySelector('#referral_reason').value;
+    const referredTo = document.querySelector('#referred_to_cc').value;
+    const comments = document.querySelector('#comments').value;
+    const remarksForCounselor = document.querySelector('#remarks_for_counselor').value;
 
-    // Create print content
-    const printContent = `
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">Diagnosis:</h4>
-            <p>${diagnosis}</p>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">Eye Examination:</h4>
-            <p><strong>Left Eye:</strong> ${leftEye}</p>
-            <p><strong>Right Eye:</strong> ${rightEye}</p>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">Medications:</h4>
-            <p>${medications}</p>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">Instructions:</h4>
-            <p>${instructions}</p>
-        </div>
-        <div style="margin-bottom: 20px;">
-            <h4 style="margin-bottom: 10px;">Follow Up:</h4>
-            <p>${followUp}</p>
-        </div>
-    `;
+    // Create comprehensive print content
+    let printContent = '';
+    
+    if (complaints) printContent += `<div style="margin-bottom: 15px;"><h4>Chief Complaints:</h4><p>${complaints}</p></div>`;
+    if (history) printContent += `<div style="margin-bottom: 15px;"><h4>History:</h4><p>${history}</p></div>`;
+    if (examination) printContent += `<div style="margin-bottom: 15px;"><h4>Examination:</h4><p>${examination}</p></div>`;
+    if (diagnosis) printContent += `<div style="margin-bottom: 15px;"><h4>Diagnosis:</h4><p>${diagnosis}</p></div>`;
+    
+    if (leftEye || rightEye) {
+        printContent += `<div style="margin-bottom: 15px;"><h4>Eye Examination:</h4>`;
+        if (leftEye) printContent += `<p><strong>Left Eye:</strong> ${leftEye}</p>`;
+        if (rightEye) printContent += `<p><strong>Right Eye:</strong> ${rightEye}</p>`;
+        printContent += `</div>`;
+    }
+    
+    if (investigation) printContent += `<div style="margin-bottom: 15px;"><h4>Investigation:</h4><p>${investigation}</p></div>`;
+    if (medications) printContent += `<div style="margin-bottom: 15px;"><h4>Medications:</h4><p>${medications}</p></div>`;
+    if (prognosis) printContent += `<div style="margin-bottom: 15px;"><h4>Prognosis:</h4><p>${prognosis}</p></div>`;
+    if (nutritional) printContent += `<div style="margin-bottom: 15px;"><h4>Nutritional Advice:</h4><p>${nutritional}</p></div>`;
+    if (planOfCare) printContent += `<div style="margin-bottom: 15px;"><h4>Plan of Care:</h4><p>${planOfCare}</p></div>`;
+    if (instructions) printContent += `<div style="margin-bottom: 15px;"><h4>Instructions:</h4><p>${instructions}</p></div>`;
+    if (followUp) printContent += `<div style="margin-bottom: 15px;"><h4>Follow Up:</h4><p>${followUp}</p></div>`;
+    if (referralReason) printContent += `<div style="margin-bottom: 15px;"><h4>Referral Reason:</h4><p>${referralReason}</p></div>`;
+    if (referredTo) printContent += `<div style="margin-bottom: 15px;"><h4>Referred to:</h4><p>${referredTo}</p></div>`;
+    if (comments) printContent += `<div style="margin-bottom: 15px;"><h4>Comments:</h4><p>${comments}</p></div>`;
+    if (remarksForCounselor) printContent += `<div style="margin-bottom: 15px;"><h4>Remarks for Counselor:</h4><p>${remarksForCounselor}</p></div>`;
 
     // Set print content
     document.querySelector('#printContent').innerHTML = printContent;
 
     // Print
     const printWindow = window.open('', '_blank');
-    printWindow.document.write('<html><head><title>Doctor Prescription</title>');
-    printWindow.document.write('<style>body { font-family: Arial, sans-serif; line-height: 1.6; }</style>');
+    printWindow.document.write('<html><head><title>Comprehensive Doctor Prescription</title>');
+    printWindow.document.write('<style>body { font-family: Arial, sans-serif; line-height: 1.6; } h4 { color: #2c3e50; margin-bottom: 5px; }</style>');
     printWindow.document.write('</head><body>');
     printWindow.document.write(document.querySelector('#printTemplate').innerHTML);
     printWindow.document.write('</body></html>');

@@ -94,10 +94,38 @@ class DoctorPrescription(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     prescription_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Examination findings
+    left_eye_findings = db.Column(db.Text, nullable=True)
+    right_eye_findings = db.Column(db.Text, nullable=True)
+    
+    # Clinical information
     diagnosis = db.Column(db.Text, nullable=True)
+    complaints = db.Column(db.Text, nullable=True)
+    history = db.Column(db.Text, nullable=True)
+    examination_notes = db.Column(db.Text, nullable=True)
+    
+    # Investigation and tests
+    investigation = db.Column(db.Text, nullable=True)
+    fall_risk = db.Column(db.Text, nullable=True)
+    immunization = db.Column(db.Text, nullable=True)
+    
+    # Treatment plan
     medications = db.Column(db.Text, nullable=True)
+    prognosis = db.Column(db.Text, nullable=True)
+    nutritional_advice = db.Column(db.Text, nullable=True)
+    plan_of_care = db.Column(db.Text, nullable=True)
+    
+    # Instructions and follow-up
     instructions = db.Column(db.Text, nullable=True)
     follow_up = db.Column(db.Text, nullable=True)
+    referral_reason = db.Column(db.Text, nullable=True)
+    referred_to_cc = db.Column(db.String(200), nullable=True)
+    
+    # Additional notes
+    comments = db.Column(db.Text, nullable=True)
+    remarks_for_counselor = db.Column(db.Text, nullable=True)
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
