@@ -114,8 +114,14 @@ def appointment():
 
         try:
             db.session.commit()
-            # Store appointment ID in session for payment process
+            # Store appointment ID and details in session for payment and success pages
             session['appointment_id'] = new_appointment.id
+            session['appointment_details'] = {
+                'patient_name': patient.full_name,
+                'appointment_date': new_appointment.appointment_date.strftime('%A, %B %d, %Y'),
+                'appointment_time': new_appointment.appointment_time.strftime('%I:%M %p'),
+                'confirmation_number': f'DC{new_appointment.id:06d}'
+            }
 
             # Send confirmation email
             subject = "Appointment Confirmation - Dr. Richa's Eye Clinic"
@@ -186,7 +192,8 @@ def payment():
 @app.route('/success')
 def success():
     """Success page after completing appointment and payment"""
-    return render_template('success.html')
+    appointment_details = session.get('appointment_details', {})
+    return render_template('success.html', appointment_details=appointment_details)
 
 # API route for checking available time slots
 @app.route('/api/available-slots', methods=['GET'])

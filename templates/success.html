@@ -37,11 +37,10 @@
                                 <p><strong>Location:</strong></p>
                             </div>
                             <div class="col-md-6 text-md-start">
-                                <p id="confirmation-number"></p>
-                                <p id="appointment-date"></p>
-                                <p id="appointment-time"></p>
-                                <p>First floor, DVR Town Centre, near to IGUS private limited, Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
-</p>
+                                <p>{{ appointment_details.confirmation_number or 'DC000000' }}</p>
+                                <p>{{ appointment_details.appointment_date or 'Date not available' }}</p>
+                                <p>{{ appointment_details.appointment_time or 'Time not available' }}</p>
+                                <p>First floor, DVR Town Centre, near to IGUS private limited, Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049</p>
                             </div>
                         </div>
                     </div>
@@ -164,26 +163,8 @@
 <!-- Custom Script for Success Page -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Generate random confirmation number
-    const confirmationNumber = 'DC' + Math.floor(100000 + Math.random() * 900000);
-    document.getElementById('confirmation-number').textContent = confirmationNumber;
-    
-    // Get and format current date + 7 days (for example appointment)
-    const now = new Date();
-    const appointmentDate = new Date(now);
-    appointmentDate.setDate(now.getDate() + 7);
-    
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('appointment-date').textContent = appointmentDate.toLocaleDateString('en-US', options);
-    
-    // Set random time (10 AM - 4 PM)
-    const hours = Math.floor(Math.random() * 6) + 10;
-    const minutes = [0, 30][Math.floor(Math.random() * 2)];
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours > 12 ? hours - 12 : hours;
-    
-    document.getElementById('appointment-time').textContent = 
-        `${displayHours}:${minutes === 0 ? '00' : minutes} ${ampm}`;
+    // Page loaded - appointment details are now shown from server data
+    console.log('Appointment confirmation page loaded');
 });
 </script>
 {% endblock %}
