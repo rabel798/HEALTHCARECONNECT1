@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Add Optometrist Prescription - Dr. Richa's Eye Clinic{% endblock %}
@@ -11,43 +12,512 @@
     </div>
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Add Prescription for {{ patient.full_name }}</h3>
+            <h3 class="mb-0">Comprehensive Optometry Examination for {{ patient.full_name }}</h3>
         </div>
         <div class="card-body">
             <form method="POST" class="needs-validation" novalidate>
                 {{ form.hidden_tag() }}
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Issue/Complaint</label>
-                    {{ form.vision_test(class="form-control", placeholder="Enter patient's main issue or complaint") }}
-                </div>
-
+                <!-- Primary Examination Details -->
                 <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Primary Examination Details</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Visit Date</label>
+                        {{ form.visit_date(class="form-control") }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Branch</label>
+                        {{ form.branch(class="form-control") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">Present Complaints</label>
+                        {{ form.present_complaints(class="form-control", rows="3") }}
+                    </div>
+                </div>
+
+                <!-- Vision Assessment -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Vision Assessment</h5>
+                    </div>
                     <div class="col-md-6">
-                        <div class="card h-100">
+                        <div class="card">
                             <div class="card-header bg-light">
-                                <h5 class="mb-0">Left Eye Findings</h5>
+                                <h6 class="mb-0">Distance Vision</h6>
                             </div>
                             <div class="card-body">
-                                {{ form.eye_power(class="form-control", rows="4", placeholder="Enter left eye examination findings") }}
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">Right Eye (RE)</label>
+                                        {{ form.vision_distance_re(class="form-control") }}
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Left Eye (LE)</label>
+                                        {{ form.vision_distance_le(class="form-control") }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card h-100">
+                        <div class="card">
                             <div class="card-header bg-light">
-                                <h5 class="mb-0">Right Eye Findings</h5>
+                                <h6 class="mb-0">Near Vision</h6>
                             </div>
                             <div class="card-body">
-                                {{ form.recommendations(class="form-control", rows="4", placeholder="Enter right eye examination findings") }}
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">Right Eye (RE)</label>
+                                        {{ form.vision_near_re(class="form-control") }}
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Left Eye (LE)</label>
+                                        {{ form.vision_near_le(class="form-control") }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Recommendations</label>
-                    {{ form.notes(class="form-control", rows="3", placeholder="Any additional notes or recommendations") }}
+                <!-- Current Medication -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Current Medication</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Type</label>
+                        {{ form.current_medication_type(class="form-control") }}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Medicine Name</label>
+                        {{ form.current_medication_name(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Dosage</label>
+                        {{ form.current_medication_dosage(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Eye</label>
+                        {{ form.current_medication_eye(class="form-control") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">Medication Remarks</label>
+                        {{ form.current_medication_remarks(class="form-control", rows="2") }}
+                    </div>
+                </div>
+
+                <!-- Undilated Acceptance -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Undilated Acceptance</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">Right Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.undilated_re_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.undilated_re_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.undilated_re_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">Prism</label>
+                                        {{ form.undilated_re_prism(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.undilated_re_va(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">N.V</label>
+                                        {{ form.undilated_re_nv(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">Left Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.undilated_le_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.undilated_le_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.undilated_le_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">Prism</label>
+                                        {{ form.undilated_le_prism(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.undilated_le_va(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">N.V</label>
+                                        {{ form.undilated_le_nv(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dilated Acceptance -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Dilated Acceptance</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0">Right Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.dilated_re_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.dilated_re_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.dilated_re_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">Prism</label>
+                                        {{ form.dilated_re_prism(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.dilated_re_va(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">N.V</label>
+                                        {{ form.dilated_re_nv(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0">Left Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.dilated_le_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.dilated_le_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.dilated_le_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">Prism</label>
+                                        {{ form.dilated_le_prism(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.dilated_le_va(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">N.V</label>
+                                        {{ form.dilated_le_nv(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IOP Details -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">IOP Details</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">IOP Time</label>
+                        {{ form.iop_time(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Method</label>
+                        {{ form.iop_method(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">OD</label>
+                        {{ form.iop_od(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">OS</label>
+                        {{ form.iop_os(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">DL</label>
+                        {{ form.iop_dl(class="form-control") }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Pachy</label>
+                        {{ form.iop_pachy(class="form-control") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">IOP Remarks</label>
+                        {{ form.iop_remarks(class="form-control", rows="2") }}
+                    </div>
+                </div>
+
+                <!-- Final Glasses -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Final Glasses</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Right Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.final_re_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.final_re_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.final_re_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">Prism</label>
+                                        {{ form.final_re_prism(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.final_re_va(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">N.V</label>
+                                        {{ form.final_re_nv(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Left Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.final_le_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.final_le_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.final_le_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">Prism</label>
+                                        {{ form.final_le_prism(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.final_le_va(class="form-control") }}
+                                    </div>
+                                    <div class="col-4 mt-2">
+                                        <label class="form-label">N.V</label>
+                                        {{ form.final_le_nv(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Old Glasses -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Old Glasses</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0">Distance - Right Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.old_distance_re_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.old_distance_re_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.old_distance_re_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.old_distance_re_va(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0">Distance - Left Eye</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="form-label">Sph</label>
+                                        {{ form.old_distance_le_sph(class="form-control") }}
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Cyl</label>
+                                        {{ form.old_distance_le_cyl(class="form-control") }}
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Axis</label>
+                                        {{ form.old_distance_le_axis(class="form-control") }}
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">V/A</label>
+                                        {{ form.old_distance_le_va(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0">Add</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">Add RE</label>
+                                        {{ form.old_add_re(class="form-control") }}
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Add LE</label>
+                                        {{ form.old_add_le(class="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lens and Glass Specifications -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Lens & Glass Specifications</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Type of Glasses</label>
+                        {{ form.type_of_glasses(class="form-control") }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Product</label>
+                        {{ form.product(class="form-control") }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Type of Lens</label>
+                        {{ form.type_of_lens(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <label class="form-label">Lens Material</label>
+                        {{ form.lens_material(class="form-control") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">Usage of Glasses</label>
+                        {{ form.glass_usage(class="form-control", rows="2") }}
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Additional Information</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">GP Advised By</label>
+                        {{ form.gp_advised_by(class="form-control") }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Opto/Student</label>
+                        {{ form.opto_student(class="form-control") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">Keratometer Readings</label>
+                        {{ form.keratometer_readings(class="form-control", rows="3") }}
+                    </div>
+                </div>
+
+                <!-- Final Remarks and Notes -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="border-bottom pb-2 mb-3 text-primary">Final Remarks & Notes</h5>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">General Remarks</label>
+                        {{ form.general_remarks(class="form-control", rows="3") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">Recommendations</label>
+                        {{ form.recommendations(class="form-control", rows="3") }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label">Additional Notes</label>
+                        {{ form.notes(class="form-control", rows="3") }}
+                    </div>
                 </div>
 
                 <div class="text-end">
@@ -58,4 +528,19 @@
         </div>
     </div>
 </div>
+
+<style>
+.card-header h6 {
+    margin: 0;
+    font-weight: bold;
+}
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+.card {
+    border: 1px solid #dee2e6;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+</style>
 {% endblock %}

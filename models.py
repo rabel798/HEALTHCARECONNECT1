@@ -138,10 +138,115 @@ class OptometristPrescription(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
     assistant_id = db.Column(db.Integer, db.ForeignKey('assistant.id'), nullable=False)
     prescription_date = db.Column(db.DateTime, default=datetime.utcnow)
-    vision_test = db.Column(db.Text, nullable=True)
-    eye_power = db.Column(db.Text, nullable=True)
+    
+    # Primary Examination Details
+    visit_date = db.Column(db.Date, nullable=True)
+    branch = db.Column(db.String(100), nullable=True)
+    present_complaints = db.Column(db.Text, nullable=True)
+    
+    # Vision Assessment
+    vision_distance_re = db.Column(db.String(50), nullable=True)  # Right Eye Distance
+    vision_distance_le = db.Column(db.String(50), nullable=True)  # Left Eye Distance
+    vision_near_re = db.Column(db.String(50), nullable=True)     # Right Eye Near
+    vision_near_le = db.Column(db.String(50), nullable=True)     # Left Eye Near
+    
+    # Current Medication
+    current_medication_type = db.Column(db.String(100), nullable=True)
+    current_medication_name = db.Column(db.String(200), nullable=True)
+    current_medication_dosage = db.Column(db.String(100), nullable=True)
+    current_medication_eye = db.Column(db.String(20), nullable=True)
+    current_medication_remarks = db.Column(db.Text, nullable=True)
+    
+    # Undilated Acceptance - Right Eye
+    undilated_re_sph = db.Column(db.String(20), nullable=True)
+    undilated_re_cyl = db.Column(db.String(20), nullable=True)
+    undilated_re_axis = db.Column(db.String(20), nullable=True)
+    undilated_re_prism = db.Column(db.String(20), nullable=True)
+    undilated_re_va = db.Column(db.String(20), nullable=True)
+    undilated_re_nv = db.Column(db.String(20), nullable=True)
+    
+    # Undilated Acceptance - Left Eye
+    undilated_le_sph = db.Column(db.String(20), nullable=True)
+    undilated_le_cyl = db.Column(db.String(20), nullable=True)
+    undilated_le_axis = db.Column(db.String(20), nullable=True)
+    undilated_le_prism = db.Column(db.String(20), nullable=True)
+    undilated_le_va = db.Column(db.String(20), nullable=True)
+    undilated_le_nv = db.Column(db.String(20), nullable=True)
+    
+    # Dilated Acceptance - Right Eye
+    dilated_re_sph = db.Column(db.String(20), nullable=True)
+    dilated_re_cyl = db.Column(db.String(20), nullable=True)
+    dilated_re_axis = db.Column(db.String(20), nullable=True)
+    dilated_re_prism = db.Column(db.String(20), nullable=True)
+    dilated_re_va = db.Column(db.String(20), nullable=True)
+    dilated_re_nv = db.Column(db.String(20), nullable=True)
+    
+    # Dilated Acceptance - Left Eye
+    dilated_le_sph = db.Column(db.String(20), nullable=True)
+    dilated_le_cyl = db.Column(db.String(20), nullable=True)
+    dilated_le_axis = db.Column(db.String(20), nullable=True)
+    dilated_le_prism = db.Column(db.String(20), nullable=True)
+    dilated_le_va = db.Column(db.String(20), nullable=True)
+    dilated_le_nv = db.Column(db.String(20), nullable=True)
+    
+    # IOP Details
+    iop_time = db.Column(db.String(20), nullable=True)
+    iop_method = db.Column(db.String(50), nullable=True)
+    iop_od = db.Column(db.String(20), nullable=True)
+    iop_os = db.Column(db.String(20), nullable=True)
+    iop_dl = db.Column(db.String(20), nullable=True)
+    iop_pachy = db.Column(db.String(20), nullable=True)
+    iop_remarks = db.Column(db.Text, nullable=True)
+    
+    # Final Glasses - Right Eye
+    final_re_sph = db.Column(db.String(20), nullable=True)
+    final_re_cyl = db.Column(db.String(20), nullable=True)
+    final_re_axis = db.Column(db.String(20), nullable=True)
+    final_re_prism = db.Column(db.String(20), nullable=True)
+    final_re_va = db.Column(db.String(20), nullable=True)
+    final_re_nv = db.Column(db.String(20), nullable=True)
+    
+    # Final Glasses - Left Eye
+    final_le_sph = db.Column(db.String(20), nullable=True)
+    final_le_cyl = db.Column(db.String(20), nullable=True)
+    final_le_axis = db.Column(db.String(20), nullable=True)
+    final_le_prism = db.Column(db.String(20), nullable=True)
+    final_le_va = db.Column(db.String(20), nullable=True)
+    final_le_nv = db.Column(db.String(20), nullable=True)
+    
+    # Old Glasses - Distance
+    old_distance_re_sph = db.Column(db.String(20), nullable=True)
+    old_distance_re_cyl = db.Column(db.String(20), nullable=True)
+    old_distance_re_axis = db.Column(db.String(20), nullable=True)
+    old_distance_re_va = db.Column(db.String(20), nullable=True)
+    old_distance_le_sph = db.Column(db.String(20), nullable=True)
+    old_distance_le_cyl = db.Column(db.String(20), nullable=True)
+    old_distance_le_axis = db.Column(db.String(20), nullable=True)
+    old_distance_le_va = db.Column(db.String(20), nullable=True)
+    
+    # Old Glasses - Add
+    old_add_re = db.Column(db.String(20), nullable=True)
+    old_add_le = db.Column(db.String(20), nullable=True)
+    
+    # Glass Type and Usage
+    type_of_glasses = db.Column(db.String(100), nullable=True)
+    glass_usage = db.Column(db.String(100), nullable=True)
+    
+    # Lens Specifications
+    product = db.Column(db.String(200), nullable=True)
+    type_of_lens = db.Column(db.String(100), nullable=True)
+    lens_material = db.Column(db.String(100), nullable=True)
+    
+    # Additional Fields
+    gp_advised_by = db.Column(db.String(100), nullable=True)
+    opto_student = db.Column(db.String(100), nullable=True)
+    keratometer_readings = db.Column(db.Text, nullable=True)
+    
+    # General Remarks and Notes
+    general_remarks = db.Column(db.Text, nullable=True)
     recommendations = db.Column(db.Text, nullable=True)
     notes = db.Column(db.Text, nullable=True)
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Treatment(db.Model):

@@ -1450,15 +1450,103 @@ def assistant_add_prescription(patient_id):
         prescription = OptometristPrescription(
             patient_id=patient_id,
             assistant_id=current_user.id,
-            vision_test=form.vision_test.data,
-            eye_power=form.eye_power.data,
+            # Primary examination details
+            visit_date=form.visit_date.data,
+            branch=form.branch.data,
+            present_complaints=form.present_complaints.data,
+            # Vision assessment
+            vision_distance_re=form.vision_distance_re.data,
+            vision_distance_le=form.vision_distance_le.data,
+            vision_near_re=form.vision_near_re.data,
+            vision_near_le=form.vision_near_le.data,
+            # Current medication
+            current_medication_type=form.current_medication_type.data,
+            current_medication_name=form.current_medication_name.data,
+            current_medication_dosage=form.current_medication_dosage.data,
+            current_medication_eye=form.current_medication_eye.data,
+            current_medication_remarks=form.current_medication_remarks.data,
+            # Undilated acceptance - Right Eye
+            undilated_re_sph=form.undilated_re_sph.data,
+            undilated_re_cyl=form.undilated_re_cyl.data,
+            undilated_re_axis=form.undilated_re_axis.data,
+            undilated_re_prism=form.undilated_re_prism.data,
+            undilated_re_va=form.undilated_re_va.data,
+            undilated_re_nv=form.undilated_re_nv.data,
+            # Undilated acceptance - Left Eye
+            undilated_le_sph=form.undilated_le_sph.data,
+            undilated_le_cyl=form.undilated_le_cyl.data,
+            undilated_le_axis=form.undilated_le_axis.data,
+            undilated_le_prism=form.undilated_le_prism.data,
+            undilated_le_va=form.undilated_le_va.data,
+            undilated_le_nv=form.undilated_le_nv.data,
+            # Dilated acceptance - Right Eye
+            dilated_re_sph=form.dilated_re_sph.data,
+            dilated_re_cyl=form.dilated_re_cyl.data,
+            dilated_re_axis=form.dilated_re_axis.data,
+            dilated_re_prism=form.dilated_re_prism.data,
+            dilated_re_va=form.dilated_re_va.data,
+            dilated_re_nv=form.dilated_re_nv.data,
+            # Dilated acceptance - Left Eye
+            dilated_le_sph=form.dilated_le_sph.data,
+            dilated_le_cyl=form.dilated_le_cyl.data,
+            dilated_le_axis=form.dilated_le_axis.data,
+            dilated_le_prism=form.dilated_le_prism.data,
+            dilated_le_va=form.dilated_le_va.data,
+            dilated_le_nv=form.dilated_le_nv.data,
+            # IOP details
+            iop_time=form.iop_time.data,
+            iop_method=form.iop_method.data,
+            iop_od=form.iop_od.data,
+            iop_os=form.iop_os.data,
+            iop_dl=form.iop_dl.data,
+            iop_pachy=form.iop_pachy.data,
+            iop_remarks=form.iop_remarks.data,
+            # Final glasses - Right Eye
+            final_re_sph=form.final_re_sph.data,
+            final_re_cyl=form.final_re_cyl.data,
+            final_re_axis=form.final_re_axis.data,
+            final_re_prism=form.final_re_prism.data,
+            final_re_va=form.final_re_va.data,
+            final_re_nv=form.final_re_nv.data,
+            # Final glasses - Left Eye
+            final_le_sph=form.final_le_sph.data,
+            final_le_cyl=form.final_le_cyl.data,
+            final_le_axis=form.final_le_axis.data,
+            final_le_prism=form.final_le_prism.data,
+            final_le_va=form.final_le_va.data,
+            final_le_nv=form.final_le_nv.data,
+            # Old glasses - Distance
+            old_distance_re_sph=form.old_distance_re_sph.data,
+            old_distance_re_cyl=form.old_distance_re_cyl.data,
+            old_distance_re_axis=form.old_distance_re_axis.data,
+            old_distance_re_va=form.old_distance_re_va.data,
+            old_distance_le_sph=form.old_distance_le_sph.data,
+            old_distance_le_cyl=form.old_distance_le_cyl.data,
+            old_distance_le_axis=form.old_distance_le_axis.data,
+            old_distance_le_va=form.old_distance_le_va.data,
+            # Old glasses - Add
+            old_add_re=form.old_add_re.data,
+            old_add_le=form.old_add_le.data,
+            # Glass type and usage
+            type_of_glasses=form.type_of_glasses.data,
+            glass_usage=form.glass_usage.data,
+            # Lens specifications
+            product=form.product.data,
+            type_of_lens=form.type_of_lens.data,
+            lens_material=form.lens_material.data,
+            # Additional fields
+            gp_advised_by=form.gp_advised_by.data,
+            opto_student=form.opto_student.data,
+            keratometer_readings=form.keratometer_readings.data,
+            # General remarks and notes
+            general_remarks=form.general_remarks.data,
             recommendations=form.recommendations.data,
             notes=form.notes.data
         )
         db.session.add(prescription)
         try:
             db.session.commit()
-            flash('Prescription added successfully', 'success')
+            flash('Comprehensive optometry prescription added successfully!', 'success')
             return redirect(url_for('assistant_prescriptions'))
         except Exception as e:
             db.session.rollback()
