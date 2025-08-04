@@ -169,21 +169,193 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        <div class="mb-4">
-                            <h6 class="border-bottom pb-2 mb-3">Diagnosis</h6>
-                            <p>{{ medical_record.diagnosis or 'No diagnosis recorded.' }}</p>
+                        <!-- Get the latest doctor prescription for this patient -->
+                        {% set doctor_prescription = appointment.patient.doctor_prescriptions|sort(attribute='prescription_date', reverse=true)|first %}
+                        
+                        {% if doctor_prescription %}
+                        <!-- Clinical Information -->
+                        {% if doctor_prescription.complaints or doctor_prescription.history or doctor_prescription.examination_notes or doctor_prescription.diagnosis %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0">Clinical Information</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if doctor_prescription.complaints %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Chief Complaints</h6>
+                                    <p>{{ doctor_prescription.complaints }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.history %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">History</h6>
+                                    <p>{{ doctor_prescription.history }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.examination_notes %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Examination Notes</h6>
+                                    <p>{{ doctor_prescription.examination_notes }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.diagnosis %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Diagnosis</h6>
+                                    <p>{{ doctor_prescription.diagnosis }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
+                        {% endif %}
 
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <h6 class="border-bottom pb-2 mb-3">Left Eye Findings</h6>
-                                <p>{{ medical_record.left_eye_findings or 'No findings recorded.' }}</p>
+                        <!-- Eye Examination Findings -->
+                        {% if doctor_prescription.left_eye_findings or doctor_prescription.right_eye_findings %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0">Eye Examination Findings</h6>
                             </div>
-                            <div class="col-md-6">
-                                <h6 class="border-bottom pb-2 mb-3">Right Eye Findings</h6>
-                                <p>{{ medical_record.right_eye_findings or 'No findings recorded.' }}</p>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="border-bottom pb-2 mb-3">Left Eye Findings</h6>
+                                        <p>{{ doctor_prescription.left_eye_findings or 'No findings recorded.' }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="border-bottom pb-2 mb-3">Right Eye Findings</h6>
+                                        <p>{{ doctor_prescription.right_eye_findings or 'No findings recorded.' }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        {% endif %}
+
+                        <!-- Investigation & Assessment -->
+                        {% if doctor_prescription.investigation or doctor_prescription.fall_risk or doctor_prescription.immunization %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0">Investigation & Assessment</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if doctor_prescription.investigation %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Investigation</h6>
+                                    <p>{{ doctor_prescription.investigation }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.fall_risk %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Fall Risk Assessment</h6>
+                                    <p>{{ doctor_prescription.fall_risk }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.immunization %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Immunization Status</h6>
+                                    <p>{{ doctor_prescription.immunization }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Treatment Plan -->
+                        {% if doctor_prescription.medications or doctor_prescription.prognosis or doctor_prescription.nutritional_advice or doctor_prescription.plan_of_care %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0">Treatment Plan</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if doctor_prescription.medications %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Prescribed Medications</h6>
+                                    <p>{{ doctor_prescription.medications }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.prognosis %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Prognosis</h6>
+                                    <p>{{ doctor_prescription.prognosis }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.nutritional_advice %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Nutritional Advice</h6>
+                                    <p>{{ doctor_prescription.nutritional_advice }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.plan_of_care %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Plan of Care</h6>
+                                    <p>{{ doctor_prescription.plan_of_care }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Instructions & Follow-up -->
+                        {% if doctor_prescription.instructions or doctor_prescription.follow_up or doctor_prescription.referral_reason or doctor_prescription.referred_to_cc %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">Instructions & Follow-up</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if doctor_prescription.instructions %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Follow-up Instructions</h6>
+                                    <p>{{ doctor_prescription.instructions }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.follow_up %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Next Appointment Recommendation</h6>
+                                    <p>{{ doctor_prescription.follow_up }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.referral_reason %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Referral Reason</h6>
+                                    <p>{{ doctor_prescription.referral_reason }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.referred_to_cc %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Referred to CC</h6>
+                                    <p>{{ doctor_prescription.referred_to_cc }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Additional Notes -->
+                        {% if doctor_prescription.comments or doctor_prescription.remarks_for_counselor %}
+                        <div class="card mb-4">
+                            <div class="card-header bg-dark text-white">
+                                <h6 class="mb-0">Additional Notes</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if doctor_prescription.comments %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Comments</h6>
+                                    <p>{{ doctor_prescription.comments }}</p>
+                                </div>
+                                {% endif %}
+                                {% if doctor_prescription.remarks_for_counselor %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Remarks for Counselor</h6>
+                                    <p>{{ doctor_prescription.remarks_for_counselor }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% else %}
+                        <div class="alert alert-info text-center">
+                            <p class="mb-0">No comprehensive prescription recorded yet.</p>
+                        </div>
+                        {% endif %}
 
                         <div class="mb-4">
                             <h6 class="border-bottom pb-2 mb-3">Prescribed Medications</h6>
