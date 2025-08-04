@@ -1090,6 +1090,7 @@ def admin_add_prescription(appointment_id):
                 immunization=form.immunization.data,
                 # Treatment plan
                 medications=form.medications.data,
+                prescribed_eyewear=form.prescribed_eyewear.data,
                 prognosis=form.prognosis.data,
                 nutritional_advice=form.nutritional_advice.data,
                 plan_of_care=form.plan_of_care.data,
@@ -1396,6 +1397,7 @@ def doctor_add_prescription(patient_id):
                 immunization=form.immunization.data,
                 # Treatment plan
                 medications=form.medications.data,
+                prescribed_eyewear=form.prescribed_eyewear.data,
                 prognosis=form.prognosis.data,
                 nutritional_advice=form.nutritional_advice.data,
                 plan_of_care=form.plan_of_care.data,

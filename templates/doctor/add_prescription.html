@@ -115,6 +115,11 @@
                                 {{ form.medications(class="form-control", rows=4) }}
                             </div>
                             
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Prescribed Eyewear</label>
+                                {{ form.prescribed_eyewear(class="form-control", rows=3) }}
+                            </div>
+                            
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Prognosis</label>
@@ -240,6 +245,7 @@ function printPrescription() {
     const fallRisk = document.querySelector('#fall_risk').value;
     const immunization = document.querySelector('#immunization').value;
     const medications = document.querySelector('#medications').value;
+    const prescribedEyewear = document.querySelector('#prescribed_eyewear').value;
     const prognosis = document.querySelector('#prognosis').value;
     const nutritional = document.querySelector('#nutritional_advice').value;
     const planOfCare = document.querySelector('#plan_of_care').value;
@@ -267,6 +273,7 @@ function printPrescription() {
     
     if (investigation) printContent += `<div style="margin-bottom: 15px;"><h4>Investigation:</h4><p>${investigation}</p></div>`;
     if (medications) printContent += `<div style="margin-bottom: 15px;"><h4>Medications:</h4><p>${medications}</p></div>`;
+    if (prescribedEyewear) printContent += `<div style="margin-bottom: 15px;"><h4>Prescribed Eyewear:</h4><p>${prescribedEyewear}</p></div>`;
     if (prognosis) printContent += `<div style="margin-bottom: 15px;"><h4>Prognosis:</h4><p>${prognosis}</p></div>`;
     if (nutritional) printContent += `<div style="margin-bottom: 15px;"><h4>Nutritional Advice:</h4><p>${nutritional}</p></div>`;
     if (planOfCare) printContent += `<div style="margin-bottom: 15px;"><h4>Plan of Care:</h4><p>${planOfCare}</p></div>`;

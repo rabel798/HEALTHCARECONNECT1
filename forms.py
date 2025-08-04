@@ -120,6 +120,7 @@ class DoctorPrescriptionForm(FlaskForm):
 
     # Treatment plan
     medications = TextAreaField('Medications', validators=[DataRequired()])
+    prescribed_eyewear = TextAreaField('Prescribed Eyewear', validators=[Optional()])
     prognosis = TextAreaField('Prognosis', validators=[Optional()])
     nutritional_advice = TextAreaField('Nutritional Advice', validators=[Optional()])
     plan_of_care = TextAreaField('Plan of Care', validators=[Optional()])

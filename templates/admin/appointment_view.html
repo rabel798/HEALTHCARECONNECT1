@@ -271,6 +271,12 @@
                                     <p>{{ doctor_prescription.medications }}</p>
                                 </div>
                                 {% endif %}
+                                {% if doctor_prescription.prescribed_eyewear %}
+                                <div class="mb-3">
+                                    <h6 class="border-bottom pb-2 mb-3">Prescribed Eyewear</h6>
+                                    <p>{{ doctor_prescription.prescribed_eyewear }}</p>
+                                </div>
+                                {% endif %}
                                 {% if doctor_prescription.prognosis %}
                                 <div class="mb-3">
                                     <h6 class="border-bottom pb-2 mb-3">Prognosis</h6>

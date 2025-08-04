@@ -113,6 +113,7 @@ class DoctorPrescription(db.Model):
     
     # Treatment plan
     medications = db.Column(db.Text, nullable=True)
+    prescribed_eyewear = db.Column(db.Text, nullable=True)
     prognosis = db.Column(db.Text, nullable=True)
     nutritional_advice = db.Column(db.Text, nullable=True)
     plan_of_care = db.Column(db.Text, nullable=True)
