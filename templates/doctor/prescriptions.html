@@ -163,8 +163,13 @@ function searchTable() {
                                     <div class="mt-2">
                                         <small class="text-success">
                                             <i class="fas fa-check-circle"></i> 
-                                            {{ patient.doctor_prescriptions|length }} prescription(s) on file
+                                            {{ patient.doctor_prescriptions|length }} comprehensive prescription(s) on file
                                         </small>
+                                        {% if patient.doctor_prescriptions %}
+                                        <div class="mt-2">
+                                            <small class="text-muted">Latest: {{ patient.doctor_prescriptions|sort(attribute='prescription_date', reverse=true)|first.prescription_date.strftime('%d %b, %Y') }}</small>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                     {% endif %}
                                 </div>

@@ -1,3 +1,4 @@
+python
 import os
 import random
 import string
@@ -1218,7 +1219,7 @@ def admin_approve_review(review_id):
 def admin_delete_review(review_id):
     """Admin delete review route"""
     # Ensure only admins or assistants can access this page
-    if not (isinstance(current_user, Admin) or isinstance(current_user, Assistant) or isinstance(current_user, Doctor)):
+    if not (isinstance(current_user, Admin) or isinstance(current_user, Doctor) or isinstance(current_user, Assistant)):
         flash('Access denied. Staff privileges required.', 'danger')
         return redirect(url_for('index'))
 
@@ -1342,32 +1343,66 @@ def doctor_prescriptions():
 @app.route('/doctor/add-prescription/<int:patient_id>', methods=['GET', 'POST'])
 @login_required
 def doctor_add_prescription(patient_id):
-    if not isinstance(current_user, Doctor):
-        flash('Access denied', 'danger')
-        return redirect(url_for('index'))
+    from forms import DoctorPrescriptionForm
+    from models import Patient, DoctorPrescription, Doctor
+    from datetime import datetime
 
-    form = DoctorPrescriptionForm()
     patient = Patient.query.get_or_404(patient_id)
+    form = DoctorPrescriptionForm()
 
     if form.validate_on_submit():
-        prescription = DoctorPrescription(
-            patient_id=patient_id,
-            doctor_id=current_user.id,
-            diagnosis=form.diagnosis.data,
-            medications=form.medications.data,
-            instructions=form.instructions.data,
-            follow_up=form.follow_up.data
-        )
-        db.session.add(prescription)
         try:
+            # Get the current doctor
+            doctor = Doctor.query.filter_by(username='drricha').first()
+            if not doctor:
+                flash('Doctor not found', 'error')
+                return redirect(url_for('doctor_prescriptions'))
+
+            # Create comprehensive prescription with all fields
+            prescription = DoctorPrescription(
+                patient_id=patient_id,
+                doctor_id=doctor.id,
+                # Clinical information
+                complaints=form.complaints.data,
+                history=form.history.data,
+                examination_notes=form.examination_notes.data,
+                diagnosis=form.diagnosis.data,
+                # Eye examination findings
+                left_eye_findings=form.left_eye_findings.data,
+                right_eye_findings=form.right_eye_findings.data,
+                # Investigation and assessment
+                investigation=form.investigation.data,
+                fall_risk=form.fall_risk.data,
+                immunization=form.immunization.data,
+                # Treatment plan
+                medications=form.medications.data,
+                prognosis=form.prognosis.data,
+                nutritional_advice=form.nutritional_advice.data,
+                plan_of_care=form.plan_of_care.data,
+                # Instructions and follow-up
+                instructions=form.instructions.data,
+                follow_up=form.follow_up.data,
+                referral_reason=form.referral_reason.data,
+                referred_to_cc=form.referred_to_cc.data,
+                # Additional notes
+                comments=form.comments.data,
+                remarks_for_counselor=form.remarks_for_counselor.data
+            )
+
+            db.session.add(prescription)
             db.session.commit()
-            flash('Prescription added successfully', 'success')
+
+            flash('Comprehensive prescription saved successfully!', 'success')
             return redirect(url_for('doctor_prescriptions'))
+
         except Exception as e:
             db.session.rollback()
-            flash(f'Error adding prescription: {str(e)}', 'danger')
+            flash(f'Error saving prescription: {str(e)}', 'error')
 
-    return render_template('doctor/add_prescription.html', form=form, patient=patient)
+    return render_template('doctor/add_prescription.html', 
+                         form=form, 
+                         patient=patient,
+                         now=datetime.utcnow())
 
 @app.route('/assistant/prescriptions')
 @login_required
