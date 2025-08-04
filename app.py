@@ -63,18 +63,11 @@ from routes import *
 # Create database tables
 with app.app_context():
     try:
-        # Drop and recreate tables to ensure schema matches models
-        db.drop_all()
+        # Only create tables if they don't exist
         db.create_all()
-        print('Database tables recreated successfully')
+        print('Database tables initialized')
     except Exception as e:
-        print(f'Error recreating database: {str(e)}')
-        # Fallback to create_all if drop fails
-        try:
-            db.create_all()
-            print('Database tables initialized')
-        except Exception as e2:
-            print(f'Error initializing database: {str(e2)}')
+        print(f'Error initializing database: {str(e)}')
 
     # Create default accounts only if they don't exist
     from models import Doctor, Assistant
