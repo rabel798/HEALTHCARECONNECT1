@@ -902,7 +902,7 @@ def admin_dashboard():
         Appointment.status == 'scheduled'
     ).order_by(Appointment.appointment_time).all()
 
-    return render_template('admin/dashboard.html', 
+    return rendertemplate('admin/dashboard.html', 
                           total_patients=total_patients,
                           total_appointments=total_appointments,
                           upcoming_appointments=upcoming_appointments,
@@ -1445,6 +1445,18 @@ def assistant_add_prescription(patient_id):
 
     form = OptometristPrescriptionForm()
     patient = Patient.query.get_or_404(patient_id)
+
+    # Auto-populate visit date from patient's most recent appointment and branch
+    if request.method == 'GET':
+        # Get the patient's most recent appointment
+        recent_appointment = Appointment.query.filter_by(patient_id=patient_id).order_by(Appointment.appointment_date.desc()).first()
+
+        if recent_appointment:
+            form.visit_date.data = recent_appointment.appointment_date
+        else:
+            form.visit_date.data = datetime.now().date()
+
+        form.branch.data = "Dr. Richa's Eye Clinic - DVR Town Centre, Budigere Road"
 
     if form.validate_on_submit():
         prescription = OptometristPrescription(
