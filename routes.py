@@ -1310,15 +1310,51 @@ def assistant_add_patient():
             db.session.add(new_patient)
             db.session.flush()  # Get patient ID
 
-            # Create walk-in appointment for today
+            # Auto-assign date and time slot for walk-in
             today = datetime.now().date()
-            current_time = datetime.now().time()
+            current_datetime = datetime.now()
+            current_hour = current_datetime.hour
+            current_minute = current_datetime.minute
+            
+            # Determine if it's Sunday
+            is_sunday = today.weekday() == 6
+            
+            # Calculate nearest appropriate time slot
+            if is_sunday:
+                # Sunday: 10 AM to 1 PM slots
+                if current_hour < 10:
+                    assigned_time = datetime.strptime("10:00", "%H:%M").time()
+                elif current_hour >= 13:
+                    assigned_time = datetime.strptime("13:00", "%H:%M").time()
+                else:
+                    # Round to nearest 30-minute slot
+                    if current_minute < 30:
+                        assigned_time = datetime.strptime(f"{current_hour}:00", "%H:%M").time()
+                    else:
+                        assigned_time = datetime.strptime(f"{current_hour}:30", "%H:%M").time()
+            else:
+                # Monday-Saturday: 5 PM to 8 PM slots
+                if current_hour < 17:
+                    assigned_time = datetime.strptime("17:00", "%H:%M").time()
+                elif current_hour >= 20:
+                    assigned_time = datetime.strptime("20:00", "%H:%M").time()
+                else:
+                    # Round to nearest 30-minute slot
+                    if current_minute < 30:
+                        assigned_time = datetime.strptime(f"{current_hour}:00", "%H:%M").time()
+                    else:
+                        assigned_time = datetime.strptime(f"{current_hour}:30", "%H:%M").time()
+
+            # Get additional information from form
+            referral_info = request.form.get('referral_info', 'Walk-in patient')
+            primary_issue = form.primary_issue.data or "Walk-in consultation"
 
             walk_in_appointment = Appointment(
                 patient_id=new_patient.id,
                 appointment_date=today,
-                appointment_time=current_time,
-                primary_issue=form.primary_issue.data or "Walk-in consultation",
+                appointment_time=assigned_time,
+                primary_issue=primary_issue,
+                referral_info=referral_info,
                 status='completed',  # Mark as completed since it's walk-in
                 consultation_fee=500.0,
                 payment_status='paid'
@@ -1341,12 +1377,13 @@ def assistant_add_patient():
                 treatment_name='Walk-in Consultation',
                 treatment_date=today,
                 amount=500.0,
-                notes=f'Walk-in patient added by {current_user.full_name}'
+                notes=f'Walk-in patient added by {current_user.full_name} at {assigned_time.strftime("%I:%M %p")}'
             )
             db.session.add(walk_in_treatment)
 
             db.session.commit()
-            flash('Walk-in patient added successfully and ₹500 consultation fee recorded!', 'success')
+            
+            flash(f'Walk-in patient "{new_patient.full_name}" successfully registered for {assigned_time.strftime("%I:%M %p")} and ₹500 consultation fee recorded!', 'success')
             return redirect(url_for('assistant_dashboard'))
 
         except Exception as e:
