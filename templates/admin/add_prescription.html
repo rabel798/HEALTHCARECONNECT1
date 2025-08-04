@@ -1,260 +1,196 @@
-
 {% extends 'layout.html' %}
 
-{% block title %}Add Prescription - Dr. Richa's Eye Clinic{% endblock %}
+{% block title %}Add Doctor Prescription - Dr. Richa's Eye Clinic{% endblock %}
 
 {% block content %}
 <section class="py-5 bg-light">
     <div class="container">
         <div class="d-flex justify-content-start mb-4">
-            <a href="{{ url_for('admin_patients') }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-1"></i> Back to Patients
+            <a href="{{ url_for('admin_appointment_view', appointment_id=appointment.id) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Appointment
             </a>
         </div>
-        <div class="row">
-            <div class="col-lg-3 mb-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body text-center">
-                        <div class="avatar-circle bg-primary text-white mb-3">
-                            <i class="fas fa-user-md fa-2x"></i>
-                        </div>
-                        <h5 class="card-title">Dr. Richa</h5>
-                        <p class="card-text text-muted">Ophthalmologist</p>
-                    </div>
-                </div>
-                
-                <div class="list-group shadow-sm">
-                    <a href="{{ url_for('admin_dashboard') }}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                    <a href="{{ url_for('admin_appointments') }}" class="list-group-item list-group-item-action active">
-                        <i class="fas fa-calendar-check me-2"></i> Appointments
-                    </a>
-                    <a href="{{ url_for('admin_patients') }}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-users me-2"></i> Patients
-                    </a>
-                    <a href="{{ url_for('admin_reviews') }}" class="list-group-item list-group-item-action">
-                        <i class="fas fa-star me-2"></i> Reviews
-                    </a>
-                </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Add Comprehensive Prescription for {{ appointment.patient.full_name }}</h5>
             </div>
-            
-            <div class="col-lg-9">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <a href="{{ url_for('admin_appointment_view', appointment_id=appointment.id) }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i> Back to Appointment
-                    </a>
-                </div>
-                
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            {% if is_edit %}
-                            Edit Comprehensive Prescription & Medical Record
-                            {% else %}
-                            Add Comprehensive Prescription & Medical Record
-                            {% endif %}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-info mb-4">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="mb-1"><strong>Patient:</strong> {{ appointment.patient.full_name }}</p>
-                                    <p class="mb-1"><strong>Age:</strong> {{ appointment.patient.age }} years</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="mb-1"><strong>Appointment:</strong> {{ appointment.appointment_date.strftime('%d %B, %Y') }}</p>
-                                    <p class="mb-1"><strong>Time:</strong> {{ appointment.appointment_time.strftime('%I:%M %p') }}</p>
-                                </div>
-                            </div>
-                            <p class="mb-0 mt-2"><strong>Primary Issue:</strong> {{ appointment.primary_issue or 'Not specified' }}</p>
+            <div class="card-body">
+                <div class="alert alert-info mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Patient:</strong> {{ appointment.patient.full_name }}</p>
+                            <p class="mb-1"><strong>Age:</strong> {{ appointment.patient.age }} years</p>
                         </div>
-                        
-                        <form method="POST" action="{{ url_for('admin_add_prescription', appointment_id=appointment.id) }}" id="prescriptionForm">
-                            {{ form.hidden_tag() }}
-                            
-                            <!-- Clinical Information Section -->
-                            <div class="card mb-4">
-                                <div class="card-header bg-secondary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Clinical Information</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Chief Complaints</label>
-                                            {{ form.complaints(class="form-control", rows=3) }}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">History</label>
-                                            {{ form.history(class="form-control", rows=3) }}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Examination Notes</label>
-                                            {{ form.examination_notes(class="form-control", rows=3) }}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Diagnosis *</label>
-                                            {{ form.diagnosis(class="form-control", rows=3) }}
-                                            {% if form.diagnosis.errors %}
-                                                <div class="text-danger">
-                                                    {% for error in form.diagnosis.errors %}
-                                                        <small>{{ error }}</small>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Eye Examination Section -->
-                            <div class="card mb-4">
-                                <div class="card-header bg-info text-white">
-                                    <h6 class="mb-0"><i class="fas fa-eye me-2"></i>Eye Examination Findings</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Left Eye Findings</label>
-                                            {{ form.left_eye_findings(class="form-control", rows=4) }}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Right Eye Findings</label>
-                                            {{ form.right_eye_findings(class="form-control", rows=4) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Investigation & Assessment Section -->
-                            <div class="card mb-4">
-                                <div class="card-header bg-warning text-dark">
-                                    <h6 class="mb-0"><i class="fas fa-search me-2"></i>Investigation & Assessment</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label class="form-label fw-bold">Investigation</label>
-                                            {{ form.investigation(class="form-control", rows=3) }}
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label class="form-label fw-bold">Fall Risk Assessment</label>
-                                            {{ form.fall_risk(class="form-control", rows=3) }}
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label class="form-label fw-bold">Immunization Status</label>
-                                            {{ form.immunization(class="form-control", rows=3) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Treatment Plan Section -->
-                            <div class="card mb-4">
-                                <div class="card-header bg-success text-white">
-                                    <h6 class="mb-0"><i class="fas fa-pills me-2"></i>Treatment Plan</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Medications *</label>
-                                            {{ form.medications(class="form-control", rows=4) }}
-                                            {% if form.medications.errors %}
-                                                <div class="text-danger">
-                                                    {% for error in form.medications.errors %}
-                                                        <small>{{ error }}</small>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Prognosis</label>
-                                            {{ form.prognosis(class="form-control", rows=4) }}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Nutritional Advice</label>
-                                            {{ form.nutritional_advice(class="form-control", rows=3) }}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Plan of Care</label>
-                                            {{ form.plan_of_care(class="form-control", rows=3) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Instructions & Follow-up Section -->
-                            <div class="card mb-4">
-                                <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Instructions & Follow-up</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Instructions *</label>
-                                            {{ form.instructions(class="form-control", rows=4) }}
-                                            {% if form.instructions.errors %}
-                                                <div class="text-danger">
-                                                    {% for error in form.instructions.errors %}
-                                                        <small>{{ error }}</small>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Follow Up</label>
-                                            {{ form.follow_up(class="form-control", rows=4) }}
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Referral Reason</label>
-                                            {{ form.referral_reason(class="form-control", rows=3) }}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Referred to CC</label>
-                                            {{ form.referred_to_cc(class="form-control") }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Additional Notes Section -->
-                            <div class="card mb-4">
-                                <div class="card-header bg-dark text-white">
-                                    <h6 class="mb-0"><i class="fas fa-notes-medical me-2"></i>Additional Notes</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Comments</label>
-                                            {{ form.comments(class="form-control", rows=4) }}
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label fw-bold">Remarks for Counselor</label>
-                                            {{ form.remarks_for_counselor(class="form-control", rows=4) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    {{ form.submit(class="btn btn-primary btn-lg") }}
-                                    <a href="{{ url_for('admin_appointment_view', appointment_id=appointment.id) }}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
-                                </div>
-                                <button type="button" class="btn btn-info btn-lg" onclick="printPrescription()">
-                                    <i class="fas fa-print me-1"></i> Print Preview
-                                </button>
-                            </div>
-                        </form>
+                        <div class="col-md-6 text-md-end">
+                            <p class="mb-1"><strong>Appointment:</strong> {{ appointment.appointment_date.strftime('%d %B, %Y') }}</p>
+                            <p class="mb-1"><strong>Time:</strong> {{ appointment.appointment_time.strftime('%I:%M %p') }}</p>
+                        </div>
                     </div>
                 </div>
+
+                <form method="POST" id="prescriptionForm">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Clinical Information Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">Clinical Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Chief Complaints</label>
+                                    {{ form.complaints(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">History</label>
+                                    {{ form.history(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Examination Notes</label>
+                                {{ form.examination_notes(class="form-control", rows=3) }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Diagnosis *</label>
+                                {{ form.diagnosis(class="form-control", rows=3) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eye Examination Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">Eye Examination Findings</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Left Eye Findings</label>
+                                    {{ form.left_eye_findings(class="form-control", rows=4) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Right Eye Findings</label>
+                                    {{ form.right_eye_findings(class="form-control", rows=4) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investigation & Assessment Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0">Investigation & Assessment</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Investigation</label>
+                                    {{ form.investigation(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fall Risk Assessment</label>
+                                    {{ form.fall_risk(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Immunization Status</label>
+                                {{ form.immunization(class="form-control", rows=2) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Treatment Plan Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">Treatment Plan</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Prescribed Medications *</label>
+                                {{ form.medications(class="form-control", rows=4) }}
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Prognosis</label>
+                                    {{ form.prognosis(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Nutritional Advice</label>
+                                    {{ form.nutritional_advice(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Plan of Care</label>
+                                {{ form.plan_of_care(class="form-control", rows=3) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instructions & Follow-up Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0">Instructions & Follow-up</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Instructions *</label>
+                                {{ form.instructions(class="form-control", rows=3) }}
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Follow Up</label>
+                                    {{ form.follow_up(class="form-control", rows=2) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Referred to CC</label>
+                                    {{ form.referred_to_cc(class="form-control") }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Referral Reason</label>
+                                {{ form.referral_reason(class="form-control", rows=2) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Notes Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h6 class="mb-0">Additional Notes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Comments</label>
+                                    {{ form.comments(class="form-control", rows=3) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Remarks for Counselor</label>
+                                    {{ form.remarks_for_counselor(class="form-control", rows=3) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                            <a href="{{ url_for('admin_appointment_view', appointment_id=appointment.id) }}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+                        </div>
+                        <button type="button" class="btn btn-info btn-lg" onclick="printPrescription()">
+                            <i class="fas fa-print me-1"></i> Print Preview
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -274,118 +210,86 @@
                     <p><strong>Age:</strong> {{ appointment.patient.age }} years</p>
                 </div>
                 <div style="float: right;">
-                    <p><strong>Date:</strong> {{ appointment.appointment_date.strftime('%d-%m-%Y') }}</p>
+                    <p><strong>Date:</strong> {{ now.strftime('%d-%m-%Y') }}</p>
                 </div>
                 <div style="clear: both;"></div>
             </div>
 
             <div id="printContent"></div>
+
+            <div style="margin-top: 50px; text-align: right;">
+                <p>Dr. Richa Sharma</p>
+                <p style="font-size: 14px;">MBBS, MS, FPOS</p>
+            </div>
         </div>
     </div>
 </section>
+{% endblock %}
 
+{% block extra_js %}
 <script>
 function printPrescription() {
-    // Get form data
-    const formData = new FormData(document.getElementById('prescriptionForm'));
+    // Get all form values
+    const complaints = document.querySelector('#complaints') ? document.querySelector('#complaints').value : '';
+    const history = document.querySelector('#history') ? document.querySelector('#history').value : '';
+    const examination = document.querySelector('#examination_notes') ? document.querySelector('#examination_notes').value : '';
+    const diagnosis = document.querySelector('#diagnosis') ? document.querySelector('#diagnosis').value : '';
+    const leftEye = document.querySelector('#left_eye_findings') ? document.querySelector('#left_eye_findings').value : '';
+    const rightEye = document.querySelector('#right_eye_findings') ? document.querySelector('#right_eye_findings').value : '';
+    const investigation = document.querySelector('#investigation') ? document.querySelector('#investigation').value : '';
+    const fallRisk = document.querySelector('#fall_risk') ? document.querySelector('#fall_risk').value : '';
+    const immunization = document.querySelector('#immunization') ? document.querySelector('#immunization').value : '';
+    const medications = document.querySelector('#medications') ? document.querySelector('#medications').value : '';
+    const prognosis = document.querySelector('#prognosis') ? document.querySelector('#prognosis').value : '';
+    const nutritional = document.querySelector('#nutritional_advice') ? document.querySelector('#nutritional_advice').value : '';
+    const planOfCare = document.querySelector('#plan_of_care') ? document.querySelector('#plan_of_care').value : '';
+    const instructions = document.querySelector('#instructions') ? document.querySelector('#instructions').value : '';
+    const followUp = document.querySelector('#follow_up') ? document.querySelector('#follow_up').value : '';
+    const referralReason = document.querySelector('#referral_reason') ? document.querySelector('#referral_reason').value : '';
+    const referredTo = document.querySelector('#referred_to_cc') ? document.querySelector('#referred_to_cc').value : '';
+    const comments = document.querySelector('#comments') ? document.querySelector('#comments').value : '';
+    const remarksForCounselor = document.querySelector('#remarks_for_counselor') ? document.querySelector('#remarks_for_counselor').value : '';
+
+    // Create comprehensive print content
     let printContent = '';
 
-    // Clinical Information
-    if (formData.get('complaints') || formData.get('history') || formData.get('examination_notes') || formData.get('diagnosis')) {
-        printContent += '<h4>Clinical Information</h4>';
-        if (formData.get('complaints')) printContent += `<p><strong>Chief Complaints:</strong> ${formData.get('complaints')}</p>`;
-        if (formData.get('history')) printContent += `<p><strong>History:</strong> ${formData.get('history')}</p>`;
-        if (formData.get('examination_notes')) printContent += `<p><strong>Examination Notes:</strong> ${formData.get('examination_notes')}</p>`;
-        if (formData.get('diagnosis')) printContent += `<p><strong>Diagnosis:</strong> ${formData.get('diagnosis')}</p>`;
+    if (complaints) printContent += `<div style="margin-bottom: 15px;"><h4>Chief Complaints:</h4><p>${complaints}</p></div>`;
+    if (history) printContent += `<div style="margin-bottom: 15px;"><h4>History:</h4><p>${history}</p></div>`;
+    if (examination) printContent += `<div style="margin-bottom: 15px;"><h4>Examination:</h4><p>${examination}</p></div>`;
+    if (diagnosis) printContent += `<div style="margin-bottom: 15px;"><h4>Diagnosis:</h4><p>${diagnosis}</p></div>`;
+
+    if (leftEye || rightEye) {
+        printContent += `<div style="margin-bottom: 15px;"><h4>Eye Examination:</h4>`;
+        if (leftEye) printContent += `<p><strong>Left Eye:</strong> ${leftEye}</p>`;
+        if (rightEye) printContent += `<p><strong>Right Eye:</strong> ${rightEye}</p>`;
+        printContent += `</div>`;
     }
 
-    // Eye Examination
-    if (formData.get('left_eye_findings') || formData.get('right_eye_findings')) {
-        printContent += '<h4>Eye Examination Findings</h4>';
-        if (formData.get('left_eye_findings')) printContent += `<p><strong>Left Eye:</strong> ${formData.get('left_eye_findings')}</p>`;
-        if (formData.get('right_eye_findings')) printContent += `<p><strong>Right Eye:</strong> ${formData.get('right_eye_findings')}</p>`;
-    }
+    if (investigation) printContent += `<div style="margin-bottom: 15px;"><h4>Investigation:</h4><p>${investigation}</p></div>`;
+    if (medications) printContent += `<div style="margin-bottom: 15px;"><h4>Medications:</h4><p>${medications}</p></div>`;
+    if (prognosis) printContent += `<div style="margin-bottom: 15px;"><h4>Prognosis:</h4><p>${prognosis}</p></div>`;
+    if (nutritional) printContent += `<div style="margin-bottom: 15px;"><h4>Nutritional Advice:</h4><p>${nutritional}</p></div>`;
+    if (planOfCare) printContent += `<div style="margin-bottom: 15px;"><h4>Plan of Care:</h4><p>${planOfCare}</p></div>`;
+    if (instructions) printContent += `<div style="margin-bottom: 15px;"><h4>Instructions:</h4><p>${instructions}</p></div>`;
+    if (followUp) printContent += `<div style="margin-bottom: 15px;"><h4>Follow Up:</h4><p>${followUp}</p></div>`;
+    if (referralReason) printContent += `<div style="margin-bottom: 15px;"><h4>Referral Reason:</h4><p>${referralReason}</p></div>`;
+    if (referredTo) printContent += `<div style="margin-bottom: 15px;"><h4>Referred to:</h4><p>${referredTo}</p></div>`;
+    if (comments) printContent += `<div style="margin-bottom: 15px;"><h4>Comments:</h4><p>${comments}</p></div>`;
+    if (remarksForCounselor) printContent += `<div style="margin-bottom: 15px;"><h4>Remarks for Counselor:</h4><p>${remarksForCounselor}</p></div>`;
 
-    // Treatment Plan
-    if (formData.get('medications') || formData.get('prognosis')) {
-        printContent += '<h4>Treatment Plan</h4>';
-        if (formData.get('medications')) printContent += `<p><strong>Medications:</strong> ${formData.get('medications')}</p>`;
-        if (formData.get('prognosis')) printContent += `<p><strong>Prognosis:</strong> ${formData.get('prognosis')}</p>`;
-    }
-
-    // Instructions
-    if (formData.get('instructions') || formData.get('follow_up')) {
-        printContent += '<h4>Instructions & Follow-up</h4>';
-        if (formData.get('instructions')) printContent += `<p><strong>Instructions:</strong> ${formData.get('instructions')}</p>`;
-        if (formData.get('follow_up')) printContent += `<p><strong>Follow Up:</strong> ${formData.get('follow_up')}</p>`;
-    }
-
-    // Set the print content
-    document.getElementById('printContent').innerHTML = printContent;
+    // Set print content
+    document.querySelector('#printContent').innerHTML = printContent;
 
     // Print
-    const printTemplate = document.getElementById('printTemplate').innerHTML;
     const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>Prescription - {{ appointment.patient.full_name }}</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                h2, h4 { color: #333; }
-                p { margin: 10px 0; }
-            </style>
-        </head>
-        <body>
-            ${printTemplate}
-        </body>
-        </html>
-    `);
+    printWindow.document.write('<html><head><title>Comprehensive Doctor Prescription</title>');
+    printWindow.document.write('<style>body { font-family: Arial, sans-serif; line-height: 1.6; } h4 { color: #2c3e50; margin-bottom: 5px; }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(document.querySelector('#printTemplate').innerHTML);
+    printWindow.document.write('</body></html>');
     printWindow.document.close();
+    printWindow.focus();
     printWindow.print();
 }
 </script>
-{% endblock %}
-
-{% block extra_css %}
-<style>
-    .avatar-circle {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-    }
-    
-    .card-header h6 {
-        margin: 0;
-        font-weight: 600;
-    }
-    
-    .form-label.fw-bold {
-        color: #495057;
-        margin-bottom: 5px;
-    }
-    
-    .card-body .row:last-child .mb-3 {
-        margin-bottom: 0 !important;
-    }
-    
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        #printTemplate, #printTemplate * {
-            visibility: visible;
-        }
-        #printTemplate {
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: block !important;
-        }
-    }
-</style>
 {% endblock %}
