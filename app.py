@@ -62,47 +62,50 @@ from routes import *
 
 # Create database tables
 with app.app_context():
-    # Drop all tables and recreate them to fix schema issues
-    db.drop_all()
+    # Create tables if they don't exist (preserves existing data)
     db.create_all()
-    print('Database tables recreated')
+    print('Database tables initialized')
 
-    # Create default accounts
+    # Create default accounts only if they don't exist
     from models import Doctor, Assistant
     from datetime import date
 
-    # Create doctor account
-    doctor = Doctor(
-        username='drricha',
-        email='drricha@eyeclinic.com',
-        full_name='Dr. Richa Sharma',
-        mobile_number='9876543210',
-        qualifications='MBBS, MS, FPOS',
-        specialization='Ophthalmology, Pediatric Eye Care'
-    )
-    doctor.set_password('admin123')
-    db.session.add(doctor)
-    print('Default doctor account created')
+    # Create doctor account if it doesn't exist
+    doctor = Doctor.query.filter_by(username='drricha').first()
+    if not doctor:
+        doctor = Doctor(
+            username='drricha',
+            email='drricha@eyeclinic.com',
+            full_name='Dr. Richa Sharma',
+            mobile_number='9876543210',
+            qualifications='MBBS, MS, FPOS',
+            specialization='Ophthalmology, Pediatric Eye Care'
+        )
+        doctor.set_password('admin123')
+        db.session.add(doctor)
+        print('Default doctor account created')
 
-    # Create optometrist account
-    assistant = Assistant(
-        username='assistant',
-        email='assistant@eyeclinic.com',
-        full_name='Clinic Optometrist',
-        mobile_number='9876543211',
-        position='Optometrist',
-        joining_date=date.today()
-    )
-    assistant.set_password('assistant123')
-    db.session.add(assistant)
-    print('Default optometrist account created')
+    # Create optometrist account if it doesn't exist
+    assistant = Assistant.query.filter_by(username='assistant').first()
+    if not assistant:
+        assistant = Assistant(
+            username='assistant',
+            email='assistant@eyeclinic.com',
+            full_name='Clinic Optometrist',
+            mobile_number='9876543211',
+            position='Optometrist',
+            joining_date=date.today()
+        )
+        assistant.set_password('assistant123')
+        db.session.add(assistant)
+        print('Default optometrist account created')
 
     try:
         db.session.commit()
-        print('Default accounts created successfully')
+        print('Default accounts initialized successfully')
     except Exception as e:
         db.session.rollback()
-        print(f'Error creating default accounts: {str(e)}')
+        print(f'Error initializing default accounts: {str(e)}')
 
 # Register error handlers
 @app.errorhandler(404)
