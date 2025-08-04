@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,56 +9,102 @@
                 font-family: 'Arial', sans-serif;
                 margin: 0;
                 padding: 20px;
-                line-height: 1.6;
+                line-height: 1.4;
                 color: #333;
+                font-size: 12px;
             }
             .header {
                 text-align: center;
-                padding: 20px 0;
+                padding: 15px 0;
                 border-bottom: 2px solid #1a73e8;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
             }
             .header h1 {
                 color: #1a73e8;
                 margin: 0;
-                font-size: 24px;
+                font-size: 20px;
             }
             .clinic-info {
-                font-size: 14px;
+                font-size: 12px;
                 color: #666;
-                margin-top: 10px;
+                margin-top: 8px;
             }
             .patient-info {
                 background: #f8f9fa;
-                padding: 20px;
-                border-radius: 8px;
-                margin-bottom: 30px;
-            }
-            .findings-section {
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 20px;
                 display: flex;
                 justify-content: space-between;
-                margin: 20px 0;
-                gap: 20px;
             }
-            .eye-findings {
-                flex: 1;
+            .prescription-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin: 15px 0;
+            }
+            .section {
                 border: 1px solid #dee2e6;
-                padding: 15px;
-                border-radius: 8px;
+                padding: 12px;
+                border-radius: 5px;
+                break-inside: avoid;
             }
             .section-title {
                 color: #1a73e8;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: bold;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
                 border-bottom: 1px solid #dee2e6;
-                padding-bottom: 5px;
+                padding-bottom: 3px;
+            }
+            .field-row {
+                display: flex;
+                justify-content: space-between;
+                margin: 3px 0;
+                font-size: 11px;
+            }
+            .field-label {
+                font-weight: bold;
+                color: #555;
+            }
+            .eye-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin: 10px 0;
+            }
+            .eye-box {
+                border: 1px solid #ccc;
+                padding: 8px;
+                border-radius: 3px;
+                text-align: center;
+            }
+            .eye-title {
+                font-weight: bold;
+                color: #1a73e8;
+                margin-bottom: 5px;
+            }
+            .prescription-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 10px 0;
+                font-size: 10px;
+            }
+            .prescription-table th,
+            .prescription-table td {
+                border: 1px solid #ccc;
+                padding: 4px;
+                text-align: center;
+            }
+            .prescription-table th {
+                background: #f0f0f0;
+                font-weight: bold;
             }
             .footer {
-                margin-top: 50px;
+                margin-top: 30px;
                 text-align: right;
                 border-top: 1px solid #dee2e6;
-                padding-top: 20px;
+                padding-top: 15px;
             }
             .signature {
                 font-weight: bold;
@@ -65,6 +112,9 @@
             }
             .no-print {
                 display: none;
+            }
+            .full-width {
+                grid-column: 1 / -1;
             }
         }
     </style>
@@ -74,38 +124,403 @@
         <h1>Dr. Richa's Eye Clinic</h1>
         <div class="clinic-info">
             First floor, DVR Town Centre, near to IGUS private limited,<br>
-            Mandur, Budigere Road (New Airport Road),<br>
-            Bengaluru, Karnataka 560049
+            Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
         </div>
     </div>
 
     <div class="patient-info">
-        <div class="section-title">Patient Information</div>
-        <p><strong>Name:</strong> {{ prescription.patient.full_name }}</p>
-        <p><strong>Age:</strong> {{ prescription.patient.age }} years</p>
-        <p><strong>Contact:</strong> {{ prescription.patient.mobile_number }}</p>
-        <p><strong>Date:</strong> {{ prescription.prescription_date.strftime('%d %B, %Y') }}</p>
-        <p><strong>Issue/Complaint:</strong> {{ prescription.vision_test }}</p>
+        <div>
+            <div class="section-title">Patient Information</div>
+            <div class="field-row">
+                <span class="field-label">Name:</span>
+                <span>{{ prescription.patient.full_name }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Age:</span>
+                <span>{{ prescription.patient.age }} years</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Sex:</span>
+                <span>{{ prescription.patient.sex or 'Not specified' }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Contact:</span>
+                <span>{{ prescription.patient.mobile_number }}</span>
+            </div>
+        </div>
+        <div>
+            <div class="section-title">Visit Details</div>
+            <div class="field-row">
+                <span class="field-label">Visit Date:</span>
+                <span>{{ prescription.visit_date.strftime('%d %B, %Y') if prescription.visit_date else 'Not specified' }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Prescription Date:</span>
+                <span>{{ prescription.prescription_date.strftime('%d %B, %Y') }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Branch:</span>
+                <span>{{ prescription.branch or 'Dr. Richa\'s Eye Clinic' }}</span>
+            </div>
+        </div>
     </div>
 
-    <div class="findings-section">
-        <div class="eye-findings">
-            <div class="section-title">Left Eye Findings</div>
-            <p>{{ prescription.eye_power }}</p>
+    <div class="prescription-grid">
+        <!-- Present Complaints -->
+        {% if prescription.present_complaints %}
+        <div class="section full-width">
+            <div class="section-title">Present Complaints</div>
+            <p>{{ prescription.present_complaints }}</p>
         </div>
-        <div class="eye-findings">
-            <div class="section-title">Right Eye Findings</div>
-            <p>{{ prescription.recommendations }}</p>
+        {% endif %}
+
+        <!-- Vision Assessment -->
+        <div class="section full-width">
+            <div class="section-title">Vision Assessment</div>
+            <div class="eye-section">
+                <div class="eye-box">
+                    <div class="eye-title">Right Eye (RE)</div>
+                    <div class="field-row">
+                        <span class="field-label">Distance:</span>
+                        <span>{{ prescription.vision_distance_re or 'N/A' }}</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Near:</span>
+                        <span>{{ prescription.vision_near_re or 'N/A' }}</span>
+                    </div>
+                </div>
+                <div class="eye-box">
+                    <div class="eye-title">Left Eye (LE)</div>
+                    <div class="field-row">
+                        <span class="field-label">Distance:</span>
+                        <span>{{ prescription.vision_distance_le or 'N/A' }}</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Near:</span>
+                        <span>{{ prescription.vision_near_le or 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Current Medication -->
+        {% if prescription.current_medication_name %}
+        <div class="section">
+            <div class="section-title">Current Medication</div>
+            <div class="field-row">
+                <span class="field-label">Type:</span>
+                <span>{{ prescription.current_medication_type or 'N/A' }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Name:</span>
+                <span>{{ prescription.current_medication_name }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Dosage:</span>
+                <span>{{ prescription.current_medication_dosage or 'N/A' }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Eye:</span>
+                <span>{{ prescription.current_medication_eye or 'N/A' }}</span>
+            </div>
+            {% if prescription.current_medication_remarks %}
+            <div class="field-row">
+                <span class="field-label">Remarks:</span>
+                <span>{{ prescription.current_medication_remarks }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- IOP Details -->
+        {% if prescription.iop_method %}
+        <div class="section">
+            <div class="section-title">IOP Measurements</div>
+            <div class="field-row">
+                <span class="field-label">Time:</span>
+                <span>{{ prescription.iop_time or 'N/A' }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">Method:</span>
+                <span>{{ prescription.iop_method }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">OD:</span>
+                <span>{{ prescription.iop_od or 'N/A' }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">OS:</span>
+                <span>{{ prescription.iop_os or 'N/A' }}</span>
+            </div>
+            {% if prescription.iop_dl %}
+            <div class="field-row">
+                <span class="field-label">DL:</span>
+                <span>{{ prescription.iop_dl }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.iop_pachy %}
+            <div class="field-row">
+                <span class="field-label">Pachy:</span>
+                <span>{{ prescription.iop_pachy }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.iop_remarks %}
+            <div class="field-row">
+                <span class="field-label">Remarks:</span>
+                <span>{{ prescription.iop_remarks }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 
-    <div class="additional-notes">
-        <div class="section-title">Additional Notes</div>
-        <p>{{ prescription.notes }}</p>
+    <!-- Prescription Tables -->
+    {% if prescription.undilated_re_sph or prescription.undilated_le_sph %}
+    <div class="section full-width">
+        <div class="section-title">Undilated Acceptance</div>
+        <table class="prescription-table">
+            <thead>
+                <tr>
+                    <th>Eye</th>
+                    <th>Sph</th>
+                    <th>Cyl</th>
+                    <th>Axis</th>
+                    <th>Prism</th>
+                    <th>VA</th>
+                    <th>NV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>RE</strong></td>
+                    <td>{{ prescription.undilated_re_sph or '-' }}</td>
+                    <td>{{ prescription.undilated_re_cyl or '-' }}</td>
+                    <td>{{ prescription.undilated_re_axis or '-' }}</td>
+                    <td>{{ prescription.undilated_re_prism or '-' }}</td>
+                    <td>{{ prescription.undilated_re_va or '-' }}</td>
+                    <td>{{ prescription.undilated_re_nv or '-' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>LE</strong></td>
+                    <td>{{ prescription.undilated_le_sph or '-' }}</td>
+                    <td>{{ prescription.undilated_le_cyl or '-' }}</td>
+                    <td>{{ prescription.undilated_le_axis or '-' }}</td>
+                    <td>{{ prescription.undilated_le_prism or '-' }}</td>
+                    <td>{{ prescription.undilated_le_va or '-' }}</td>
+                    <td>{{ prescription.undilated_le_nv or '-' }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+    {% endif %}
+
+    {% if prescription.dilated_re_sph or prescription.dilated_le_sph %}
+    <div class="section full-width">
+        <div class="section-title">Dilated Acceptance</div>
+        <table class="prescription-table">
+            <thead>
+                <tr>
+                    <th>Eye</th>
+                    <th>Sph</th>
+                    <th>Cyl</th>
+                    <th>Axis</th>
+                    <th>Prism</th>
+                    <th>VA</th>
+                    <th>NV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>RE</strong></td>
+                    <td>{{ prescription.dilated_re_sph or '-' }}</td>
+                    <td>{{ prescription.dilated_re_cyl or '-' }}</td>
+                    <td>{{ prescription.dilated_re_axis or '-' }}</td>
+                    <td>{{ prescription.dilated_re_prism or '-' }}</td>
+                    <td>{{ prescription.dilated_re_va or '-' }}</td>
+                    <td>{{ prescription.dilated_re_nv or '-' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>LE</strong></td>
+                    <td>{{ prescription.dilated_le_sph or '-' }}</td>
+                    <td>{{ prescription.dilated_le_cyl or '-' }}</td>
+                    <td>{{ prescription.dilated_le_axis or '-' }}</td>
+                    <td>{{ prescription.dilated_le_prism or '-' }}</td>
+                    <td>{{ prescription.dilated_le_va or '-' }}</td>
+                    <td>{{ prescription.dilated_le_nv or '-' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if prescription.final_re_sph or prescription.final_le_sph %}
+    <div class="section full-width">
+        <div class="section-title">Final Glasses Prescription</div>
+        <table class="prescription-table">
+            <thead>
+                <tr>
+                    <th>Eye</th>
+                    <th>Sph</th>
+                    <th>Cyl</th>
+                    <th>Axis</th>
+                    <th>Prism</th>
+                    <th>VA</th>
+                    <th>NV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>RE</strong></td>
+                    <td>{{ prescription.final_re_sph or '-' }}</td>
+                    <td>{{ prescription.final_re_cyl or '-' }}</td>
+                    <td>{{ prescription.final_re_axis or '-' }}</td>
+                    <td>{{ prescription.final_re_prism or '-' }}</td>
+                    <td>{{ prescription.final_re_va or '-' }}</td>
+                    <td>{{ prescription.final_re_nv or '-' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>LE</strong></td>
+                    <td>{{ prescription.final_le_sph or '-' }}</td>
+                    <td>{{ prescription.final_le_cyl or '-' }}</td>
+                    <td>{{ prescription.final_le_axis or '-' }}</td>
+                    <td>{{ prescription.final_le_prism or '-' }}</td>
+                    <td>{{ prescription.final_le_va or '-' }}</td>
+                    <td>{{ prescription.final_le_nv or '-' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if prescription.old_distance_re_sph or prescription.old_distance_le_sph %}
+    <div class="section full-width">
+        <div class="section-title">Old Glasses</div>
+        <table class="prescription-table">
+            <thead>
+                <tr>
+                    <th>Eye</th>
+                    <th>Sph</th>
+                    <th>Cyl</th>
+                    <th>Axis</th>
+                    <th>VA</th>
+                    <th>Add</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>RE</strong></td>
+                    <td>{{ prescription.old_distance_re_sph or '-' }}</td>
+                    <td>{{ prescription.old_distance_re_cyl or '-' }}</td>
+                    <td>{{ prescription.old_distance_re_axis or '-' }}</td>
+                    <td>{{ prescription.old_distance_re_va or '-' }}</td>
+                    <td>{{ prescription.old_add_re or '-' }}</td>
+                </tr>
+                <tr>
+                    <td><strong>LE</strong></td>
+                    <td>{{ prescription.old_distance_le_sph or '-' }}</td>
+                    <td>{{ prescription.old_distance_le_cyl or '-' }}</td>
+                    <td>{{ prescription.old_distance_le_axis or '-' }}</td>
+                    <td>{{ prescription.old_distance_le_va or '-' }}</td>
+                    <td>{{ prescription.old_add_le or '-' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <div class="prescription-grid">
+        <!-- Glass Type and Lens Details -->
+        {% if prescription.type_of_glasses or prescription.product %}
+        <div class="section">
+            <div class="section-title">Glass & Lens Details</div>
+            {% if prescription.type_of_glasses %}
+            <div class="field-row">
+                <span class="field-label">Type of Glasses:</span>
+                <span>{{ prescription.type_of_glasses }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.glass_usage %}
+            <div class="field-row">
+                <span class="field-label">Usage:</span>
+                <span>{{ prescription.glass_usage }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.product %}
+            <div class="field-row">
+                <span class="field-label">Product:</span>
+                <span>{{ prescription.product }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.type_of_lens %}
+            <div class="field-row">
+                <span class="field-label">Type of Lens:</span>
+                <span>{{ prescription.type_of_lens }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.lens_material %}
+            <div class="field-row">
+                <span class="field-label">Lens Material:</span>
+                <span>{{ prescription.lens_material }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Additional Information -->
+        {% if prescription.gp_advised_by or prescription.opto_student %}
+        <div class="section">
+            <div class="section-title">Additional Information</div>
+            {% if prescription.gp_advised_by %}
+            <div class="field-row">
+                <span class="field-label">GP Advised By:</span>
+                <span>{{ prescription.gp_advised_by }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.opto_student %}
+            <div class="field-row">
+                <span class="field-label">Opto Student:</span>
+                <span>{{ prescription.opto_student }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Keratometer Readings -->
+    {% if prescription.keratometer_readings %}
+    <div class="section full-width">
+        <div class="section-title">Keratometer Readings</div>
+        <p>{{ prescription.keratometer_readings }}</p>
+    </div>
+    {% endif %}
+
+    <!-- General Remarks and Recommendations -->
+    {% if prescription.general_remarks or prescription.recommendations or prescription.notes %}
+    <div class="section full-width">
+        <div class="section-title">Remarks & Recommendations</div>
+        {% if prescription.general_remarks %}
+        <div style="margin-bottom: 10px;">
+            <strong>General Remarks:</strong><br>
+            {{ prescription.general_remarks }}
+        </div>
+        {% endif %}
+        {% if prescription.recommendations %}
+        <div style="margin-bottom: 10px;">
+            <strong>Recommendations:</strong><br>
+            {{ prescription.recommendations }}
+        </div>
+        {% endif %}
+        {% if prescription.notes %}
+        <div>
+            <strong>Additional Notes:</strong><br>
+            {{ prescription.notes }}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
 
     <div class="footer">
-        <p class="signature">{{ current_user.full_name }}</p>
+        <p class="signature">{{ prescription.assistant.full_name if prescription.assistant else 'Optometrist' }}</p>
         <p>Optometrist<br>
         Dr. Richa's Eye Clinic</p>
     </div>
