@@ -240,38 +240,38 @@
                                             <div class="accordion-body">
                                                 <div class="mb-4">
                                                     <h6 class="border-bottom pb-2 mb-3">Diagnosis</h6>
-                                                    <p>{{ appointment.medical_record[0].diagnosis or 'No diagnosis recorded.' }}</p>
+                                                    <p>{{ appointment.medical_record.diagnosis or 'No diagnosis recorded.' }}</p>
                                                 </div>
 
                                                 <div class="row mb-4">
                                                     <div class="col-md-6">
                                                         <h6 class="border-bottom pb-2 mb-3">Left Eye Findings</h6>
-                                                        <p>{{ appointment.medical_record[0].left_eye_findings or 'No findings recorded.' }}</p>
+                                                        <p>{{ appointment.medical_record.left_eye_findings or 'No findings recorded.' }}</p>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <h6 class="border-bottom pb-2 mb-3">Right Eye Findings</h6>
-                                                        <p>{{ appointment.medical_record[0].right_eye_findings or 'No findings recorded.' }}</p>
+                                                        <p>{{ appointment.medical_record.right_eye_findings or 'No findings recorded.' }}</p>
                                                     </div>
                                                 </div>
 
                                                 <div class="mb-4">
                                                     <h6 class="border-bottom pb-2 mb-3">Prescribed Medications</h6>
-                                                    <p>{{ appointment.medical_record[0].prescribed_medications or 'No medications prescribed.' }}</p>
+                                                    <p>{{ appointment.medical_record.prescribed_medications or 'No medications prescribed.' }}</p>
                                                 </div>
 
                                                 <div class="mb-4">
                                                     <h6 class="border-bottom pb-2 mb-3">Prescribed Eyewear</h6>
-                                                    <p>{{ appointment.medical_record[0].prescribed_eyewear or 'No eyewear prescribed.' }}</p>
+                                                    <p>{{ appointment.medical_record.prescribed_eyewear or 'No eyewear prescribed.' }}</p>
                                                 </div>
 
                                                 <div class="mb-4">
                                                     <h6 class="border-bottom pb-2 mb-3">Follow-up Instructions</h6>
-                                                    <p>{{ appointment.medical_record[0].follow_up_instructions or 'No follow-up instructions provided.' }}</p>
+                                                    <p>{{ appointment.medical_record.follow_up_instructions or 'No follow-up instructions provided.' }}</p>
                                                 </div>
 
                                                 <div>
                                                     <h6 class="border-bottom pb-2 mb-3">Next Appointment Recommendation</h6>
-                                                    <p>{{ appointment.medical_record[0].next_appointment_recommendation or 'No recommendation for next appointment.' }}</p>
+                                                    <p>{{ appointment.medical_record.next_appointment_recommendation or 'No recommendation for next appointment.' }}</p>
                                                 </div>
                                             </div>
                                         </div>
