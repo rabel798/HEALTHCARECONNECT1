@@ -9,6 +9,7 @@ class Patient(UserMixin, db.Model):
     mobile_number = db.Column(db.String(15), nullable=False)
     email = db.Column(db.String(100), nullable=True)
     age = db.Column(db.Integer, nullable=False)
+    sex = db.Column(db.String(10), nullable=True)
     password_hash = db.Column(db.String(256), nullable=True)
     is_registered = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

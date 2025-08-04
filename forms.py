@@ -8,6 +8,7 @@ class AppointmentForm(FlaskForm):
     consultation_fee = IntegerField('Consultation Fee', validators=[Optional()], default=500)
     email = StringField('Email', validators=[Optional(), Email(), Length(max=100)])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
+    sex = SelectField('Sex', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], validators=[DataRequired()])
     appointment_date = DateField('Appointment Date', validators=[DataRequired()])
     appointment_time = TimeField('Appointment Time', validators=[DataRequired()])
     primary_issue = TextAreaField('Primary Eye Issue', validators=[Optional(), Length(max=500)])
@@ -80,6 +81,7 @@ class PatientRegistrationForm(FlaskForm):
     mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
     email = StringField('Email', validators=[Optional(), Length(max=100)])  # Removed Email() validator
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
+    sex = SelectField('Sex', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], validators=[DataRequired()])
     primary_issue = TextAreaField('Primary Issue', validators=[Optional()])
     password = PasswordField('Password', validators=[Optional(), Length(min=8, max=128)])  # Made optional for walk-ins
     confirm_password = PasswordField('Confirm Password', validators=[Optional(), EqualTo('password')])  # Made optional

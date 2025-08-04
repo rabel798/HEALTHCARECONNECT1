@@ -98,7 +98,8 @@ def appointment():
                     full_name=form.full_name.data,
                     mobile_number=form.mobile_number.data,
                     email=form.email.data,
-                    age=form.age.data
+                    age=form.age.data,
+                    sex=form.sex.data
                 )
                 db.session.add(patient)
                 db.session.flush()  # To get the patient ID before commit
@@ -275,6 +276,7 @@ def patient_register():
                 'mobile_number': form.mobile_number.data,
                 'email': form.email.data,
                 'age': form.age.data,
+                'sex': form.sex.data,
                 'password': form.password.data
             }
 
@@ -350,6 +352,7 @@ def verify_otp(email):
             mobile_number=registration_data['mobile_number'],
             email=registration_data['email'],
             age=registration_data['age'],
+            sex=registration_data['sex'],
             is_registered=True
         )
         new_patient.set_password(registration_data['password'])
@@ -1276,6 +1279,7 @@ def assistant_add_patient():
                 mobile_number=form.mobile_number.data,
                 email=form.email.data,
                 age=form.age.data,
+                sex=form.sex.data,
                 is_registered=False
             )
             db.session.add(new_patient)

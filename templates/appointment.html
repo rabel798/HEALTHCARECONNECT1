@@ -58,6 +58,14 @@
                         </div>
                         
                         <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="sex" class="form-label">Sex <span class="text-danger">*</span></label>
+                                {{ form.sex(class="form-control", required=true) }}
+                                <div class="invalid-feedback">Please select your sex.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label for="appointment_date" class="form-label">Preferred Date <span class="text-danger">*</span></label>
                                 <div class="input-group">
