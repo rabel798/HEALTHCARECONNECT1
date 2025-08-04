@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Add Prescription - Dr. Richa's Eye Clinic{% endblock %}
@@ -46,12 +47,12 @@
                 </div>
                 
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">
                             {% if is_edit %}
-                            Edit Prescription & Medical Record
+                            Edit Comprehensive Prescription & Medical Record
                             {% else %}
-                            Add Prescription & Medical Record
+                            Add Comprehensive Prescription & Medical Record
                             {% endif %}
                         </h5>
                     </div>
@@ -70,97 +71,186 @@
                             <p class="mb-0 mt-2"><strong>Primary Issue:</strong> {{ appointment.primary_issue or 'Not specified' }}</p>
                         </div>
                         
-                        <form method="POST" action="{{ url_for('admin_add_prescription', appointment_id=appointment.id) }}">
+                        <form method="POST" action="{{ url_for('admin_add_prescription', appointment_id=appointment.id) }}" id="prescriptionForm">
                             {{ form.hidden_tag() }}
                             
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Diagnosis</label>
-                                {{ form.diagnosis(class="form-control", rows=3) }}
-                                {% if form.diagnosis.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.diagnosis.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Left Eye Findings</label>
-                                    {{ form.left_eye_findings(class="form-control", rows=3) }}
-                                    {% if form.left_eye_findings.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.left_eye_findings.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
+                            <!-- Clinical Information Section -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-secondary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Clinical Information</h6>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Right Eye Findings</label>
-                                    {{ form.right_eye_findings(class="form-control", rows=3) }}
-                                    {% if form.right_eye_findings.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.right_eye_findings.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Chief Complaints</label>
+                                            {{ form.complaints(class="form-control", rows=3) }}
                                         </div>
-                                    {% endif %}
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">History</label>
+                                            {{ form.history(class="form-control", rows=3) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Examination Notes</label>
+                                            {{ form.examination_notes(class="form-control", rows=3) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Diagnosis *</label>
+                                            {{ form.diagnosis(class="form-control", rows=3) }}
+                                            {% if form.diagnosis.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.diagnosis.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Eye Examination Section -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-eye me-2"></i>Eye Examination Findings</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Left Eye Findings</label>
+                                            {{ form.left_eye_findings(class="form-control", rows=4) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Right Eye Findings</label>
+                                            {{ form.right_eye_findings(class="form-control", rows=4) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Investigation & Assessment Section -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0"><i class="fas fa-search me-2"></i>Investigation & Assessment</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label fw-bold">Investigation</label>
+                                            {{ form.investigation(class="form-control", rows=3) }}
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label fw-bold">Fall Risk Assessment</label>
+                                            {{ form.fall_risk(class="form-control", rows=3) }}
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label fw-bold">Immunization Status</label>
+                                            {{ form.immunization(class="form-control", rows=3) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Treatment Plan Section -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-pills me-2"></i>Treatment Plan</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Medications *</label>
+                                            {{ form.medications(class="form-control", rows=4) }}
+                                            {% if form.medications.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.medications.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Prognosis</label>
+                                            {{ form.prognosis(class="form-control", rows=4) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Nutritional Advice</label>
+                                            {{ form.nutritional_advice(class="form-control", rows=3) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Plan of Care</label>
+                                            {{ form.plan_of_care(class="form-control", rows=3) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Instructions & Follow-up Section -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Instructions & Follow-up</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Instructions *</label>
+                                            {{ form.instructions(class="form-control", rows=4) }}
+                                            {% if form.instructions.errors %}
+                                                <div class="text-danger">
+                                                    {% for error in form.instructions.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Follow Up</label>
+                                            {{ form.follow_up(class="form-control", rows=4) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Referral Reason</label>
+                                            {{ form.referral_reason(class="form-control", rows=3) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Referred to CC</label>
+                                            {{ form.referred_to_cc(class="form-control") }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Notes Section -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-dark text-white">
+                                    <h6 class="mb-0"><i class="fas fa-notes-medical me-2"></i>Additional Notes</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Comments</label>
+                                            {{ form.comments(class="form-control", rows=4) }}
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label fw-bold">Remarks for Counselor</label>
+                                            {{ form.remarks_for_counselor(class="form-control", rows=4) }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Prescribed Medications</label>
-                                {{ form.prescribed_medications(class="form-control", rows=3) }}
-                                {% if form.prescribed_medications.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.prescribed_medications.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Prescribed Eyewear</label>
-                                {{ form.prescribed_eyewear(class="form-control", rows=3) }}
-                                {% if form.prescribed_eyewear.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.prescribed_eyewear.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Follow-up Instructions</label>
-                                {{ form.follow_up_instructions(class="form-control", rows=3) }}
-                                {% if form.follow_up_instructions.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.follow_up_instructions.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">Next Appointment Recommendation</label>
-                                {{ form.next_appointment_recommendation(class="form-control") }}
-                                {% if form.next_appointment_recommendation.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.next_appointment_recommendation.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a href="{{ url_for('admin_appointment_view', appointment_id=appointment.id) }}" class="btn btn-outline-secondary me-md-2">Cancel</a>
-                                {{ form.submit(class="btn btn-primary") }}
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                                    <a href="{{ url_for('admin_appointment_view', appointment_id=appointment.id) }}" class="btn btn-secondary btn-lg ms-2">Cancel</a>
+                                </div>
+                                <button type="button" class="btn btn-info btn-lg" onclick="printPrescription()">
+                                    <i class="fas fa-print me-1"></i> Print Preview
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -168,7 +258,93 @@
             </div>
         </div>
     </div>
+
+    <!-- Print Template (Hidden) -->
+    <div id="printTemplate" style="display: none;">
+        <div style="padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2>Dr. Richa's Eye Clinic</h2>
+                <p>First floor, DVR Town Centre, Mandur, Budigere Road</p>
+                <p>Bengaluru, Karnataka 560049</p>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <div style="float: left;">
+                    <p><strong>Patient:</strong> {{ appointment.patient.full_name }}</p>
+                    <p><strong>Age:</strong> {{ appointment.patient.age }} years</p>
+                </div>
+                <div style="float: right;">
+                    <p><strong>Date:</strong> {{ appointment.appointment_date.strftime('%d-%m-%Y') }}</p>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+
+            <div id="printContent"></div>
+        </div>
+    </div>
 </section>
+
+<script>
+function printPrescription() {
+    // Get form data
+    const formData = new FormData(document.getElementById('prescriptionForm'));
+    let printContent = '';
+
+    // Clinical Information
+    if (formData.get('complaints') || formData.get('history') || formData.get('examination_notes') || formData.get('diagnosis')) {
+        printContent += '<h4>Clinical Information</h4>';
+        if (formData.get('complaints')) printContent += `<p><strong>Chief Complaints:</strong> ${formData.get('complaints')}</p>`;
+        if (formData.get('history')) printContent += `<p><strong>History:</strong> ${formData.get('history')}</p>`;
+        if (formData.get('examination_notes')) printContent += `<p><strong>Examination Notes:</strong> ${formData.get('examination_notes')}</p>`;
+        if (formData.get('diagnosis')) printContent += `<p><strong>Diagnosis:</strong> ${formData.get('diagnosis')}</p>`;
+    }
+
+    // Eye Examination
+    if (formData.get('left_eye_findings') || formData.get('right_eye_findings')) {
+        printContent += '<h4>Eye Examination Findings</h4>';
+        if (formData.get('left_eye_findings')) printContent += `<p><strong>Left Eye:</strong> ${formData.get('left_eye_findings')}</p>`;
+        if (formData.get('right_eye_findings')) printContent += `<p><strong>Right Eye:</strong> ${formData.get('right_eye_findings')}</p>`;
+    }
+
+    // Treatment Plan
+    if (formData.get('medications') || formData.get('prognosis')) {
+        printContent += '<h4>Treatment Plan</h4>';
+        if (formData.get('medications')) printContent += `<p><strong>Medications:</strong> ${formData.get('medications')}</p>`;
+        if (formData.get('prognosis')) printContent += `<p><strong>Prognosis:</strong> ${formData.get('prognosis')}</p>`;
+    }
+
+    // Instructions
+    if (formData.get('instructions') || formData.get('follow_up')) {
+        printContent += '<h4>Instructions & Follow-up</h4>';
+        if (formData.get('instructions')) printContent += `<p><strong>Instructions:</strong> ${formData.get('instructions')}</p>`;
+        if (formData.get('follow_up')) printContent += `<p><strong>Follow Up:</strong> ${formData.get('follow_up')}</p>`;
+    }
+
+    // Set the print content
+    document.getElementById('printContent').innerHTML = printContent;
+
+    // Print
+    const printTemplate = document.getElementById('printTemplate').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Prescription - {{ appointment.patient.full_name }}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h2, h4 { color: #333; }
+                p { margin: 10px 0; }
+            </style>
+        </head>
+        <body>
+            ${printTemplate}
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+</script>
 {% endblock %}
 
 {% block extra_css %}
@@ -181,6 +357,35 @@
         align-items: center;
         justify-content: center;
         margin: 0 auto;
+    }
+    
+    .card-header h6 {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .form-label.fw-bold {
+        color: #495057;
+        margin-bottom: 5px;
+    }
+    
+    .card-body .row:last-child .mb-3 {
+        margin-bottom: 0 !important;
+    }
+    
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #printTemplate, #printTemplate * {
+            visibility: visible;
+        }
+        #printTemplate {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: block !important;
+        }
     }
 </style>
 {% endblock %}

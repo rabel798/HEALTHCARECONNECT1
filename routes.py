@@ -1047,7 +1047,7 @@ def admin_add_prescription(appointment_id):
         db.session.flush()
         print("Created new medical record")  # Debug log
 
-    form = PrescriptionForm(obj=medical_record)
+    form = DoctorPrescriptionForm(obj=medical_record)
 
     if form.validate_on_submit():
         print("Form validated successfully")  # Debug log
@@ -1071,17 +1071,38 @@ def admin_add_prescription(appointment_id):
                 db.session.flush()
                 print(f"Created default doctor with ID: {doctor.id}")
 
-            # Create a DoctorPrescription record
+            # Create a comprehensive DoctorPrescription record
             doctor_prescription = DoctorPrescription(
                 patient_id=appointment.patient_id,
-                doctor_id=doctor.id,  # Always use the default doctor's ID
+                doctor_id=doctor.id,
                 prescription_date=datetime.utcnow(),
+                # Clinical information
+                complaints=form.complaints.data,
+                history=form.history.data,
+                examination_notes=form.examination_notes.data,
                 diagnosis=form.diagnosis.data,
-                medications=form.prescribed_medications.data,
-                instructions=form.follow_up_instructions.data,
-                follow_up=form.next_appointment_recommendation.data
+                # Eye examination findings
+                left_eye_findings=form.left_eye_findings.data,
+                right_eye_findings=form.right_eye_findings.data,
+                # Investigation and assessment
+                investigation=form.investigation.data,
+                fall_risk=form.fall_risk.data,
+                immunization=form.immunization.data,
+                # Treatment plan
+                medications=form.medications.data,
+                prognosis=form.prognosis.data,
+                nutritional_advice=form.nutritional_advice.data,
+                plan_of_care=form.plan_of_care.data,
+                # Instructions and follow-up
+                instructions=form.instructions.data,
+                follow_up=form.follow_up.data,
+                referral_reason=form.referral_reason.data,
+                referred_to_cc=form.referred_to_cc.data,
+                # Additional notes
+                comments=form.comments.data,
+                remarks_for_counselor=form.remarks_for_counselor.data
             )
-            print(f"Created doctor prescription for patient {appointment.patient_id} with doctor {doctor.id}")  # Debug log
+            print(f"Created comprehensive doctor prescription for patient {appointment.patient_id} with doctor {doctor.id}")  # Debug log
             db.session.add(doctor_prescription)
 
             # Update appointment status to completed
