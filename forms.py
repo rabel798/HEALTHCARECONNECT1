@@ -8,7 +8,7 @@ class AppointmentForm(FlaskForm):
     consultation_fee = IntegerField('Consultation Fee', validators=[Optional()], default=500)
     email = StringField('Email', validators=[Optional(), Email(), Length(max=100)])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
-    sex = SelectField('Sex', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], validators=[DataRequired()])
+    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
     appointment_date = DateField('Appointment Date', validators=[DataRequired()])
     appointment_time = TimeField('Appointment Time', validators=[DataRequired()])
     primary_issue = TextAreaField('Primary Eye Issue', validators=[Optional(), Length(max=500)])
@@ -81,7 +81,7 @@ class PatientRegistrationForm(FlaskForm):
     mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
     email = StringField('Email', validators=[Optional(), Length(max=100)])  # Removed Email() validator
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
-    sex = SelectField('Sex', choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], validators=[DataRequired()])
+    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
     primary_issue = TextAreaField('Primary Issue', validators=[Optional()])
     password = PasswordField('Password', validators=[Optional(), Length(min=8, max=128)])  # Made optional for walk-ins
     confirm_password = PasswordField('Confirm Password', validators=[Optional(), EqualTo('password')])  # Made optional
@@ -106,34 +106,34 @@ class DoctorPrescriptionForm(FlaskForm):
     # Examination findings
     left_eye_findings = TextAreaField('Left Eye Findings', validators=[Optional()])
     right_eye_findings = TextAreaField('Right Eye Findings', validators=[Optional()])
-    
+
     # Clinical information
     diagnosis = TextAreaField('Diagnosis', validators=[DataRequired()])
     complaints = TextAreaField('Chief Complaints', validators=[Optional()])
     history = TextAreaField('History', validators=[Optional()])
     examination_notes = TextAreaField('Examination Notes', validators=[Optional()])
-    
+
     # Investigation and tests
     investigation = TextAreaField('Investigation', validators=[Optional()])
     fall_risk = TextAreaField('Fall Risk Assessment', validators=[Optional()])
     immunization = TextAreaField('Immunization Status', validators=[Optional()])
-    
+
     # Treatment plan
     medications = TextAreaField('Medications', validators=[DataRequired()])
     prognosis = TextAreaField('Prognosis', validators=[Optional()])
     nutritional_advice = TextAreaField('Nutritional Advice', validators=[Optional()])
     plan_of_care = TextAreaField('Plan of Care', validators=[Optional()])
-    
+
     # Instructions and follow-up
     instructions = TextAreaField('Instructions', validators=[DataRequired()])
     follow_up = TextAreaField('Follow Up', validators=[Optional()])
     referral_reason = TextAreaField('Referral Reason', validators=[Optional()])
     referred_to_cc = StringField('Referred to CC', validators=[Optional()])
-    
+
     # Additional notes
     comments = TextAreaField('Comments', validators=[Optional()])
     remarks_for_counselor = TextAreaField('Remarks for Counselor', validators=[Optional()])
-    
+
     submit = SubmitField('Save Prescription')
 
 class OptometristPrescriptionForm(FlaskForm):
