@@ -104,3 +104,83 @@ function searchTable() {
 }
 </script>
 {% endblock %}
+{% extends 'layout.html' %}
+
+{% block title %}Doctor Prescriptions - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Prescription Management</h2>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Patients Available for Prescription</h5>
+            </div>
+            <div class="card-body">
+                {% if patients %}
+                    <div class="row">
+                        {% for patient in patients %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ patient.full_name }}</h6>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Age: {{ patient.age }} years<br>
+                                            Sex: {{ patient.sex|title if patient.sex else 'Not specified' }}<br>
+                                            Mobile: {{ patient.mobile_number }}
+                                        </small>
+                                    </p>
+                                    
+                                    <div class="btn-group w-100">
+                                        <a href="{{ url_for('doctor_add_prescription', patient_id=patient.id) }}" 
+                                           class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus"></i> Add Prescription
+                                        </a>
+                                        {% if patient.doctor_prescriptions %}
+                                        <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class="fas fa-print"></i> Print Previous
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            {% for prescription in patient.doctor_prescriptions|sort(attribute='prescription_date', reverse=true) %}
+                                            <li>
+                                                <a class="dropdown-item" href="{{ url_for('print_doctor_prescription', prescription_id=prescription.id) }}" target="_blank">
+                                                    {{ prescription.prescription_date.strftime('%d %b, %Y') }}
+                                                </a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if patient.doctor_prescriptions %}
+                                    <div class="mt-2">
+                                        <small class="text-success">
+                                            <i class="fas fa-check-circle"></i> 
+                                            {{ patient.doctor_prescriptions|length }} prescription(s) on file
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Patients Available</h5>
+                        <p class="text-muted">No completed appointments found for prescription management.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

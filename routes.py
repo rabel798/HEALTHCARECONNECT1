@@ -14,10 +14,7 @@ from wtforms.validators import DataRequired, Email
 from app import app, db
 from models import Patient, Appointment, MedicalRecord, Payment, Review, Admin, OTP, Doctor, Assistant, Salary, Treatment, DoctorPrescription, OptometristPrescription
 from forms import (
-    AppointmentForm, PaymentForm, ReviewForm, AdminLoginForm,
-    PatientLoginForm, PatientRegistrationForm, OTPVerificationForm,
-    PrescriptionForm, DoctorLoginForm, AssistantLoginForm, SalaryForm,
-    DoctorPrescriptionForm, OptometristPrescriptionForm
+    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm
 )
 import requests
 
@@ -29,7 +26,7 @@ def inject_now():
 @app.route('/')
 def index():
     """Home page route"""
-    
+
 
     # Fetch 3 most recent approved reviews
     recent_reviews = Review.query.filter_by(is_approved=True).order_by(desc(Review.created_at)).limit(3).all()
@@ -726,7 +723,7 @@ def assistant_dashboard():
     if not isinstance(current_user, Assistant):
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('index'))
-    
+
     try:
         # Get statistics
         today = datetime.now().date()
@@ -734,16 +731,16 @@ def assistant_dashboard():
             Appointment.appointment_date >= today,
             Appointment.status == 'scheduled'
         ).count()
-        
+
         total_appointments = Appointment.query.count()
         total_patients = Patient.query.count()
         prescriptions_count = OptometristPrescription.query.filter_by(assistant_id=current_user.id).count()
-        
+
         # Get salary records
         salary_records = Salary.query.filter_by(
             assistant_id=current_user.id
         ).order_by(desc(Salary.payment_date)).all()
-        
+
         return render_template(
             'assistant/optometrist_dashboard.html',
             upcoming_appointments=upcoming_appointments,
@@ -755,11 +752,11 @@ def assistant_dashboard():
     except Exception as e:
         flash(f'Error loading dashboard: {str(e)}', 'danger')
         return redirect(url_for('index'))
-        
+
     try:
         # Create form for CSRF token
         form = FlaskForm()
-        
+
         # Get all patients
         all_patients = Patient.query.order_by(Patient.full_name).all()
 
@@ -951,7 +948,7 @@ def admin_patient_view(patient_id):
     if not (isinstance(current_user, Admin) or isinstance(current_user, Assistant) or isinstance(current_user, Doctor)):
         flash('Access denied. Staff privileges required.', 'danger')
         return redirect(url_for('index'))
-        
+
     # Set return URL based on user role
     if isinstance(current_user, Assistant):
         return_url = url_for('assistant_dashboard')
@@ -1092,18 +1089,18 @@ def admin_add_prescription(appointment_id):
 
             db.session.commit()
             print("Successfully committed changes to database")  # Debug log
-            
+
             # Verify the prescription was saved
             saved_prescription = DoctorPrescription.query.filter_by(
                 patient_id=appointment.patient_id,
                 doctor_id=doctor.id
             ).order_by(DoctorPrescription.created_at.desc()).first()
-            
+
             if saved_prescription:
                 print(f"Verified prescription saved with ID: {saved_prescription.id}")
             else:
                 print("Warning: Could not verify prescription was saved")
-            
+
             if is_edit:
                 flash('Prescription updated successfully!', 'success')
             else:
@@ -1197,7 +1194,7 @@ def admin_reviews():
 def admin_approve_review(review_id):
     """Admin approve review route"""
     # Ensure only admins or assistants can access this page
-    if not (isinstance(current_user, Admin) or isinstance(current_user, Assistant) or isinstance(current_user, Doctor)):
+    if not (isinstance(current_user, Admin) or isinstance(current_user, Doctor) or isinstance(current_user, Assistant)):
         flash('Access denied. Staff privileges required.', 'danger')
         return redirect(url_for('index'))
 
@@ -1220,7 +1217,7 @@ def admin_approve_review(review_id):
 @login_required
 def admin_delete_review(review_id):
     """Admin delete review route"""
-    # Ensure only admins, doctors or assistants can access this page
+    # Ensure only admins or assistants can access this page
     if not (isinstance(current_user, Admin) or isinstance(current_user, Assistant) or isinstance(current_user, Doctor)):
         flash('Access denied. Staff privileges required.', 'danger')
         return redirect(url_for('index'))
@@ -1283,11 +1280,11 @@ def assistant_add_patient():
             )
             db.session.add(new_patient)
             db.session.flush()  # Get patient ID
-            
+
             # Create walk-in appointment for today
             today = datetime.now().date()
             current_time = datetime.now().time()
-            
+
             walk_in_appointment = Appointment(
                 patient_id=new_patient.id,
                 appointment_date=today,
@@ -1299,7 +1296,7 @@ def assistant_add_patient():
             )
             db.session.add(walk_in_appointment)
             db.session.flush()  # Get appointment ID
-            
+
             # Create payment record for revenue tracking
             walk_in_payment = Payment(
                 appointment_id=walk_in_appointment.id,
@@ -1308,7 +1305,7 @@ def assistant_add_patient():
                 status='completed'
             )
             db.session.add(walk_in_payment)
-            
+
             # Create treatment record for revenue tracking
             walk_in_treatment = Treatment(
                 patient_id=new_patient.id,
@@ -1318,11 +1315,11 @@ def assistant_add_patient():
                 notes=f'Walk-in patient added by {current_user.full_name}'
             )
             db.session.add(walk_in_treatment)
-            
+
             db.session.commit()
             flash('Walk-in patient added successfully and ₹500 consultation fee recorded!', 'success')
             return redirect(url_for('assistant_dashboard'))
-            
+
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding patient: {str(e)}', 'danger')
@@ -1338,7 +1335,7 @@ def doctor_prescriptions():
     if not isinstance(current_user, Doctor):
         flash('Access denied', 'danger')
         return redirect(url_for('index'))
-    
+
     all_patients = Patient.query.order_by(Patient.full_name).all()
     return render_template('doctor/prescriptions.html', all_patients=all_patients)
 
@@ -1348,10 +1345,10 @@ def doctor_add_prescription(patient_id):
     if not isinstance(current_user, Doctor):
         flash('Access denied', 'danger')
         return redirect(url_for('index'))
-    
+
     form = DoctorPrescriptionForm()
     patient = Patient.query.get_or_404(patient_id)
-    
+
     if form.validate_on_submit():
         prescription = DoctorPrescription(
             patient_id=patient_id,
@@ -1369,7 +1366,7 @@ def doctor_add_prescription(patient_id):
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding prescription: {str(e)}', 'danger')
-    
+
     return render_template('doctor/add_prescription.html', form=form, patient=patient)
 
 @app.route('/assistant/prescriptions')
@@ -1378,7 +1375,7 @@ def assistant_prescriptions():
     if not isinstance(current_user, Assistant):
         flash('Access denied', 'danger')
         return redirect(url_for('index'))
-    
+
     all_patients = Patient.query.order_by(Patient.full_name).all()
     return render_template('assistant/prescriptions.html', all_patients=all_patients)
 
@@ -1388,10 +1385,10 @@ def assistant_add_prescription(patient_id):
     if not isinstance(current_user, Assistant):
         flash('Access denied', 'danger')
         return redirect(url_for('index'))
-    
+
     form = OptometristPrescriptionForm()
     patient = Patient.query.get_or_404(patient_id)
-    
+
     if form.validate_on_submit():
         prescription = OptometristPrescription(
             patient_id=patient_id,
@@ -1409,7 +1406,7 @@ def assistant_add_prescription(patient_id):
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding prescription: {str(e)}', 'danger')
-    
+
     return render_template('assistant/add_prescription.html', form=form, patient=patient)
 
 @app.route('/print-prescription/<string:type>/<int:prescription_id>')
@@ -1430,7 +1427,7 @@ def print_prescription(type, prescription_id):
     else:
         flash('Invalid prescription type', 'danger')
         return redirect(url_for('index'))
-    
+
     return render_template(template, prescription=prescription)
 
 @app.route('/admin/revenue', methods=['GET', 'POST'])
@@ -1537,13 +1534,13 @@ def delete_prescription(type, prescription_id):
 
         # Store patient info for redirect if needed
         patient_id = prescription.patient_id
-        
+
         # Delete the prescription
         db.session.delete(prescription)
         db.session.commit()
-        
+
         flash(f'{prescription_type} prescription deleted successfully!', 'success')
-        
+
         # Check where to redirect based on referer
         referer = request.referrer
         if referer and 'patient_view' in referer:
@@ -1554,7 +1551,7 @@ def delete_prescription(type, prescription_id):
             return redirect(url_for('assistant_prescriptions'))
         else:
             return redirect(url_for('admin_dashboard'))
-            
+
     except Exception as e:
         db.session.rollback()
         flash(f'Error deleting prescription: {str(e)}', 'danger')
