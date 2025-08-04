@@ -138,7 +138,6 @@ def appointment():
             """
             send_email_notification(patient.email, subject, message)
 
-            flash('Appointment booked successfully!', 'success')
             return redirect(url_for('payment'))
         except Exception as e:
             db.session.rollback()
