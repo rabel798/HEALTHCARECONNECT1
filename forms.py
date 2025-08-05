@@ -15,6 +15,24 @@ class AppointmentForm(FlaskForm):
     referral_info = StringField('Referral Information (if any)', validators=[Optional(), Length(max=255)])
     submit = SubmitField('Book Appointment')
 
+class FindAppointmentForm(FlaskForm):
+    mobile_number = StringField('Mobile Number', validators=[Optional(), Length(min=10, max=15)])
+    email = StringField('Email Address', validators=[Optional(), Email(), Length(max=100)])
+    submit = SubmitField('Find My Appointment')
+    
+    def validate(self):
+        rv = FlaskForm.validate(self)
+        if not rv:
+            return False
+        
+        # At least one field must be filled
+        if not self.mobile_number.data and not self.email.data:
+            self.mobile_number.errors.append('Please provide either mobile number or email address')
+            self.email.errors.append('Please provide either mobile number or email address')
+            return False
+        
+        return True
+
 class PaymentForm(FlaskForm):
     payment_method = SelectField('Payment Method', choices=[
         ('upi', 'UPI'),

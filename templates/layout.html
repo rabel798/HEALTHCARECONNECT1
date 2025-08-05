@@ -117,6 +117,9 @@
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary text-white px-3 ms-lg-2" href="{{ url_for('appointment') }}">Book Appointment</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('find_appointment') }}">Find My Appointment</a>
+                    </li>
 
                     {% if current_user.is_authenticated %}
                         {% if current_user.__class__.__name__ == 'Patient' %}

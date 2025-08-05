@@ -14,7 +14,7 @@ from wtforms.validators import DataRequired, Email
 from app import app, db
 from models import Patient, Appointment, MedicalRecord, Payment, Review, Admin, OTP, Doctor, Assistant, Salary, Treatment, DoctorPrescription, OptometristPrescription
 from forms import (
-    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm
+    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm
 )
 import requests
 
@@ -194,6 +194,32 @@ def success():
     """Success page after completing appointment and payment"""
     appointment_details = session.get('appointment_details', {})
     return render_template('success.html', appointment_details=appointment_details)
+
+@app.route('/find-appointment', methods=['GET', 'POST'])
+def find_appointment():
+    """Find appointment using mobile number or email"""
+    form = FindAppointmentForm()
+    appointments = []
+    search_performed = False
+    
+    if form.validate_on_submit():
+        search_performed = True
+        query = Appointment.query.join(Patient)
+        
+        # Search by mobile number or email
+        if form.mobile_number.data:
+            query = query.filter(Patient.mobile_number == form.mobile_number.data)
+        elif form.email.data:
+            query = query.filter(Patient.email == form.email.data)
+        
+        # Get appointments ordered by date (most recent first)
+        appointments = query.order_by(desc(Appointment.appointment_date), desc(Appointment.appointment_time)).all()
+    
+    return render_template('find_appointment.html', 
+                         form=form, 
+                         appointments=appointments, 
+                         search_performed=search_performed,
+                         now=datetime.now())
 
 # API route for checking available time slots
 @app.route('/api/available-slots', methods=['GET'])
