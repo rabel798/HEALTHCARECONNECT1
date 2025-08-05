@@ -221,6 +221,92 @@ def find_appointment():
                          search_performed=search_performed,
                          now=datetime.now())
 
+@app.route('/staff/verify-appointment', methods=['GET', 'POST'])
+@login_required
+def staff_verify_appointment():
+    """Staff verification of appointments using confirmation number or patient details"""
+    # Ensure only staff members can access this page
+    if not (isinstance(current_user, Doctor) or isinstance(current_user, Assistant) or isinstance(current_user, Admin)):
+        flash('Access denied. Staff privileges required.', 'danger')
+        return redirect(url_for('index'))
+    
+    class VerifyAppointmentForm(FlaskForm):
+        confirmation_number = StringField('Confirmation Number (DC######)')
+        mobile_number = StringField('Mobile Number')
+        email = StringField('Email')
+        appointment_date = StringField('Appointment Date (YYYY-MM-DD)')
+        submit = SubmitField('Verify Appointment')
+    
+    form = VerifyAppointmentForm()
+    appointment = None
+    verification_result = None
+    
+    if form.validate_on_submit():
+        if form.confirmation_number.data:
+            # Extract appointment ID from confirmation number (DC000123 -> 123)
+            try:
+                confirmation_num = form.confirmation_number.data.strip().upper()
+                if confirmation_num.startswith('DC'):
+                    appointment_id = int(confirmation_num[2:])
+                    appointment = Appointment.query.get(appointment_id)
+                    if appointment:
+                        verification_result = {
+                            'status': 'found',
+                            'message': f'Valid appointment found for {appointment.patient.full_name}',
+                            'confirmation': f'DC{appointment.id:06d}'
+                        }
+                    else:
+                        verification_result = {
+                            'status': 'not_found',
+                            'message': 'No appointment found with this confirmation number'
+                        }
+                else:
+                    verification_result = {
+                        'status': 'invalid',
+                        'message': 'Invalid confirmation number format. Should start with DC'
+                    }
+            except ValueError:
+                verification_result = {
+                    'status': 'invalid',
+                    'message': 'Invalid confirmation number format'
+                }
+        else:
+            # Search by patient details
+            query = Appointment.query.join(Patient)
+            
+            if form.mobile_number.data:
+                query = query.filter(Patient.mobile_number == form.mobile_number.data)
+            if form.email.data:
+                query = query.filter(Patient.email == form.email.data)
+            if form.appointment_date.data:
+                try:
+                    search_date = datetime.strptime(form.appointment_date.data, '%Y-%m-%d').date()
+                    query = query.filter(Appointment.appointment_date == search_date)
+                except ValueError:
+                    verification_result = {
+                        'status': 'invalid',
+                        'message': 'Invalid date format. Use YYYY-MM-DD'
+                    }
+                    return render_template('staff/verify_appointment.html', form=form, verification_result=verification_result)
+            
+            appointment = query.first()
+            if appointment:
+                verification_result = {
+                    'status': 'found',
+                    'message': f'Appointment found for {appointment.patient.full_name}',
+                    'confirmation': f'DC{appointment.id:06d}'
+                }
+            else:
+                verification_result = {
+                    'status': 'not_found',
+                    'message': 'No appointment found with the provided details'
+                }
+    
+    return render_template('staff/verify_appointment.html', 
+                         form=form, 
+                         appointment=appointment, 
+                         verification_result=verification_result)
+
 # API route for checking available time slots
 @app.route('/api/available-slots', methods=['GET'])
 def available_slots():
