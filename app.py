@@ -25,10 +25,10 @@ app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 # Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'test@example.com'  # Test email
-app.config['MAIL_PASSWORD'] = 'test123'  # Test password
+app.config['MAIL_USERNAME'] = 'your-gmail@gmail.com'  # Replace with your Gmail
+app.config['MAIL_PASSWORD'] = 'your-app-password'  # Replace with your Gmail App Password
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'test@example.com'  # Test email
+app.config['MAIL_DEFAULT_SENDER'] = 'your-gmail@gmail.com'  # Replace with your Gmail
 
 
 # Configure the database
