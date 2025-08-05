@@ -2024,9 +2024,27 @@ def patient_google_register():
     session['oauth_state'] = state
     session['oauth_action'] = 'register'
     
+    # Ensure we use the correct redirect URI format for Replit
     google_redirect_uri = url_for('patient_google_callback', _external=True)
+    if 'replit.dev' in google_redirect_uri:
+        google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
     
-    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={state}&access_type=offline&prompt=consent"
+    # Use proper URL encoding for parameters
+    from urllib.parse import urlencode
+    
+    params = {
+        'client_id': google_client_id,
+        'redirect_uri': google_redirect_uri,
+        'response_type': 'code',
+        'scope': 'openid email profile',
+        'state': state,
+        'access_type': 'online',
+        'prompt': 'select_account'
+    }
+    
+    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
+    print(f"OAuth URL: {oauth_url}")  # Debug log
+    print(f"Redirect URI: {google_redirect_uri}")  # Debug log
 
     # Redirect to Google's OAuth consent screen
     return redirect(oauth_url)
@@ -2049,9 +2067,27 @@ def patient_google_login():
     session['oauth_state'] = state
     session['oauth_action'] = 'login'
     
+    # Ensure we use the correct redirect URI format for Replit
     google_redirect_uri = url_for('patient_google_callback', _external=True)
+    if 'replit.dev' in google_redirect_uri:
+        google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
     
-    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={state}&access_type=offline&prompt=consent"
+    # Use proper URL encoding for parameters
+    from urllib.parse import urlencode
+    
+    params = {
+        'client_id': google_client_id,
+        'redirect_uri': google_redirect_uri,
+        'response_type': 'code',
+        'scope': 'openid email profile',
+        'state': state,
+        'access_type': 'online',
+        'prompt': 'select_account'
+    }
+    
+    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
+    print(f"OAuth URL: {oauth_url}")  # Debug log
+    print(f"Redirect URI: {google_redirect_uri}")  # Debug log
     
     # Redirect to Google's OAuth consent screen
     return redirect(oauth_url)
@@ -2060,6 +2096,7 @@ def patient_google_login():
 def patient_google_callback():
     """Google OAuth callback route"""
     print(f"OAuth callback received. Args: {request.args}")  # Debug log
+    print(f"Request URL: {request.url}")  # Debug log
     
     # Check for OAuth errors
     if 'error' in request.args:
@@ -2091,7 +2128,11 @@ def patient_google_callback():
         token_url = "https://oauth2.googleapis.com/token"
         google_client_id = app.config.get('GOOGLE_CLIENT_ID')
         google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
+        
+        # Ensure redirect URI matches what we sent to Google
         google_redirect_uri = url_for('patient_google_callback', _external=True)
+        if 'replit.dev' in google_redirect_uri:
+            google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
         if not google_client_id or not google_client_secret:
             flash('Google OAuth configuration is incomplete.', 'danger')
@@ -2105,29 +2146,37 @@ def patient_google_callback():
             'grant_type': 'authorization_code'
         }
 
-        print(f"Requesting token with data: {token_data}")  # Debug log
-        token_response = requests.post(token_url, data=token_data)
+        print(f"Token request - Redirect URI: {google_redirect_uri}")  # Debug log
+        
+        # Add headers and timeout for better error handling
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
         
         if token_response.status_code != 200:
             print(f"Token request failed: {token_response.status_code} - {token_response.text}")  # Debug log
-            flash('Failed to get access token from Google.', 'danger')
+            flash('Failed to get access token from Google. Please check your OAuth configuration.', 'danger')
             return redirect(url_for('patient_login'))
             
         tokens = token_response.json()
         print(f"Received tokens: {list(tokens.keys())}")  # Debug log
 
-        # Get user info
-        userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
+        # Get user info using the newer v3 endpoint
+        userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
         headers = {'Authorization': f"Bearer {tokens['access_token']}"}
-        userinfo_response = requests.get(userinfo_url, headers=headers)
+        userinfo_response = requests.get(userinfo_url, headers=headers, timeout=30)
         
         if userinfo_response.status_code != 200:
-            print(f"User info request failed: {userinfo_response.status_code}")  # Debug log
+            print(f"User info request failed: {userinfo_response.status_code} - {userinfo_response.text}")  # Debug log
             flash('Failed to get user information from Google.', 'danger')
             return redirect(url_for('patient_login'))
             
         userinfo = userinfo_response.json()
         print(f"User info received: {userinfo.get('name')} - {userinfo.get('email')}")  # Debug log
+
+        # Validate that we got required fields
+        if not userinfo.get('email'):
+            flash('Could not get email from Google. Please try again.', 'danger')
+            return redirect(url_for('patient_login'))
 
         # Find or create patient
         patient = Patient.query.filter_by(email=userinfo['email']).first()
@@ -2163,6 +2212,10 @@ def patient_google_callback():
             
         return redirect(url_for('patient_dashboard'))
 
+    except requests.exceptions.Timeout:
+        print("Timeout error during Google OAuth")  # Debug log
+        flash('Request to Google timed out. Please try again.', 'danger')
+        return redirect(url_for('patient_login'))
     except requests.exceptions.RequestException as e:
         print(f"Request error during Google OAuth: {str(e)}")  # Debug log
         flash('Network error during Google authentication. Please try again.', 'danger')
