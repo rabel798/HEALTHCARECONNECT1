@@ -119,8 +119,7 @@ def appointment():
             session['appointment_details'] = {
                 'patient_name': patient.full_name,
                 'appointment_date': new_appointment.appointment_date.strftime('%A, %B %d, %Y'),
-                'appointment_time': new_appointment.appointment_time.strftime('%I:%M %p'),
-                'confirmation_number': f'DC{new_appointment.id:06d}'
+                'appointment_time': new_appointment.appointment_time.strftime('%I:%M %p')
             }
 
             # Send confirmation email
@@ -131,7 +130,6 @@ def appointment():
             Your appointment has been confirmed for {new_appointment.appointment_date.strftime('%d %B, %Y')} at {new_appointment.appointment_time.strftime('%I:%M %p')}.
 
             Primary Issue: {new_appointment.primary_issue}
-            Appointment ID: #{new_appointment.id}
 
             Location: First floor, DVR Town Centre, near to IGUS private limited, 
             Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
@@ -231,76 +229,45 @@ def staff_verify_appointment():
         return redirect(url_for('index'))
     
     class VerifyAppointmentForm(FlaskForm):
-        confirmation_number = StringField('Confirmation Number (DC######)')
         mobile_number = StringField('Mobile Number')
         email = StringField('Email')
         appointment_date = StringField('Appointment Date (YYYY-MM-DD)')
-        submit = SubmitField('Verify Appointment')
+        submit = SubmitField('Search Appointment')
     
     form = VerifyAppointmentForm()
     appointment = None
     verification_result = None
     
     if form.validate_on_submit():
-        if form.confirmation_number.data:
-            # Extract appointment ID from confirmation number (DC000123 -> 123)
+        # Search by patient details
+        query = Appointment.query.join(Patient)
+        
+        if form.mobile_number.data:
+            query = query.filter(Patient.mobile_number == form.mobile_number.data)
+        if form.email.data:
+            query = query.filter(Patient.email == form.email.data)
+        if form.appointment_date.data:
             try:
-                confirmation_num = form.confirmation_number.data.strip().upper()
-                if confirmation_num.startswith('DC'):
-                    appointment_id = int(confirmation_num[2:])
-                    appointment = Appointment.query.get(appointment_id)
-                    if appointment:
-                        verification_result = {
-                            'status': 'found',
-                            'message': f'Valid appointment found for {appointment.patient.full_name}',
-                            'confirmation': f'DC{appointment.id:06d}'
-                        }
-                    else:
-                        verification_result = {
-                            'status': 'not_found',
-                            'message': 'No appointment found with this confirmation number'
-                        }
-                else:
-                    verification_result = {
-                        'status': 'invalid',
-                        'message': 'Invalid confirmation number format. Should start with DC'
-                    }
+                search_date = datetime.strptime(form.appointment_date.data, '%Y-%m-%d').date()
+                query = query.filter(Appointment.appointment_date == search_date)
             except ValueError:
                 verification_result = {
                     'status': 'invalid',
-                    'message': 'Invalid confirmation number format'
+                    'message': 'Invalid date format. Use YYYY-MM-DD'
                 }
+                return render_template('staff/verify_appointment.html', form=form, verification_result=verification_result)
+        
+        appointment = query.first()
+        if appointment:
+            verification_result = {
+                'status': 'found',
+                'message': f'Appointment found for {appointment.patient.full_name}'
+            }
         else:
-            # Search by patient details
-            query = Appointment.query.join(Patient)
-            
-            if form.mobile_number.data:
-                query = query.filter(Patient.mobile_number == form.mobile_number.data)
-            if form.email.data:
-                query = query.filter(Patient.email == form.email.data)
-            if form.appointment_date.data:
-                try:
-                    search_date = datetime.strptime(form.appointment_date.data, '%Y-%m-%d').date()
-                    query = query.filter(Appointment.appointment_date == search_date)
-                except ValueError:
-                    verification_result = {
-                        'status': 'invalid',
-                        'message': 'Invalid date format. Use YYYY-MM-DD'
-                    }
-                    return render_template('staff/verify_appointment.html', form=form, verification_result=verification_result)
-            
-            appointment = query.first()
-            if appointment:
-                verification_result = {
-                    'status': 'found',
-                    'message': f'Appointment found for {appointment.patient.full_name}',
-                    'confirmation': f'DC{appointment.id:06d}'
-                }
-            else:
-                verification_result = {
-                    'status': 'not_found',
-                    'message': 'No appointment found with the provided details'
-                }
+            verification_result = {
+                'status': 'not_found',
+                'message': 'No appointment found with the provided details'
+            }
     
     return render_template('staff/verify_appointment.html', 
                          form=form, 
