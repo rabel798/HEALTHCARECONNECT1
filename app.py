@@ -28,7 +28,11 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USERNAME'] = 'drrichaeyeclinic@gmail.com'  
 app.config['MAIL_PASSWORD'] = 'onlg iqtn eizf vehv'  
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'drrichaeyeclinic@gmail.com'  
+app.config['MAIL_DEFAULT_SENDER'] = 'drrichaeyeclinic@gmail.com'
+
+# Google OAuth configuration
+app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID', 'your-google-client-id')
+app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET', 'your-google-client-secret')  
 
 
 # Configure the database

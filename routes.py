@@ -208,21 +208,21 @@ def staff_verify_appointment():
     if not (isinstance(current_user, Doctor) or isinstance(current_user, Assistant) or isinstance(current_user, Admin)):
         flash('Access denied. Staff privileges required.', 'danger')
         return redirect(url_for('index'))
-    
+
     class VerifyAppointmentForm(FlaskForm):
         mobile_number = StringField('Mobile Number')
         email = StringField('Email')
         appointment_date = StringField('Appointment Date (YYYY-MM-DD)')
         submit = SubmitField('Search Appointment')
-    
+
     form = VerifyAppointmentForm()
     appointment = None
     verification_result = None
-    
+
     if form.validate_on_submit():
         # Search by patient details
         query = Appointment.query.join(Patient)
-        
+
         if form.mobile_number.data:
             query = query.filter(Patient.mobile_number == form.mobile_number.data)
         if form.email.data:
@@ -237,7 +237,7 @@ def staff_verify_appointment():
                     'message': 'Invalid date format. Use YYYY-MM-DD'
                 }
                 return render_template('staff/verify_appointment.html', form=form, verification_result=verification_result)
-        
+
         appointment = query.first()
         if appointment:
             verification_result = {
@@ -249,7 +249,7 @@ def staff_verify_appointment():
                 'status': 'not_found',
                 'message': 'No appointment found with the provided details'
             }
-    
+
     return render_template('staff/verify_appointment.html', 
                          form=form, 
                          appointment=appointment, 
@@ -319,7 +319,7 @@ def patient_register():
             query_filters = [Patient.mobile_number == form.mobile_number.data]
             if form.email.data:
                 query_filters.append(Patient.email == form.email.data)
-            
+
             existing_patient = Patient.query.filter(db.or_(*query_filters)).first()
 
             if existing_patient:
@@ -374,7 +374,7 @@ Dr. Richa's Eye Clinic
                     flash('Registration completed! Please proceed to login.', 'info')
 
                 return redirect(url_for('verify_otp', email=form.email.data))
-            
+
             else:
                 # Direct registration without email verification
                 new_patient = Patient(
@@ -387,10 +387,10 @@ Dr. Richa's Eye Clinic
                 )
                 if form.password.data:
                     new_patient.set_password(form.password.data)
-                
+
                 db.session.add(new_patient)
                 db.session.commit()
-                
+
                 login_user(new_patient)
                 flash('Registration successful! Welcome to Dr. Richa\'s Eye Clinic.', 'success')
                 return redirect(url_for('patient_dashboard'))
@@ -688,11 +688,11 @@ def patient_cancel_appointment(appointment_id):
 
     try:
         appointment.status = 'cancelled'
-        
+
         # Update payment status to cancelled as well
         if appointment.payment:
             appointment.payment.status = 'cancelled'
-        
+
         db.session.commit()
 
         # Send email notification to clinic and patient
@@ -1085,7 +1085,7 @@ def admin_appointment_view(appointment_id):
 
         if action == 'complete':
             appointment.status = 'confirmed'
-            
+
             # Update payment status to completed when confirmed
             try:
                 payment = Payment.query.filter_by(appointment_id=appointment_id).first()
@@ -1094,7 +1094,7 @@ def admin_appointment_view(appointment_id):
                     print(f"Updated payment {payment.id} status to completed")  # Debug log
                 else:
                     print(f"No payment found for appointment {appointment_id}")  # Debug log
-                
+
                 db.session.commit()
 
                 # Send confirmation email when doctor confirms the appointment
@@ -1129,7 +1129,7 @@ Dr. Richa's Eye Clinic
 
         elif action == 'cancel':
             appointment.status = 'cancelled'
-            
+
             # Update payment status to cancelled as well
             try:
                 payment = Payment.query.filter_by(appointment_id=appointment_id).first()
@@ -1138,7 +1138,7 @@ Dr. Richa's Eye Clinic
                     print(f"Updated payment {payment.id} status to cancelled")  # Debug log
                 else:
                     print(f"No payment found for appointment {appointment_id}")  # Debug log
-                
+
                 db.session.commit()
 
                 # Send cancellation email when doctor cancels the appointment
@@ -1299,11 +1299,11 @@ def admin_assistant_salary():
         return redirect(url_for('index'))
 
     form = SalaryForm()
-    
+
     # Populate assistant choices
     assistants = Assistant.query.all()
     form.assistant_id.choices = [(assistant.id, f"{assistant.full_name} ({assistant.email})") for assistant in assistants]
-    
+
     if form.validate_on_submit():
         # Get the selected assistant
         assistant = Assistant.query.get(form.assistant_id.data)
@@ -1345,7 +1345,7 @@ Dr. Richa's Eye Clinic
                         flash('Salary payment processed successfully! (Email notification failed)', 'warning')
                 else:
                     flash('Salary payment processed successfully! (No email configured for assistant)', 'success')
-                    
+
                 return redirect(url_for('admin_assistant_salary'))
             except Exception as e:
                 db.session.rollback()
@@ -1360,7 +1360,7 @@ Dr. Richa's Eye Clinic
     for assistant in assistants:
         assistant_salaries = Salary.query.filter_by(assistant_id=assistant.id).order_by(desc(Salary.payment_date)).all()
         salary_records.extend(assistant_salaries)
-    
+
     # Sort all salary records by payment date
     salary_records.sort(key=lambda x: x.payment_date, reverse=True)
 
@@ -1481,10 +1481,10 @@ def assistant_add_patient():
             current_datetime = datetime.now()
             current_hour = current_datetime.hour
             current_minute = current_datetime.minute
-            
+
             # Determine if it's Sunday
             is_sunday = today.weekday() == 6
-            
+
             # Calculate nearest appropriate time slot
             if is_sunday:
                 # Sunday: 10 AM to 1 PM slots
@@ -1548,7 +1548,7 @@ def assistant_add_patient():
             db.session.add(walk_in_treatment)
 
             db.session.commit()
-            
+
             flash(f'Walk-in patient "{new_patient.full_name}" successfully registered for {assigned_time.strftime("%I:%M %p")} and ₹500 consultation fee recorded!', 'success')
             return redirect(url_for('assistant_dashboard'))
 
@@ -1804,50 +1804,50 @@ def admin_fix_payment_status():
     if not isinstance(current_user, Doctor):
         flash('Access denied. Doctor privileges required.', 'danger')
         return redirect(url_for('index'))
-    
+
     try:
         fixed_count = 0
         cancelled_count = 0
-        
+
         # Find payments where appointment is confirmed but payment is still pending
         inconsistent_payments = db.session.query(Payment).join(Appointment).filter(
             Appointment.status == 'confirmed',
             Payment.status == 'pending'
         ).all()
-        
+
         # Fix them
         for payment in inconsistent_payments:
             payment.status = 'completed'
             fixed_count += 1
             print(f"Fixed payment {payment.id} for appointment {payment.appointment_id}")
-        
+
         # Find payments where appointment is cancelled but payment is not cancelled
         cancelled_payments = db.session.query(Payment).join(Appointment).filter(
             Appointment.status == 'cancelled',
             Payment.status != 'cancelled'
         ).all()
-        
+
         for payment in cancelled_payments:
             payment.status = 'cancelled'
             cancelled_count += 1
             print(f"Fixed cancelled payment {payment.id} for appointment {payment.appointment_id}")
-        
+
         # Also check for payments with completed status where appointment is still scheduled
         completed_payments_wrong = db.session.query(Payment).join(Appointment).filter(
             Appointment.status == 'scheduled',
             Payment.status == 'completed'
         ).all()
-        
+
         for payment in completed_payments_wrong:
             payment.status = 'pending'
             fixed_count += 1
             print(f"Reset payment {payment.id} for scheduled appointment {payment.appointment_id}")
-        
+
         db.session.commit()
-        
+
         flash(f'Fixed {fixed_count} payments and cancelled {cancelled_count} payments', 'success')
         return redirect(url_for('admin_revenue'))
-        
+
     except Exception as e:
         db.session.rollback()
         flash(f'Error fixing payment statuses: {str(e)}', 'danger')
@@ -1866,10 +1866,10 @@ def admin_revenue():
     if request.method == 'POST':
         try:
             patient_name = request.form.get('patient_name')
-            
+
             # Try to find existing patient by name
             patient = Patient.query.filter_by(full_name=patient_name).first()
-            
+
             # If patient doesn't exist, create a new one with minimal info
             if not patient:
                 patient = Patient(
@@ -1882,7 +1882,7 @@ def admin_revenue():
                 )
                 db.session.add(patient)
                 db.session.flush()  # Get patient ID before commit
-            
+
             new_treatment = Treatment(
                 patient_id=patient.id,
                 treatment_name=request.form.get('treatment_name'),
@@ -1892,7 +1892,7 @@ def admin_revenue():
             )
             db.session.add(new_treatment)
             db.session.commit()
-            
+
             if patient.mobile_number == '0000000000':
                 flash(f'Treatment record added successfully for new patient: {patient_name}!', 'success')
             else:
@@ -2013,9 +2013,16 @@ def patient_google_register():
     if current_user.is_authenticated:
         return redirect(url_for('patient_dashboard'))
 
-    # Use Gmail OTP for now since Google OAuth requires setup
-    flash('For Google registration, please use Gmail OTP option below:', 'info')
-    return redirect(url_for('patient_gmail_login'))
+    # Google OAuth configuration
+    google_client_id = app.config['GOOGLE_CLIENT_ID']
+    google_client_secret = app.config['GOOGLE_CLIENT_SECRET']
+    google_redirect_uri = url_for('patient_google_callback', _external=True)
+    
+    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={os.urandom(16).hex()}"
+    session['oauth_state'] = oauth_url.split('state=')[-1] # Store state for verification
+
+    # Redirect to Google's OAuth consent screen
+    return redirect(oauth_url)
 
 @app.route('/patient/google-login')
 def patient_google_login():
@@ -2024,9 +2031,18 @@ def patient_google_login():
     if current_user.is_authenticated:
         return redirect(url_for('patient_dashboard'))
 
-    # Use Gmail OTP for now since Google OAuth requires proper setup
-    flash('Please use Gmail OTP login for Google authentication:', 'info')
-    return redirect(url_for('patient_gmail_login'))
+    # Google OAuth configuration
+    google_client_id = app.config['GOOGLE_CLIENT_ID']
+    google_client_secret = app.config['GOOGLE_CLIENT_SECRET']
+    google_redirect_uri = url_for('patient_google_callback', _external=True)
+    
+    # Generate a state parameter for CSRF protection
+    session['oauth_state'] = os.urandom(16).hex()
+    
+    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={session['oauth_state']}"
+    
+    # Redirect to Google's OAuth consent screen
+    return redirect(oauth_url)
 
 @app.route('/patient/google-callback')
 def patient_google_callback():
@@ -2047,15 +2063,16 @@ def patient_google_callback():
     try:
         # Exchange code for tokens
         token_url = "https://oauth2.googleapis.com/token"
-        client_id = "your-client-id"  # Replace with your Google OAuth client ID
-        client_secret = "your-client-secret"  # Replace with your Google OAuth client secret
-        redirect_uri = url_for('patient_google_callback', _external=True)
+        # Google OAuth configuration
+        google_client_id = app.config['GOOGLE_CLIENT_ID']
+        google_client_secret = app.config['GOOGLE_CLIENT_SECRET']
+        google_redirect_uri = url_for('patient_google_callback', _external=True)
 
         token_data = {
             'code': code,
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'redirect_uri': redirect_uri,
+            'client_id': google_client_id,
+            'client_secret': google_client_secret,
+            'redirect_uri': google_redirect_uri,
             'grant_type': 'authorization_code'
         }
 
