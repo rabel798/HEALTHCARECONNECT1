@@ -2013,13 +2013,20 @@ def patient_google_register():
     if current_user.is_authenticated:
         return redirect(url_for('patient_dashboard'))
 
-    # Google OAuth configuration
-    google_client_id = app.config['GOOGLE_CLIENT_ID']
-    google_client_secret = app.config['GOOGLE_CLIENT_SECRET']
+    # Check if Google OAuth is configured
+    google_client_id = app.config.get('GOOGLE_CLIENT_ID')
+    if not google_client_id:
+        flash('Google OAuth is not configured. Please contact administrator.', 'danger')
+        return redirect(url_for('patient_register'))
+
+    # Generate state for CSRF protection
+    state = os.urandom(16).hex()
+    session['oauth_state'] = state
+    session['oauth_action'] = 'register'
+    
     google_redirect_uri = url_for('patient_google_callback', _external=True)
     
-    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={os.urandom(16).hex()}"
-    session['oauth_state'] = oauth_url.split('state=')[-1] # Store state for verification
+    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={state}&access_type=offline&prompt=consent"
 
     # Redirect to Google's OAuth consent screen
     return redirect(oauth_url)
@@ -2031,15 +2038,20 @@ def patient_google_login():
     if current_user.is_authenticated:
         return redirect(url_for('patient_dashboard'))
 
-    # Google OAuth configuration
-    google_client_id = app.config['GOOGLE_CLIENT_ID']
-    google_client_secret = app.config['GOOGLE_CLIENT_SECRET']
+    # Check if Google OAuth is configured
+    google_client_id = app.config.get('GOOGLE_CLIENT_ID')
+    if not google_client_id:
+        flash('Google OAuth is not configured. Please contact administrator.', 'danger')
+        return redirect(url_for('patient_login'))
+
+    # Generate state for CSRF protection
+    state = os.urandom(16).hex()
+    session['oauth_state'] = state
+    session['oauth_action'] = 'login'
+    
     google_redirect_uri = url_for('patient_google_callback', _external=True)
     
-    # Generate a state parameter for CSRF protection
-    session['oauth_state'] = os.urandom(16).hex()
-    
-    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={session['oauth_state']}"
+    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?client_id={google_client_id}&redirect_uri={google_redirect_uri}&response_type=code&scope=openid%20email%20profile&state={state}&access_type=offline&prompt=consent"
     
     # Redirect to Google's OAuth consent screen
     return redirect(oauth_url)
@@ -2047,11 +2059,22 @@ def patient_google_login():
 @app.route('/patient/google-callback')
 def patient_google_callback():
     """Google OAuth callback route"""
+    print(f"OAuth callback received. Args: {request.args}")  # Debug log
+    
+    # Check for OAuth errors
     if 'error' in request.args:
-        flash('Google login failed. Please try again.', 'danger')
+        error = request.args.get('error')
+        error_description = request.args.get('error_description', '')
+        print(f"OAuth error: {error} - {error_description}")  # Debug log
+        flash(f'Google authentication failed: {error_description}', 'danger')
         return redirect(url_for('patient_login'))
 
-    if request.args.get('state') != session.get('oauth_state'):
+    # Verify state parameter
+    received_state = request.args.get('state')
+    stored_state = session.get('oauth_state')
+    
+    if not received_state or received_state != stored_state:
+        print(f"State mismatch. Received: {received_state}, Stored: {stored_state}")  # Debug log
         flash('Invalid state parameter. Please try again.', 'danger')
         return redirect(url_for('patient_login'))
 
@@ -2061,12 +2084,18 @@ def patient_google_callback():
         return redirect(url_for('patient_login'))
 
     try:
+        # Get OAuth action from session
+        oauth_action = session.get('oauth_action', 'login')
+        
         # Exchange code for tokens
         token_url = "https://oauth2.googleapis.com/token"
-        # Google OAuth configuration
-        google_client_id = app.config['GOOGLE_CLIENT_ID']
-        google_client_secret = app.config['GOOGLE_CLIENT_SECRET']
+        google_client_id = app.config.get('GOOGLE_CLIENT_ID')
+        google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
         google_redirect_uri = url_for('patient_google_callback', _external=True)
+
+        if not google_client_id or not google_client_secret:
+            flash('Google OAuth configuration is incomplete.', 'danger')
+            return redirect(url_for('patient_login'))
 
         token_data = {
             'code': code,
@@ -2076,35 +2105,69 @@ def patient_google_callback():
             'grant_type': 'authorization_code'
         }
 
+        print(f"Requesting token with data: {token_data}")  # Debug log
         token_response = requests.post(token_url, data=token_data)
-        token_response.raise_for_status()
+        
+        if token_response.status_code != 200:
+            print(f"Token request failed: {token_response.status_code} - {token_response.text}")  # Debug log
+            flash('Failed to get access token from Google.', 'danger')
+            return redirect(url_for('patient_login'))
+            
         tokens = token_response.json()
+        print(f"Received tokens: {list(tokens.keys())}")  # Debug log
 
         # Get user info
         userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
         headers = {'Authorization': f"Bearer {tokens['access_token']}"}
         userinfo_response = requests.get(userinfo_url, headers=headers)
-        userinfo_response.raise_for_status()
+        
+        if userinfo_response.status_code != 200:
+            print(f"User info request failed: {userinfo_response.status_code}")  # Debug log
+            flash('Failed to get user information from Google.', 'danger')
+            return redirect(url_for('patient_login'))
+            
         userinfo = userinfo_response.json()
+        print(f"User info received: {userinfo.get('name')} - {userinfo.get('email')}")  # Debug log
 
         # Find or create patient
         patient = Patient.query.filter_by(email=userinfo['email']).first()
-        if not patient:
+        
+        if not patient and oauth_action == 'register':
+            # Create new patient for registration
             patient = Patient(
                 full_name=userinfo.get('name', 'Google User'),
                 email=userinfo['email'],
                 mobile_number='0000000000',  # Will be updated later
                 age=1,  # Will be updated later
-                is_registered=False
+                sex='',
+                is_registered=True  # Mark as registered since they used OAuth
             )
             db.session.add(patient)
             db.session.commit()
+            flash('Successfully registered with Google!', 'success')
+        elif not patient and oauth_action == 'login':
+            flash('No account found with this email. Please register first.', 'warning')
+            return redirect(url_for('patient_register'))
 
         # Login the patient
         login_user(patient)
-        flash('Successfully logged in with Google!', 'success')
+        
+        # Clear OAuth session data
+        session.pop('oauth_state', None)
+        session.pop('oauth_action', None)
+        
+        if oauth_action == 'register':
+            flash('Successfully registered and logged in with Google!', 'success')
+        else:
+            flash('Successfully logged in with Google!', 'success')
+            
         return redirect(url_for('patient_dashboard'))
 
+    except requests.exceptions.RequestException as e:
+        print(f"Request error during Google OAuth: {str(e)}")  # Debug log
+        flash('Network error during Google authentication. Please try again.', 'danger')
+        return redirect(url_for('patient_login'))
     except Exception as e:
-        flash(f'Error during Google login: {str(e)}', 'danger')
+        print(f"Unexpected error during Google OAuth: {str(e)}")  # Debug log
+        flash(f'Error during Google authentication: {str(e)}', 'danger')
         return redirect(url_for('patient_login'))
