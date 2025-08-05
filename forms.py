@@ -72,6 +72,7 @@ class OptometristPrescriptionForm(FlaskForm):
     submit = SubmitField('Save Prescription')
 
 class SalaryForm(FlaskForm):
+    assistant_id = SelectField('Assistant', coerce=int, validators=[DataRequired()])
     amount = StringField('Salary Amount', validators=[DataRequired()])
     payment_date = DateField('Payment Date', validators=[DataRequired()])
     payment_method = SelectField('Payment Method', choices=[

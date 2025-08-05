@@ -1277,9 +1277,14 @@ def admin_assistant_salary():
         return redirect(url_for('index'))
 
     form = SalaryForm()
+    
+    # Populate assistant choices
+    assistants = Assistant.query.all()
+    form.assistant_id.choices = [(assistant.id, f"{assistant.full_name} ({assistant.email})") for assistant in assistants]
+    
     if form.validate_on_submit():
-        # Get the default assistant account
-        assistant = Assistant.query.filter_by(email='assistant@eyeclinic.com').first()
+        # Get the selected assistant
+        assistant = Assistant.query.get(form.assistant_id.data)
         if assistant:
             try:
                 # Create salary record
@@ -1294,36 +1299,50 @@ def admin_assistant_salary():
                 db.session.add(new_salary)
                 db.session.commit()
 
-                # Send email notification
-                subject = "Salary Payment Receipt - Dr. Richa's Eye Clinic"
-                message = f"""
-            Dear Optrometrist,
+                # Send email notification only if assistant has a valid email
+                if assistant.email and assistant.email != 'assistant@eyeclinic.com':
+                    subject = "Salary Payment Receipt - Dr. Richa's Eye Clinic"
+                    message = f"""
+Dear {assistant.full_name},
 
-            Your salary payment has been processed:
+Your salary payment has been processed:
 
-            Amount: ₹{form.amount.data}
-            Date: {form.payment_date.data}
-            Payment Method: {form.payment_method.data}
-            Description: {form.description.data}
+Amount: ₹{form.amount.data}
+Date: {form.payment_date.data}
+Payment Method: {form.payment_method.data}
+Description: {form.description.data}
 
-            Best regards,
-            Dr. Richa's Eye Clinic
-            """
-                send_email_notification('assistant@eyeclinic.com', subject, message)
-                flash('Salary payment processed successfully!', 'success')
+Best regards,
+Dr. Richa's Eye Clinic
+"""
+                    try:
+                        send_email_notification(assistant.email, subject, message)
+                        flash('Salary payment processed successfully and notification sent!', 'success')
+                    except Exception as email_error:
+                        print(f"Email notification failed: {str(email_error)}")
+                        flash('Salary payment processed successfully! (Email notification failed)', 'warning')
+                else:
+                    flash('Salary payment processed successfully! (No email configured for assistant)', 'success')
+                    
                 return redirect(url_for('admin_assistant_salary'))
             except Exception as e:
                 db.session.rollback()
                 flash(f'Error processing salary: {str(e)}', 'danger')
                 return redirect(url_for('admin_assistant_salary'))
         else:
-            flash('Assistant not found', 'danger')
+            flash('No assistant found in the system', 'danger')
 
-    # Get all salary records
-    assistant = Assistant.query.filter_by(email='assistant@eyeclinic.com').first()
-    salary_records = Salary.query.filter_by(assistant_id=assistant.id).order_by(desc(Salary.payment_date)).all() if assistant else []
+    # Get all salary records from all assistants
+    assistants = Assistant.query.all()
+    salary_records = []
+    for assistant in assistants:
+        assistant_salaries = Salary.query.filter_by(assistant_id=assistant.id).order_by(desc(Salary.payment_date)).all()
+        salary_records.extend(assistant_salaries)
+    
+    # Sort all salary records by payment date
+    salary_records.sort(key=lambda x: x.payment_date, reverse=True)
 
-    return render_template('admin/assistant_salary.html', form=form, salary_records=salary_records)
+    return render_template('admin/assistant_salary.html', form=form, salary_records=salary_records, assistants=assistants)
 
 @app.route('/admin/reviews')
 @login_required
