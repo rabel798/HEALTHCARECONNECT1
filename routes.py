@@ -1065,11 +1065,14 @@ def admin_appointment_view(appointment_id):
             appointment.status = 'confirmed'
             
             # Update payment status to completed when confirmed
-            if appointment.payment:
-                appointment.payment.status = 'completed'
-                print(f"Updated payment {appointment.payment.id} status to completed")  # Debug log
-            
             try:
+                payment = Payment.query.filter_by(appointment_id=appointment_id).first()
+                if payment:
+                    payment.status = 'completed'
+                    print(f"Updated payment {payment.id} status to completed")  # Debug log
+                else:
+                    print(f"No payment found for appointment {appointment_id}")  # Debug log
+                
                 db.session.commit()
 
                 # Send confirmation email when doctor confirms the appointment
@@ -1106,10 +1109,14 @@ Dr. Richa's Eye Clinic
             appointment.status = 'cancelled'
             
             # Update payment status to cancelled as well
-            if appointment.payment:
-                appointment.payment.status = 'cancelled'
-            
             try:
+                payment = Payment.query.filter_by(appointment_id=appointment_id).first()
+                if payment:
+                    payment.status = 'cancelled'
+                    print(f"Updated payment {payment.id} status to cancelled")  # Debug log
+                else:
+                    print(f"No payment found for appointment {appointment_id}")  # Debug log
+                
                 db.session.commit()
 
                 # Send cancellation email when doctor cancels the appointment
@@ -1758,6 +1765,9 @@ def admin_fix_payment_status():
         return redirect(url_for('index'))
     
     try:
+        fixed_count = 0
+        cancelled_count = 0
+        
         # Find payments where appointment is confirmed but payment is still pending
         inconsistent_payments = db.session.query(Payment).join(Appointment).filter(
             Appointment.status == 'confirmed',
@@ -1767,6 +1777,7 @@ def admin_fix_payment_status():
         # Fix them
         for payment in inconsistent_payments:
             payment.status = 'completed'
+            fixed_count += 1
             print(f"Fixed payment {payment.id} for appointment {payment.appointment_id}")
         
         # Find payments where appointment is cancelled but payment is not cancelled
@@ -1777,11 +1788,23 @@ def admin_fix_payment_status():
         
         for payment in cancelled_payments:
             payment.status = 'cancelled'
+            cancelled_count += 1
             print(f"Fixed cancelled payment {payment.id} for appointment {payment.appointment_id}")
+        
+        # Also check for payments with completed status where appointment is still scheduled
+        completed_payments_wrong = db.session.query(Payment).join(Appointment).filter(
+            Appointment.status == 'scheduled',
+            Payment.status == 'completed'
+        ).all()
+        
+        for payment in completed_payments_wrong:
+            payment.status = 'pending'
+            fixed_count += 1
+            print(f"Reset payment {payment.id} for scheduled appointment {payment.appointment_id}")
         
         db.session.commit()
         
-        flash(f'Fixed {len(inconsistent_payments)} confirmed payments and {len(cancelled_payments)} cancelled payments', 'success')
+        flash(f'Fixed {fixed_count} payments and cancelled {cancelled_count} payments', 'success')
         return redirect(url_for('admin_revenue'))
         
     except Exception as e:

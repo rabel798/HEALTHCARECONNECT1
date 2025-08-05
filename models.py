@@ -79,7 +79,7 @@ class MedicalRecord(db.Model):
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     appointment_id = db.Column(db.Integer, db.ForeignKey('appointment.id'), nullable=False)
-    appointment = db.relationship('Appointment', backref='payment', uselist=False)
+    appointment = db.relationship('Appointment', backref=db.backref('payment', uselist=False))
     amount = db.Column(db.Float, nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)  # cash, bank_transfer, upi
     transaction_id = db.Column(db.String(100), nullable=True)
