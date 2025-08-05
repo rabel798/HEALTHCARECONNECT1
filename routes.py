@@ -1067,6 +1067,7 @@ def admin_appointment_view(appointment_id):
             # Update payment status to completed when confirmed
             if appointment.payment:
                 appointment.payment.status = 'completed'
+                print(f"Updated payment {appointment.payment.id} status to completed")  # Debug log
             
             try:
                 db.session.commit()
@@ -1747,6 +1748,46 @@ def print_prescription(type, prescription_id):
         return redirect(url_for('index'))
 
     return render_template(template, prescription=prescription)
+
+@app.route('/admin/fix-payment-status')
+@login_required
+def admin_fix_payment_status():
+    """Debug route to fix inconsistent payment statuses"""
+    if not isinstance(current_user, Doctor):
+        flash('Access denied. Doctor privileges required.', 'danger')
+        return redirect(url_for('index'))
+    
+    try:
+        # Find payments where appointment is confirmed but payment is still pending
+        inconsistent_payments = db.session.query(Payment).join(Appointment).filter(
+            Appointment.status == 'confirmed',
+            Payment.status == 'pending'
+        ).all()
+        
+        # Fix them
+        for payment in inconsistent_payments:
+            payment.status = 'completed'
+            print(f"Fixed payment {payment.id} for appointment {payment.appointment_id}")
+        
+        # Find payments where appointment is cancelled but payment is not cancelled
+        cancelled_payments = db.session.query(Payment).join(Appointment).filter(
+            Appointment.status == 'cancelled',
+            Payment.status != 'cancelled'
+        ).all()
+        
+        for payment in cancelled_payments:
+            payment.status = 'cancelled'
+            print(f"Fixed cancelled payment {payment.id} for appointment {payment.appointment_id}")
+        
+        db.session.commit()
+        
+        flash(f'Fixed {len(inconsistent_payments)} confirmed payments and {len(cancelled_payments)} cancelled payments', 'success')
+        return redirect(url_for('admin_revenue'))
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error fixing payment statuses: {str(e)}', 'danger')
+        return redirect(url_for('admin_revenue'))
 
 @app.route('/admin/revenue', methods=['GET', 'POST'])
 @login_required
