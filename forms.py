@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, DateField, TimeField, SelectField, SubmitField, PasswordField, HiddenField, DecimalField
-from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional, EqualTo
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, DateField, TimeField, PasswordField, HiddenField, SubmitField, FloatField
+from wtforms.validators import DataRequired, Length, NumberRange, Optional, Email, EqualTo, ValidationError
 
 class AppointmentForm(FlaskForm):
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=3, max=100)])

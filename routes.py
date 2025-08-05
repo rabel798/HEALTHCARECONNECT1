@@ -315,68 +315,90 @@ def patient_register():
     form = PatientRegistrationForm()
     if form.validate_on_submit():
         try:
-            # Check if email or mobile already exists
-            existing_patient = Patient.query.filter(
-                (Patient.email == form.email.data) | 
-                (Patient.mobile_number == form.mobile_number.data)
-            ).first()
+            # Check if email or mobile already exists (only check email if provided)
+            query_filters = [Patient.mobile_number == form.mobile_number.data]
+            if form.email.data:
+                query_filters.append(Patient.email == form.email.data)
+            
+            existing_patient = Patient.query.filter(db.or_(*query_filters)).first()
 
             if existing_patient:
-                flash('A patient with this email or mobile number already exists.', 'danger')
-                return redirect(url_for('patient_register'))
+                if existing_patient.mobile_number == form.mobile_number.data:
+                    flash('A patient with this mobile number already exists.', 'danger')
+                else:
+                    flash('A patient with this email already exists.', 'danger')
+                return render_template('patient/register.html', form=form)
 
-            # Generate 6-digit OTP
-            otp_code = ''.join(random.choices(string.digits, k=6))
+            # If email is provided, use OTP verification
+            if form.email.data:
+                # Generate 6-digit OTP
+                otp_code = ''.join(random.choices(string.digits, k=6))
+                expires_at = datetime.utcnow() + timedelta(minutes=30)
 
-            # Set expiry time (30 minutes)
-            expires_at = datetime.utcnow() + timedelta(minutes=30)
+                # Store OTP in database
+                new_otp = OTP(
+                    email=form.email.data,
+                    otp_code=otp_code,
+                    expires_at=expires_at
+                )
+                db.session.add(new_otp)
+                db.session.commit()
 
-            # Store OTP in database
-            new_otp = OTP(
-                email=form.email.data,
-                otp_code=otp_code,
-                expires_at=expires_at
-            )
-            db.session.add(new_otp)
-            db.session.commit()
+                # Store registration data in session
+                session['registration_data'] = {
+                    'full_name': form.full_name.data,
+                    'mobile_number': form.mobile_number.data,
+                    'email': form.email.data,
+                    'age': form.age.data,
+                    'sex': form.sex.data,
+                    'password': form.password.data
+                }
 
-            # Store registration data in session for later use
-            session['registration_data'] = {
-                'full_name': form.full_name.data,
-                'mobile_number': form.mobile_number.data,
-                'email': form.email.data,
-                'age': form.age.data,
-                'sex': form.sex.data,
-                'password': form.password.data
-            }
+                # Send OTP via email
+                subject = "Your OTP for Dr. Richa's Eye Clinic Registration"
+                message = f"""
+Dear {form.full_name.data},
 
-            # Send OTP via email
-            subject = "Your OTP for Dr. Richa's Eye Clinic Registration"
-            message = f"""
-            Dear {form.full_name.data},
+Your OTP for registration is: {otp_code}
 
-            Your OTP for registration is: {otp_code}
+This OTP will expire in 30 minutes.
 
-            This OTP will expire in 30 minutes.
+Best regards,
+Dr. Richa's Eye Clinic
+                """
+                try:
+                    send_email_notification(form.email.data, subject, message)
+                    flash('OTP has been sent to your email address', 'success')
+                except Exception as email_error:
+                    print(f"Email error: {str(email_error)}")
+                    flash('Registration completed! Please proceed to login.', 'info')
 
-            Best regards,
-            Dr. Richa's Eye Clinic
-            """
-            try:
-                send_email_notification(form.email.data, subject, message)
-                flash('OTP has been sent to your email address', 'success')
-            except Exception as email_error:
-                print(f"Email error: {str(email_error)}")
-                flash('OTP has been generated. Please proceed to verification.', 'info')
-
-            # Redirect to OTP verification page
-            return redirect(url_for('verify_otp', email=form.email.data))
+                return redirect(url_for('verify_otp', email=form.email.data))
+            
+            else:
+                # Direct registration without email verification
+                new_patient = Patient(
+                    full_name=form.full_name.data,
+                    mobile_number=form.mobile_number.data,
+                    email='',
+                    age=form.age.data,
+                    sex=form.sex.data,
+                    is_registered=True
+                )
+                if form.password.data:
+                    new_patient.set_password(form.password.data)
+                
+                db.session.add(new_patient)
+                db.session.commit()
+                
+                login_user(new_patient)
+                flash('Registration successful! Welcome to Dr. Richa\'s Eye Clinic.', 'success')
+                return redirect(url_for('patient_dashboard'))
 
         except Exception as e:
             db.session.rollback()
             print(f"Registration error: {str(e)}")
-            flash('An error occurred during registration. Please try again.', 'danger')
-            return redirect(url_for('patient_register'))
+            flash(f'Registration failed: {str(e)}', 'danger')
 
     return render_template('patient/register.html', form=form)
 
@@ -1984,6 +2006,17 @@ def delete_prescription(type, prescription_id):
         flash(f'Error deleting prescription: {str(e)}', 'danger')
         return redirect(request.referrer or url_for('admin_dashboard'))
 
+@app.route('/patient/google-register')
+def patient_google_register():
+    """Patient Google OAuth registration route"""
+    # If already logged in, redirect to patient dashboard
+    if current_user.is_authenticated:
+        return redirect(url_for('patient_dashboard'))
+
+    # Use Gmail OTP for now since Google OAuth requires setup
+    flash('For Google registration, please use Gmail OTP option below:', 'info')
+    return redirect(url_for('patient_gmail_login'))
+
 @app.route('/patient/google-login')
 def patient_google_login():
     """Patient Google OAuth login route"""
@@ -1991,16 +2024,9 @@ def patient_google_login():
     if current_user.is_authenticated:
         return redirect(url_for('patient_dashboard'))
 
-    # Generate OAuth URL
-    oauth_url = "https://accounts.google.com/o/oauth2/v2/auth"
-    client_id = "your-client-id"  # Replace with your Google OAuth client ID
-    redirect_uri = url_for('patient_google_callback', _external=True)
-    scope = "email profile"
-    state = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
-    session['oauth_state'] = state
-
-    auth_url = f"{oauth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code&scope={scope}&state={state}"
-    return redirect(auth_url)
+    # Use Gmail OTP for now since Google OAuth requires proper setup
+    flash('Please use Gmail OTP login for Google authentication:', 'info')
+    return redirect(url_for('patient_gmail_login'))
 
 @app.route('/patient/google-callback')
 def patient_google_callback():

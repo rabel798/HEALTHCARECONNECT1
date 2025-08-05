@@ -12,6 +12,16 @@
                         <h2 class="card-title text-center mb-4">Create Patient Account</h2>
                         <p class="text-center mb-4">Register to book appointments, view medical records, and more.</p>
                         
+                        <!-- Google OAuth Registration -->
+                        <div class="text-center mb-4">
+                            <a href="{{ url_for('patient_google_register') }}" class="btn btn-danger w-100 py-2 mb-3">
+                                <i class="fab fa-google me-2"></i> Sign up with Google
+                            </a>
+                            <div class="divider my-3">
+                                <span class="text-muted">OR</span>
+                            </div>
+                        </div>
+                        
                         <form method="POST" action="{{ url_for('patient_register') }}">
                             {{ form.hidden_tag() }}
                             
@@ -56,7 +66,8 @@
                                 
                                 <div class="col-md-6 mb-3">
                                     {{ form.email.label(class="form-label") }}
-                                    {{ form.email(class="form-control", placeholder="Enter your email") }}
+                                    <small class="text-muted">(Optional - for OTP verification)</small>
+                                    {{ form.email(class="form-control", placeholder="Enter your email (optional)") }}
                                     {% if form.email.errors %}
                                         <div class="text-danger">
                                             {% for error in form.email.errors %}
@@ -70,7 +81,8 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     {{ form.password.label(class="form-label") }}
-                                    {{ form.password(class="form-control", placeholder="Create a password") }}
+                                    <small class="text-muted">(Optional - leave empty for Gmail OTP login)</small>
+                                    {{ form.password(class="form-control", placeholder="Create a password (optional)") }}
                                     {% if form.password.errors %}
                                         <div class="text-danger">
                                             {% for error in form.password.errors %}

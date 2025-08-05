@@ -10,7 +10,7 @@
   --white: #ffffff;
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
-  
+
   /* Dark mode variables */
   --bg-color: #ffffff;
   --text-color: #343a40;
@@ -440,11 +440,11 @@ footer a:hover {
   .hero {
     padding: 4rem 0;
   }
-  
+
   .hero h1 {
     font-size: 2rem;
   }
-  
+
   .doctor-image {
     margin-bottom: 2rem;
   }
@@ -454,11 +454,11 @@ footer a:hover {
   .hero h1 {
     font-size: 1.75rem;
   }
-  
+
   .hero p {
     font-size: 1rem;
   }
-  
+
   .service-card {
     margin-bottom: 1.5rem;
   }
@@ -816,4 +816,30 @@ footer a:hover {
 
 [data-theme="dark"] .highlight-credential:hover {
     background-color: rgba(0, 123, 255, 0.2);
+}
+
+/* Add any custom styles here */
+
+/* Registration form divider */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #dee2e6;
+}
+
+.divider span {
+    background: white;
+    padding: 0 15px;
+    color: #6c757d;
+    font-size: 0.9em;
 }
