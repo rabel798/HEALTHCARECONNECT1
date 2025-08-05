@@ -1021,7 +1021,7 @@ def admin_dashboard():
         Appointment.status == 'scheduled'
     ).order_by(Appointment.appointment_time).all()
 
-    return rendertemplate('admin/dashboard.html', 
+    return render_template('admin/dashboard.html', 
                           total_patients=total_patients,
                           total_appointments=total_appointments,
                           upcoming_appointments=upcoming_appointments,
