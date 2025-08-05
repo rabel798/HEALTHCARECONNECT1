@@ -1,4 +1,7 @@
-﻿# Python/Django
+# Environment variables
+.env
+
+# Python/Django
 healthconnect-venv/
 __pycache__/
 *.py[cod]
