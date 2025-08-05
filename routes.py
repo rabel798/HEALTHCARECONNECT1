@@ -122,14 +122,19 @@ def appointment():
                 'appointment_time': new_appointment.appointment_time.strftime('%I:%M %p')
             }
 
-            # Send confirmation email
-            subject = "Appointment Confirmation - Dr. Richa's Eye Clinic"
+            # Send appointment application email
+            subject = "Appointment Application Submitted - Dr. Richa's Eye Clinic"
             message = f"""
             Dear {patient.full_name},
 
-            Your appointment has been confirmed for {new_appointment.appointment_date.strftime('%d %B, %Y')} at {new_appointment.appointment_time.strftime('%I:%M %p')}.
+            Thank you for submitting your appointment application. Your request has been received and is pending confirmation from our medical team.
 
-            Primary Issue: {new_appointment.primary_issue}
+            Appointment Details:
+            - Date: {new_appointment.appointment_date.strftime('%d %B, %Y')}
+            - Time: {new_appointment.appointment_time.strftime('%I:%M %p')}
+            - Primary Issue: {new_appointment.primary_issue}
+
+            We will send you a confirmation email once your appointment is approved by Dr. Richa.
 
             Location: First floor, DVR Town Centre, near to IGUS private limited, 
             Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
@@ -1053,35 +1058,72 @@ def admin_appointment_view(appointment_id):
 
         if action == 'complete':
             appointment.status = 'completed'
-            message = "Your appointment has been completed. Thank you for visiting Dr. Richa's Eye Clinic."
-
+            
             try:
                 db.session.commit()
 
-                # Send email notification if patient has email
+                # Send confirmation email when doctor confirms the appointment
                 if appointment.patient.email:
-                    subject = f"Appointment {appointment.status.title()} - Dr. Richa's Eye Clinic"
+                    subject = "Appointment Confirmed - Dr. Richa's Eye Clinic"
+                    message = f"""
+Dear {appointment.patient.full_name},
+
+Great news! Your appointment has been CONFIRMED by Dr. Richa.
+
+Confirmed Appointment Details:
+- Date: {appointment.appointment_date.strftime('%A, %B %d, %Y')}
+- Time: {appointment.appointment_time.strftime('%I:%M %p')}
+- Primary Issue: {appointment.primary_issue}
+- Consultation Fee: ₹500 (to be paid at the clinic)
+
+Please arrive 15 minutes before your scheduled time.
+
+Location: First floor, DVR Town Centre, near to IGUS private limited, 
+Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
+
+Best regards,
+Dr. Richa's Eye Clinic
+                    """
                     send_email_notification(appointment.patient.email, subject, message)
 
-                flash('Appointment marked as completed.', 'success')
+                flash('Appointment confirmed and confirmation email sent to patient.', 'success')
                 return redirect(url_for('admin_appointment_view', appointment_id=appointment_id))
             except Exception as e:
                 db.session.rollback()
-                flash(f'Error updating appointment:: {str(e)}', 'danger')
+                flash(f'Error updating appointment: {str(e)}', 'danger')
 
         elif action == 'cancel':
             appointment.status = 'cancelled'
-            message = "Your appointment has been cancelled. Please contact us if you need to reschedule."
-
+            
             try:
                 db.session.commit()
 
-                # Send email notification if patient has email
+                # Send cancellation email when doctor cancels the appointment
                 if appointment.patient.email:
-                    subject = f"Appointment {appointment.status.title()} - Dr. Richa's Eye Clinic"
+                    subject = "Appointment Cancelled - Dr. Richa's Eye Clinic"
+                    message = f"""
+Dear {appointment.patient.full_name},
+
+We regret to inform you that your appointment scheduled for {appointment.appointment_date.strftime('%A, %B %d, %Y')} at {appointment.appointment_time.strftime('%I:%M %p')} has been cancelled by our medical team.
+
+We apologize for any inconvenience caused. Please contact us at your earliest convenience to reschedule your appointment.
+
+You can:
+- Call us during clinic hours
+- Visit our website to book a new appointment
+- Reply to this email with your preferred time slots
+
+We look forward to serving you soon.
+
+Best regards,
+Dr. Richa's Eye Clinic
+Phone: +91 98765 43210
+Location: First floor, DVR Town Centre, near to IGUS private limited, 
+Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
+                    """
                     send_email_notification(appointment.patient.email, subject, message)
 
-                flash('Appointment has been cancelled.', 'warning')
+                flash('Appointment cancelled and notification sent to patient.', 'warning')
                 return redirect(url_for('admin_appointment_view', appointment_id=appointment_id))
             except Exception as e:
                 db.session.rollback()

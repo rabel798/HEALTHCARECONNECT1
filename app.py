@@ -25,10 +25,10 @@ app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 # Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'your-gmail@gmail.com'  # Replace with your Gmail
-app.config['MAIL_PASSWORD'] = 'your-app-password'  # Replace with your Gmail App Password
+app.config['MAIL_USERNAME'] = 'eyeclinic@gmail.com'  # Replace with your actual Gmail address
+app.config['MAIL_PASSWORD'] = 'onlg iqtn eizf vehv'  # Your Gmail App Password
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'your-gmail@gmail.com'  # Replace with your Gmail
+app.config['MAIL_DEFAULT_SENDER'] = 'eyeclinic@gmail.com'  # Replace with your actual Gmail address
 
 
 # Configure the database
