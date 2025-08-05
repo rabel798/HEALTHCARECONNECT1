@@ -305,11 +305,18 @@ def available_slots():
         # Get all appointments for the selected date
         booked_appointments = Appointment.query.filter_by(appointment_date=selected_date).all()
 
-        # Get the booked time slots
-        booked_slots = [appt.appointment_time.strftime('%H:%M') for appt in booked_appointments]
+        # Count appointments per time slot
+        slot_counts = {}
+        for appointment in booked_appointments:
+            time_str = appointment.appointment_time.strftime('%H:%M')
+            slot_counts[time_str] = slot_counts.get(time_str, 0) + 1
 
-        # Filter out booked slots
-        available_slots = [slot for slot in all_slots if slot not in booked_slots]
+        # Filter out slots that have 3 or more appointments (full capacity)
+        available_slots = []
+        for slot in all_slots:
+            appointments_in_slot = slot_counts.get(slot, 0)
+            if appointments_in_slot < 3:  # Allow up to 3 appointments per slot
+                available_slots.append(slot)
 
         return jsonify(available_slots)
     except Exception as e:
