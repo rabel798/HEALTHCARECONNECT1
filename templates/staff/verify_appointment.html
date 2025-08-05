@@ -130,11 +130,11 @@
                 </div>
                 
                 <div class="text-center mt-4">
-                    {% if isinstance(current_user, Doctor) %}
+                    {% if current_user.__class__.__name__ == 'Doctor' %}
                         <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-primary">
                             <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </a>
-                    {% elif isinstance(current_user, Assistant) %}
+                    {% elif current_user.__class__.__name__ == 'Assistant' %}
                         <a href="{{ url_for('assistant_dashboard') }}" class="btn btn-outline-primary">
                             <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </a>
