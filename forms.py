@@ -111,6 +111,13 @@ class OTPVerificationForm(FlaskForm):
     otp = StringField('OTP Code', validators=[DataRequired(), Length(min=6, max=6)])
     submit = SubmitField('Verify OTP')
 
+class ProfileCompletionForm(FlaskForm):
+    mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
+    age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
+    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
+    primary_issue = TextAreaField('Primary Eye Concern', validators=[Optional(), Length(max=500)])
+    submit = SubmitField('Complete Profile')
+
 class PrescriptionForm(FlaskForm):
     diagnosis = TextAreaField('Diagnosis', validators=[DataRequired()])
     left_eye_findings = TextAreaField('Left Eye Findings', validators=[Optional()])

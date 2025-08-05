@@ -17,7 +17,7 @@
                         <p class="card-text text-muted">{{ current_user.mobile_number }}</p>
                     </div>
                 </div>
-                
+
                 <div class="list-group shadow-sm">
                     <a href="{{ url_for('patient_dashboard') }}" class="list-group-item list-group-item-action active">
                         <i class="fas fa-home me-2"></i> Dashboard
@@ -33,17 +33,27 @@
                     </a>
                 </div>
             </div>
-            
+
             <div class="col-lg-9">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Welcome, {{ current_user.full_name }}!</h4>
                         <p>From your patient dashboard, you can view your upcoming appointments, access your medical records, and book new appointments with Dr. Richa.</p>
+
+                        {% if current_user.mobile_number == '0000000000' or current_user.age == 1 %}
+                        <div class="alert alert-info" role="alert">
+                            <h5><i class="fas fa-info-circle me-2"></i>Complete Your Profile</h5>
+                            <p class="mb-0">Help us serve you better by completing your profile information.</p>
+                            <a href="{{ url_for('patient_complete_profile') }}" class="btn btn-outline-primary btn-sm mt-2">
+                                <i class="fas fa-user-edit me-1"></i>Complete Profile
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
-                
+
                 <h5 class="mb-3">Your Upcoming Appointments</h5>
-                
+
                 <div class="card shadow-sm">
                     <div class="card-body">
                         {% if appointments %}
@@ -79,7 +89,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             {% set upcoming_count = appointments|selectattr('appointment_date', 'ge', now.date())|list|length %}
                             {% if upcoming_count == 0 %}
                                 <div class="text-center p-4">

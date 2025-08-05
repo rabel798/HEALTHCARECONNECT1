@@ -117,7 +117,7 @@
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary text-white px-3 ms-lg-2" href="{{ url_for('appointment') }}">Book Appointment</a>
                     </li>
-                    
+
 
                     {% if current_user.is_authenticated %}
                         {% if current_user.__class__.__name__ == 'Patient' %}
@@ -217,15 +217,13 @@
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h5>Contact Information</h5>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> First floor, DVR Town Centre, near to     IGUS private limited, Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049</li>
-                        <li><i class="fas fa-phone"></i> Coming Soon .....</li>
-                        <li><i class="fas fa-envelope"></i> drrichaeyeclinic@gmail.com</li>
-                        <li><i class="fas fa-clock"></i> Mon-Sat: 5:00 PM - 8:00 PM</li>
-                        <li><i class="fas fa-clock"></i> Sun: 10:00 AM - 1:00 PM</li>
-                    </ul>
-                </div>
+                        <h5>Contact Info</h5>
+                        <p><i class="fas fa-map-marker-alt me-2"></i>First floor, DVR Town Centre, Mandur, Budigere Road, Bengaluru 560049</p>
+                        <p><i class="fas fa-envelope me-2"></i>drrichaeyeclinic@gmail.com</p>
+                        <div class="alert alert-warning mt-3 p-2">
+                            <small><i class="fas fa-exclamation-triangle me-1"></i><strong>Emergency:</strong> For urgent eye emergencies, please visit the nearest hospital emergency room.</small>
+                        </div>
+                    </div>
             </div>
             <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
             <div class="row">

@@ -1,0 +1,83 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}Complete Your Profile - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="card-title text-center mb-4">Complete Your Profile</h2>
+                        <p class="text-center mb-4 text-muted">Please provide additional information to help us serve you better.</p>
+                        
+                        <form method="POST">
+                            {{ form.hidden_tag() }}
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.mobile_number.label(class="form-label") }}
+                                    {{ form.mobile_number(class="form-control", placeholder="Enter mobile number") }}
+                                    {% if form.mobile_number.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.mobile_number.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.age.label(class="form-label") }}
+                                    {{ form.age(class="form-control", placeholder="Enter age") }}
+                                    {% if form.age.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.age.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.sex.label(class="form-label") }}
+                                {{ form.sex(class="form-select") }}
+                                {% if form.sex.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.sex.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.primary_issue.label(class="form-label") }}
+                                {{ form.primary_issue(class="form-control", rows="3", placeholder="Briefly describe any eye-related concerns you have") }}
+                                {% if form.primary_issue.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.primary_issue.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                {{ form.submit(class="btn btn-primary py-2") }}
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('patient_dashboard') }}" class="text-muted">Skip for now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

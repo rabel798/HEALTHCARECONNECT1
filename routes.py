@@ -14,7 +14,7 @@ from wtforms.validators import DataRequired, Email
 from app import app, db
 from models import Patient, Appointment, MedicalRecord, Payment, Review, Admin, OTP, Doctor, Assistant, Salary, Treatment, DoctorPrescription, OptometristPrescription
 from forms import (
-    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm
+    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm, ProfileCompletionForm
 )
 import requests
 
@@ -723,6 +723,41 @@ def patient_cancel_appointment(appointment_id):
 
     return redirect(url_for('patient_appointments'))
 
+
+@app.route('/patient/complete-profile', methods=['GET', 'POST'])
+@login_required
+def patient_complete_profile():
+    """Patient profile completion route"""
+    if not isinstance(current_user, Patient):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('index'))
+
+    form = ProfileCompletionForm()
+    
+    # Pre-populate form with existing data
+    if request.method == 'GET':
+        if current_user.mobile_number != '0000000000':
+            form.mobile_number.data = current_user.mobile_number
+        if current_user.age != 1:
+            form.age.data = current_user.age
+        if current_user.sex:
+            form.sex.data = current_user.sex
+
+    if form.validate_on_submit():
+        try:
+            # Update patient profile
+            current_user.mobile_number = form.mobile_number.data
+            current_user.age = form.age.data
+            current_user.sex = form.sex.data
+            
+            db.session.commit()
+            flash('Profile completed successfully!', 'success')
+            return redirect(url_for('patient_dashboard'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error updating profile: {str(e)}', 'danger')
+
+    return render_template('patient/complete_profile.html', form=form)
 
 @app.route('/patient/medical-records')
 @login_required
@@ -2216,6 +2251,11 @@ def patient_google_callback():
             flash('Successfully registered and logged in with Google!', 'success')
         else:
             flash('Successfully logged in with Google!', 'success')
+
+        # Check if profile is incomplete for new users
+        if patient.mobile_number == '0000000000' or patient.age == 1:
+            flash('Please complete your profile to help us serve you better.', 'info')
+            return redirect(url_for('patient_complete_profile'))
 
         return redirect(url_for('patient_dashboard'))
 
