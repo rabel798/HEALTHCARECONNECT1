@@ -10,6 +10,11 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+# Debug: Print environment variables (remove in production)
+print(f"GOOGLE_CLIENT_ID loaded: {'Yes' if os.environ.get('GOOGLE_CLIENT_ID') else 'No'}")
+print(f"GOOGLE_CLIENT_SECRET loaded: {'Yes' if os.environ.get('GOOGLE_CLIENT_SECRET') else 'No'}")
+print(f"SESSION_SECRET loaded: {'Yes' if os.environ.get('SESSION_SECRET') else 'No'}")
+
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
