@@ -1,0 +1,145 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}Edit Profile - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        <div class="avatar-circle bg-primary text-white mb-3">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                        <h5 class="card-title">{{ current_user.full_name }}</h5>
+                        <p class="card-text text-muted mb-0">{{ current_user.email }}</p>
+                        <p class="card-text text-muted">{{ current_user.mobile_number }}</p>
+                    </div>
+                </div>
+
+                <div class="list-group shadow-sm">
+                    <a href="{{ url_for('patient_dashboard') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('patient_appointments') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-calendar-check me-2"></i> My Appointments
+                    </a>
+                    <a href="{{ url_for('patient_medical_records') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-medical me-2"></i> Medical Records
+                    </a>
+                    <a href="{{ url_for('patient_edit_profile') }}" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-user-edit me-2"></i> Edit Profile
+                    </a>
+                    <a href="{{ url_for('appointment') }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus-circle me-2"></i> Book New Appointment
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-edit me-2"></i>Edit Profile
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('patient_edit_profile') }}">
+                            {{ form.csrf_token }}
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="full_name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    {{ form.full_name(class="form-control", placeholder="Enter your full name") }}
+                                    {% if form.full_name.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.full_name.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="mobile_number" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                                    {{ form.mobile_number(class="form-control", placeholder="Enter mobile number") }}
+                                    {% if form.mobile_number.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.mobile_number.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    {{ form.email(class="form-control", placeholder="Enter email address") }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.email.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="age" class="form-label">Age <span class="text-danger">*</span></label>
+                                    {{ form.age(class="form-control", placeholder="Enter your age") }}
+                                    {% if form.age.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.age.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label for="sex" class="form-label">Sex <span class="text-danger">*</span></label>
+                                    {{ form.sex(class="form-select") }}
+                                    {% if form.sex.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.sex.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline-secondary me-md-2">
+                                    <i class="fas fa-times me-1"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>{{ form.submit.label.text }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}

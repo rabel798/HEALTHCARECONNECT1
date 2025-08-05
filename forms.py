@@ -118,6 +118,14 @@ class ProfileCompletionForm(FlaskForm):
     primary_issue = TextAreaField('Primary Eye Concern', validators=[Optional(), Length(max=500)])
     submit = SubmitField('Complete Profile')
 
+class PatientEditForm(FlaskForm):
+    full_name = StringField('Full Name', validators=[DataRequired(), Length(min=3, max=100)])
+    mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
+    email = StringField('Email', validators=[Optional(), Email(), Length(max=100)])
+    age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
+    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
+    submit = SubmitField('Update Profile')
+
 class PrescriptionForm(FlaskForm):
     diagnosis = TextAreaField('Diagnosis', validators=[DataRequired()])
     left_eye_findings = TextAreaField('Left Eye Findings', validators=[Optional()])

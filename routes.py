@@ -14,7 +14,7 @@ from wtforms.validators import DataRequired, Email
 from app import app, db
 from models import Patient, Appointment, MedicalRecord, Payment, Review, Admin, OTP, Doctor, Assistant, Salary, Treatment, DoctorPrescription, OptometristPrescription
 from forms import (
-    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm, ProfileCompletionForm
+    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm, ProfileCompletionForm, PatientEditForm
 )
 import requests
 
@@ -758,6 +758,63 @@ def patient_complete_profile():
             flash(f'Error updating profile: {str(e)}', 'danger')
 
     return render_template('patient/complete_profile.html', form=form)
+
+
+@app.route('/patient/edit-profile', methods=['GET', 'POST'])
+@login_required
+def patient_edit_profile():
+    """Patient profile editing route"""
+    if not isinstance(current_user, Patient):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('index'))
+
+    form = PatientEditForm()
+    
+    # Pre-populate form with existing data
+    if request.method == 'GET':
+        form.full_name.data = current_user.full_name
+        form.mobile_number.data = current_user.mobile_number
+        form.email.data = current_user.email
+        form.age.data = current_user.age
+        form.sex.data = current_user.sex
+
+    if form.validate_on_submit():
+        try:
+            # Check if mobile number is being changed and if it already exists
+            if form.mobile_number.data != current_user.mobile_number:
+                existing_patient = Patient.query.filter(
+                    Patient.mobile_number == form.mobile_number.data,
+                    Patient.id != current_user.id
+                ).first()
+                if existing_patient:
+                    flash('A patient with this mobile number already exists.', 'danger')
+                    return render_template('patient/edit_profile.html', form=form)
+
+            # Check if email is being changed and if it already exists
+            if form.email.data and form.email.data != current_user.email:
+                existing_patient = Patient.query.filter(
+                    Patient.email == form.email.data,
+                    Patient.id != current_user.id
+                ).first()
+                if existing_patient:
+                    flash('A patient with this email already exists.', 'danger')
+                    return render_template('patient/edit_profile.html', form=form)
+
+            # Update patient profile
+            current_user.full_name = form.full_name.data
+            current_user.mobile_number = form.mobile_number.data
+            current_user.email = form.email.data
+            current_user.age = form.age.data
+            current_user.sex = form.sex.data
+            
+            db.session.commit()
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('patient_dashboard'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error updating profile: {str(e)}', 'danger')
+
+    return render_template('patient/edit_profile.html', form=form)
 
 @app.route('/patient/medical-records')
 @login_required
