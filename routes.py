@@ -1062,7 +1062,11 @@ def admin_appointment_view(appointment_id):
         action = request.form.get('action')
 
         if action == 'complete':
-            appointment.status = 'completed'
+            appointment.status = 'confirmed'
+            
+            # Update payment status to completed when confirmed
+            if appointment.payment:
+                appointment.payment.status = 'completed'
             
             try:
                 db.session.commit()

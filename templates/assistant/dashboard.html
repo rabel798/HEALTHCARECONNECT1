@@ -164,8 +164,10 @@
                                                     <td>
                                                         {% if appointment.status == 'scheduled' %}
                                                             <span class="badge bg-warning">Scheduled</span>
+                                                        {% elif appointment.status == 'confirmed' %}
+                                                            <span class="badge bg-success">Confirmed</span>
                                                         {% elif appointment.status == 'completed' %}
-                                                            <span class="badge bg-success">Completed</span>
+                                                            <span class="badge bg-primary">Completed</span>
                                                         {% elif appointment.status == 'cancelled' %}
                                                             <span class="badge bg-danger">Cancelled</span>
                                                         {% endif %}
