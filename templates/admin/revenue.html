@@ -95,13 +95,10 @@
                                     </td>
                                     <td>₹{{ "%.2f"|format(payment.amount) }}</td>
                                     <td>
-                                        {% set appointment = payment.appointment %}
-                                        {% if appointment.status == 'cancelled' %}
-                                            <span class="badge bg-danger">Cancelled</span>
-                                        {% elif payment.status == 'completed' %}
-                                            <span class="badge bg-success">{{ payment.status|title }}</span>
+                                        {% if payment.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
                                         {% elif payment.status == 'pending' %}
-                                            <span class="badge bg-warning">{{ payment.status|title }}</span>
+                                            <span class="badge bg-warning">Pending</span>
                                         {% else %}
                                             <span class="badge bg-danger">{{ payment.status|title }}</span>
                                         {% endif %}

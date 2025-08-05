@@ -1815,12 +1815,15 @@ def admin_revenue():
             db.session.rollback()
             flash(f'Error adding treatment: {str(e)}', 'danger')
 
-    # Get all payments with patient details (exclude cancelled payments)
+    # Get all payments with patient details (exclude cancelled payments and payments from cancelled appointments)
     payments = (
         db.session.query(Payment, Patient)
         .join(Appointment, Payment.appointment_id == Appointment.id)
         .join(Patient, Appointment.patient_id == Patient.id)
-        .filter(Payment.status != 'cancelled')
+        .filter(
+            Payment.status != 'cancelled',
+            Appointment.status != 'cancelled'
+        )
         .order_by(Payment.created_at.desc())
         .all()
     )
