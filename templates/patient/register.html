@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Patient Registration - Dr. Richa's Eye Clinic{% endblock %}
@@ -6,112 +7,64 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm">
                     <div class="card-body p-4 p-md-5">
                         <h2 class="card-title text-center mb-4">Create Patient Account</h2>
-                        <p class="text-center mb-4">Register to book appointments, view medical records, and more.</p>
+                        <p class="text-center mb-5">Choose your preferred registration method</p>
                         
-                        <!-- Google OAuth Registration -->
-                        <div class="text-center mb-4">
-                            <a href="{{ url_for('patient_google_register') }}" class="btn btn-danger w-100 py-2 mb-3">
-                                <i class="fab fa-google me-2"></i> Sign up with Google
-                            </a>
-                            <div class="divider my-3">
-                                <span class="text-muted">OR</span>
+                        <!-- Registration Options -->
+                        <div class="row g-3">
+                            <!-- Gmail OTP Registration -->
+                            <div class="col-12">
+                                <div class="card border-primary registration-option">
+                                    <div class="card-body text-center p-4">
+                                        <i class="fas fa-envelope text-primary fa-2x mb-3"></i>
+                                        <h5 class="card-title">Register with Gmail OTP</h5>
+                                        <p class="text-muted mb-3">Quick registration using your Gmail address with OTP verification</p>
+                                        <a href="{{ url_for('patient_gmail_login') }}" class="btn btn-primary w-100">
+                                            <i class="fas fa-key me-2"></i>Continue with Gmail OTP
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Google Account Registration -->
+                            <div class="col-12">
+                                <div class="card border-danger registration-option">
+                                    <div class="card-body text-center p-4">
+                                        <i class="fab fa-google text-danger fa-2x mb-3"></i>
+                                        <h5 class="card-title">Register with Google Account</h5>
+                                        <p class="text-muted mb-3">One-click registration using your Google account</p>
+                                        <a href="{{ url_for('patient_google_register') }}" class="btn btn-danger w-100">
+                                            <i class="fab fa-google me-2"></i>Continue with Google Account
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ url_for('patient_register') }}">
-                            {{ form.hidden_tag() }}
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.full_name.label(class="form-label") }}
-                                    {{ form.full_name(class="form-control", placeholder="Enter your full name") }}
-                                    {% if form.full_name.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.full_name.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.age.label(class="form-label") }}
-                                    {{ form.age(class="form-control", placeholder="Enter your age") }}
-                                    {% if form.age.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.age.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.mobile_number.label(class="form-label") }}
-                                    {{ form.mobile_number(class="form-control", placeholder="Enter your mobile number") }}
-                                    {% if form.mobile_number.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.mobile_number.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.email.label(class="form-label") }}
-                                    <small class="text-muted">(Optional - for OTP verification)</small>
-                                    {{ form.email(class="form-control", placeholder="Enter your email (optional)") }}
-                                    {% if form.email.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.email.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form.password.label(class="form-label") }}
-                                    <small class="text-muted">(Optional - leave empty for Gmail OTP login)</small>
-                                    {{ form.password(class="form-control", placeholder="Create a password (optional)") }}
-                                    {% if form.password.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.password.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-6 mb-3">
-                                    {{ form.confirm_password.label(class="form-label") }}
-                                    {{ form.confirm_password(class="form-control", placeholder="Confirm your password") }}
-                                    {% if form.confirm_password.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.confirm_password.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="d-grid gap-2 mb-3">
-                                {{ form.submit(class="btn btn-primary py-2") }}
-                            </div>
-                        </form>
+                        <div class="text-center mt-4">
+                            <p class="text-muted">Already have an account? <a href="{{ url_for('patient_login') }}">Login here</a></p>
+                        </div>
                         
-                        <div class="text-center mt-3">
-                            <p>Already have an account? <a href="{{ url_for('patient_login') }}">Login here</a></p>
+                        <!-- Benefits of Registration -->
+                        <div class="mt-4 pt-4 border-top">
+                            <h6 class="text-center mb-3">Benefits of Creating an Account</h6>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <i class="fas fa-calendar-check text-primary mb-2"></i>
+                                    <small class="d-block">Book Appointments</small>
+                                </div>
+                                <div class="col-4">
+                                    <i class="fas fa-file-medical text-success mb-2"></i>
+                                    <small class="d-block">View Records</small>
+                                </div>
+                                <div class="col-4">
+                                    <i class="fas fa-bell text-info mb-2"></i>
+                                    <small class="d-block">Get Updates</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,4 +72,39 @@
         </div>
     </div>
 </section>
+
+<style>
+.registration-option {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.registration-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #dee2e6;
+}
+
+.divider span {
+    background: #f8f9fa;
+    padding: 0 1rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+</style>
 {% endblock %}
