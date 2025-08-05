@@ -1843,8 +1843,26 @@ def admin_revenue():
 
     if request.method == 'POST':
         try:
+            patient_name = request.form.get('patient_name')
+            
+            # Try to find existing patient by name
+            patient = Patient.query.filter_by(full_name=patient_name).first()
+            
+            # If patient doesn't exist, create a new one with minimal info
+            if not patient:
+                patient = Patient(
+                    full_name=patient_name,
+                    mobile_number='0000000000',  # Default placeholder
+                    email='',  # Empty email
+                    age=1,  # Default age
+                    sex='',  # Empty sex
+                    is_registered=False
+                )
+                db.session.add(patient)
+                db.session.flush()  # Get patient ID before commit
+            
             new_treatment = Treatment(
-                patient_id=request.form.get('patient_id'),
+                patient_id=patient.id,
                 treatment_name=request.form.get('treatment_name'),
                 treatment_date=datetime.strptime(request.form.get('treatment_date'), '%Y-%m-%d').date(),
                 amount=float(request.form.get('amount')),
@@ -1852,7 +1870,11 @@ def admin_revenue():
             )
             db.session.add(new_treatment)
             db.session.commit()
-            flash('Treatment record added successfully!', 'success')
+            
+            if patient.mobile_number == '0000000000':
+                flash(f'Treatment record added successfully for new patient: {patient_name}!', 'success')
+            else:
+                flash('Treatment record added successfully!', 'success')
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding treatment: {str(e)}', 'danger')
