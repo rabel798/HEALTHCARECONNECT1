@@ -19,18 +19,18 @@ class FindAppointmentForm(FlaskForm):
     mobile_number = StringField('Mobile Number', validators=[Optional(), Length(min=10, max=15)])
     email = StringField('Email Address', validators=[Optional(), Email(), Length(max=100)])
     submit = SubmitField('Find My Appointment')
-    
+
     def validate(self):
         rv = FlaskForm.validate(self)
         if not rv:
             return False
-        
+
         # At least one field must be filled
         if not self.mobile_number.data and not self.email.data:
             self.mobile_number.errors.append('Please provide either mobile number or email address')
             self.email.errors.append('Please provide either mobile number or email address')
             return False
-        
+
         return True
 
 class PaymentForm(FlaskForm):
@@ -160,20 +160,20 @@ class OptometristPrescriptionForm(FlaskForm):
     visit_date = DateField('Visit Date', validators=[Optional()])
     branch = StringField('Branch', validators=[Optional()])
     present_complaints = TextAreaField('Present Complaints', validators=[Optional()])
-    
+
     # Vision Assessment
     vision_distance_re = StringField('Distance Vision RE', validators=[Optional()])
     vision_distance_le = StringField('Distance Vision LE', validators=[Optional()])
     vision_near_re = StringField('Near Vision RE', validators=[Optional()])
     vision_near_le = StringField('Near Vision LE', validators=[Optional()])
-    
+
     # Current Medication
     current_medication_type = StringField('Medication Type', validators=[Optional()])
     current_medication_name = StringField('Medication Name', validators=[Optional()])
     current_medication_dosage = StringField('Dosage', validators=[Optional()])
     current_medication_eye = SelectField('Eye', choices=[('', 'Select'), ('OD', 'OD'), ('OS', 'OS'), ('OU', 'OU')], validators=[Optional()])
     current_medication_remarks = TextAreaField('Medication Remarks', validators=[Optional()])
-    
+
     # Undilated Acceptance - Right Eye
     undilated_re_sph = StringField('Sph', validators=[Optional()])
     undilated_re_cyl = StringField('Cyl', validators=[Optional()])
@@ -181,7 +181,7 @@ class OptometristPrescriptionForm(FlaskForm):
     undilated_re_prism = StringField('Prism', validators=[Optional()])
     undilated_re_va = StringField('V/A', validators=[Optional()])
     undilated_re_nv = StringField('N.V', validators=[Optional()])
-    
+
     # Undilated Acceptance - Left Eye
     undilated_le_sph = StringField('Sph', validators=[Optional()])
     undilated_le_cyl = StringField('Cyl', validators=[Optional()])
@@ -189,7 +189,7 @@ class OptometristPrescriptionForm(FlaskForm):
     undilated_le_prism = StringField('Prism', validators=[Optional()])
     undilated_le_va = StringField('V/A', validators=[Optional()])
     undilated_le_nv = StringField('N.V', validators=[Optional()])
-    
+
     # Dilated Acceptance - Right Eye
     dilated_re_sph = StringField('Sph', validators=[Optional()])
     dilated_re_cyl = StringField('Cyl', validators=[Optional()])
@@ -197,7 +197,7 @@ class OptometristPrescriptionForm(FlaskForm):
     dilated_re_prism = StringField('Prism', validators=[Optional()])
     dilated_re_va = StringField('V/A', validators=[Optional()])
     dilated_re_nv = StringField('N.V', validators=[Optional()])
-    
+
     # Dilated Acceptance - Left Eye
     dilated_le_sph = StringField('Sph', validators=[Optional()])
     dilated_le_cyl = StringField('Cyl', validators=[Optional()])
@@ -205,7 +205,7 @@ class OptometristPrescriptionForm(FlaskForm):
     dilated_le_prism = StringField('Prism', validators=[Optional()])
     dilated_le_va = StringField('V/A', validators=[Optional()])
     dilated_le_nv = StringField('N.V', validators=[Optional()])
-    
+
     # IOP Details
     iop_time = StringField('IOP Time', validators=[Optional()])
     iop_method = StringField('Method', validators=[Optional()])
@@ -214,7 +214,7 @@ class OptometristPrescriptionForm(FlaskForm):
     iop_dl = StringField('DL', validators=[Optional()])
     iop_pachy = StringField('Pachy', validators=[Optional()])
     iop_remarks = TextAreaField('IOP Remarks', validators=[Optional()])
-    
+
     # Final Glasses - Right Eye
     final_re_sph = StringField('Sph', validators=[Optional()])
     final_re_cyl = StringField('Cyl', validators=[Optional()])
@@ -222,7 +222,7 @@ class OptometristPrescriptionForm(FlaskForm):
     final_re_prism = StringField('Prism', validators=[Optional()])
     final_re_va = StringField('V/A', validators=[Optional()])
     final_re_nv = StringField('N.V', validators=[Optional()])
-    
+
     # Final Glasses - Left Eye
     final_le_sph = StringField('Sph', validators=[Optional()])
     final_le_cyl = StringField('Cyl', validators=[Optional()])
@@ -230,7 +230,7 @@ class OptometristPrescriptionForm(FlaskForm):
     final_le_prism = StringField('Prism', validators=[Optional()])
     final_le_va = StringField('V/A', validators=[Optional()])
     final_le_nv = StringField('N.V', validators=[Optional()])
-    
+
     # Old Glasses - Distance
     old_distance_re_sph = StringField('Sph', validators=[Optional()])
     old_distance_re_cyl = StringField('Cyl', validators=[Optional()])
@@ -240,28 +240,28 @@ class OptometristPrescriptionForm(FlaskForm):
     old_distance_le_cyl = StringField('Cyl', validators=[Optional()])
     old_distance_le_axis = StringField('Axis', validators=[Optional()])
     old_distance_le_va = StringField('V/A', validators=[Optional()])
-    
+
     # Old Glasses - Add
     old_add_re = StringField('Add RE', validators=[Optional()])
     old_add_le = StringField('Add LE', validators=[Optional()])
-    
+
     # Glass Type and Usage
     type_of_glasses = StringField('Type of Glasses', validators=[Optional()])
     glass_usage = TextAreaField('Usage of Glasses', validators=[Optional()])
-    
+
     # Lens Specifications
     product = StringField('Product', validators=[Optional()])
     type_of_lens = StringField('Type of Lens', validators=[Optional()])
     lens_material = StringField('Lens Material', validators=[Optional()])
-    
+
     # Additional Fields
     gp_advised_by = StringField('GP Advised By', validators=[Optional()])
     opto_student = StringField('Opto/Student', validators=[Optional()])
     keratometer_readings = TextAreaField('Keratometer Readings', validators=[Optional()])
-    
+
     # General Remarks and Notes
     general_remarks = TextAreaField('General Remarks', validators=[Optional()])
     recommendations = TextAreaField('Recommendations', validators=[Optional()])
     notes = TextAreaField('Additional Notes', validators=[Optional()])
-    
+
     submit = SubmitField('Save Prescription')

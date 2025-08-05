@@ -193,31 +193,7 @@ def success():
     appointment_details = session.get('appointment_details', {})
     return render_template('success.html', appointment_details=appointment_details)
 
-@app.route('/find-appointment', methods=['GET', 'POST'])
-def find_appointment():
-    """Find appointment using mobile number or email"""
-    form = FindAppointmentForm()
-    appointments = []
-    search_performed = False
-    
-    if form.validate_on_submit():
-        search_performed = True
-        query = Appointment.query.join(Patient)
-        
-        # Search by mobile number or email
-        if form.mobile_number.data:
-            query = query.filter(Patient.mobile_number == form.mobile_number.data)
-        elif form.email.data:
-            query = query.filter(Patient.email == form.email.data)
-        
-        # Get appointments ordered by date (most recent first)
-        appointments = query.order_by(desc(Appointment.appointment_date), desc(Appointment.appointment_time)).all()
-    
-    return render_template('find_appointment.html', 
-                         form=form, 
-                         appointments=appointments, 
-                         search_performed=search_performed,
-                         now=datetime.now())
+
 
 @app.route('/staff/verify-appointment', methods=['GET', 'POST'])
 @login_required
