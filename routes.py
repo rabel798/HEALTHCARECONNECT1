@@ -666,6 +666,11 @@ def patient_cancel_appointment(appointment_id):
 
     try:
         appointment.status = 'cancelled'
+        
+        # Update payment status to cancelled as well
+        if appointment.payment:
+            appointment.payment.status = 'cancelled'
+        
         db.session.commit()
 
         # Send email notification to clinic and patient
@@ -1094,6 +1099,10 @@ Dr. Richa's Eye Clinic
 
         elif action == 'cancel':
             appointment.status = 'cancelled'
+            
+            # Update payment status to cancelled as well
+            if appointment.payment:
+                appointment.payment.status = 'cancelled'
             
             try:
                 db.session.commit()
@@ -1773,7 +1782,7 @@ def admin_revenue():
     # Get all treatments
     treatments = Treatment.query.order_by(Treatment.treatment_date.desc()).all()
 
-    # Calculate total revenue
+    # Calculate total revenue (exclude cancelled payments)
     appointment_revenue = sum(payment.amount for payment, _ in payments if payment.status == 'completed')
     treatment_revenue = sum(treatment.amount for treatment in treatments)
     total_revenue = appointment_revenue + treatment_revenue
