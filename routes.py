@@ -2207,23 +2207,21 @@ def patient_google_login():
 
 @app.route('/patient/google-callback')
 def patient_google_callback():
-    """Google OAuth callback route"""
-    print(f"=== OAUTH CALLBACK START ===")  # Debug log
-    print(f"OAuth callback received. Args: {request.args}")  # Debug log
-    print(f"Request URL: {request.url}")  # Debug log
-    print(f"Request method: {request.method}")  # Debug log
-    print(f"Session oauth_state: {session.get('oauth_state')}")  # Debug log
-    print(f"Session oauth_action: {session.get('oauth_action')}")  # Debug log
+    """Google OAuth callback route with comprehensive error handling"""
+    print(f"=== OAUTH CALLBACK START ===")
+    print(f"Full request URL: {request.url}")
+    print(f"Request args: {dict(request.args)}")
+    print(f"Session state: {session.get('oauth_state')}")
+    print(f"Session action: {session.get('oauth_action')}")
 
-    # Check for OAuth errors
+    # Check for OAuth errors first
     if 'error' in request.args:
         error = request.args.get('error')
         error_description = request.args.get('error_description', '')
-        print(f"OAuth error: {error} - {error_description}")  # Debug log
-
-        # Handle specific OAuth errors
+        print(f"OAuth error received: {error} - {error_description}")
+        
         if error == 'access_denied':
-            flash('Google authentication was cancelled by user.', 'info')
+            flash('Google authentication was cancelled.', 'info')
         else:
             flash(f'Google authentication failed: {error_description or error}', 'danger')
         return redirect(url_for('patient_register'))
@@ -2231,187 +2229,187 @@ def patient_google_callback():
     # Verify state parameter
     received_state = request.args.get('state')
     stored_state = session.get('oauth_state')
-
-    if not received_state:
-        flash('Missing state parameter. Please try again.', 'danger')
+    
+    if not received_state or received_state != stored_state:
+        print(f"State verification failed. Received: {received_state}, Expected: {stored_state}")
+        flash('Security verification failed. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
 
-    if received_state != stored_state:
-        print(f"State mismatch. Received: {received_state}, Stored: {stored_state}")  # Debug log
-        flash('Invalid state parameter. Security check failed. Please try again.', 'danger')
-        return redirect(url_for('patient_register'))
-
+    # Get authorization code
     code = request.args.get('code')
     if not code:
         flash('No authorization code received from Google.', 'danger')
         return redirect(url_for('patient_register'))
 
     try:
-        # Get OAuth action from session
         oauth_action = session.get('oauth_action', 'login')
-
-        # Exchange code for tokens
-        token_url = "https://oauth2.googleapis.com/token"
         google_client_id = app.config.get('GOOGLE_CLIENT_ID')
         google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
 
-        # Ensure redirect URI matches what we sent to Google
-        google_redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
-        if not google_redirect_uri.startswith('https://'):
-            google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
-
-        # Define possible redirect URIs to try
-        possible_redirect_uris = [
-            google_redirect_uri,
-            request.url_root + 'patient/google-callback', # Fallback with trailing slash removed
-            request.url_root.rstrip('/') + '/patient/google-callback' # Ensure no trailing slash
-        ]
-        # Remove duplicates and ensure they are clean
-        possible_redirect_uris = list(dict.fromkeys([uri.replace('//', '/') for uri in possible_redirect_uris]))
-
-        print(f"Using redirect URI for token exchange: {google_redirect_uri}")  # Debug log
-
         if not google_client_id or not google_client_secret:
-            flash('Google OAuth configuration is incomplete.', 'danger')
-            return redirect(url_for('patient_login'))
+            flash('Google OAuth is not properly configured.', 'danger')
+            return redirect(url_for('patient_register'))
 
-        # Try token exchange with different redirect URIs if the first one fails
-        token_response = None
-        successful_redirect_uri = None
+        # Calculate the correct redirect URI that was used in the initial request
+        base_url = request.url_root.rstrip('/')
+        if not base_url.startswith('https://'):
+            base_url = base_url.replace('http://', 'https://')
+        
+        callback_path = '/patient/google-callback'
+        redirect_uri = base_url + callback_path
 
-        for redirect_uri in possible_redirect_uris:
-            print(f"=== TRYING TOKEN EXCHANGE ===")  # Debug log
-            print(f"Redirect URI: {redirect_uri}")  # Debug log
-            print(f"Code: {code[:20]}...")  # Debug log (partial for security)
+        print(f"Using redirect URI: {redirect_uri}")
+        print(f"Authorization code: {code[:20]}...")
 
-            token_data = {
-                'code': code,
-                'client_id': google_client_id,
-                'client_secret': google_client_secret,
-                'redirect_uri': redirect_uri,
-                'grant_type': 'authorization_code'
-            }
+        # Exchange authorization code for access token
+        token_url = "https://oauth2.googleapis.com/token"
+        token_data = {
+            'code': code,
+            'client_id': google_client_id,
+            'client_secret': google_client_secret,
+            'redirect_uri': redirect_uri,
+            'grant_type': 'authorization_code'
+        }
 
-            # Add headers and timeout for better error handling
-            headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        print(f"Making token request to: {token_url}")
+        print(f"Token data keys: {list(token_data.keys())}")
+
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+        }
+
+        token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
+        
+        print(f"Token response status: {token_response.status_code}")
+        print(f"Token response headers: {dict(token_response.headers)}")
+
+        if token_response.status_code != 200:
+            print(f"Token request failed with status {token_response.status_code}")
+            print(f"Response text: {token_response.text}")
+            
             try:
-                print(f"Making token request to: {token_url}")  # Debug log
-                token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
-                print(f"Token response status: {token_response.status_code}")  # Debug log
-                print(f"Token response headers: {dict(token_response.headers)}")  # Debug log
-
-                if token_response.status_code == 200:
-                    successful_redirect_uri = redirect_uri
-                    print(f"✓ Token exchange successful with redirect URI: {redirect_uri}")  # Debug log
-                    break
-                else:
-                    print(f"✗ Token request failed with {redirect_uri}")  # Debug log
-                    print(f"Status: {token_response.status_code}")  # Debug log
-                    print(f"Response: {token_response.text}")  # Debug log
-                    try:
-                        error_json = token_response.json()
-                        print(f"Error JSON: {error_json}")  # Debug log
-                    except:
-                        print("Could not parse error as JSON")  # Debug log
-            except Exception as e:
-                print(f"✗ Token request exception with {redirect_uri}: {str(e)}")  # Debug log
-                import traceback
-                print(f"Traceback: {traceback.format_exc()}")  # Debug log
-                continue
-
-        if not token_response or token_response.status_code != 200:
-            print(f"All token requests failed. Last response: {token_response.status_code if token_response else 'None'}")  # Debug log
-            if token_response:
-                try:
-                    error_data = token_response.json()
-                    error_msg = error_data.get('error_description', error_data.get('error', 'Failed to get access token from Google'))
-                    print(f"Token error details: {error_data}")  # Debug log
-                except:
-                    error_msg = f'HTTP {token_response.status_code}: Failed to get access token from Google'
-            else:
-                error_msg = 'Failed to connect to Google token service'
+                error_data = token_response.json()
+                error_msg = error_data.get('error_description', error_data.get('error', 'Token exchange failed'))
+                print(f"Token error details: {error_data}")
+            except:
+                error_msg = f'Token exchange failed with HTTP {token_response.status_code}'
+            
             flash(f'Authentication failed: {error_msg}', 'danger')
             return redirect(url_for('patient_register'))
 
-        tokens = token_response.json()
-        print(f"Received tokens: {list(tokens.keys())}")  # Debug log
+        # Parse token response
+        try:
+            tokens = token_response.json()
+            access_token = tokens.get('access_token')
+            
+            if not access_token:
+                raise ValueError("No access token in response")
+                
+            print(f"✓ Successfully received access token")
+            
+        except Exception as e:
+            print(f"Failed to parse token response: {str(e)}")
+            flash('Failed to process authentication response.', 'danger')
+            return redirect(url_for('patient_register'))
 
-        # Get user info using the newer v3 endpoint
+        # Get user information from Google
         userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
-        headers = {'Authorization': f"Bearer {tokens['access_token']}"}
-        userinfo_response = requests.get(userinfo_url, headers=headers, timeout=30)
+        userinfo_headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Accept': 'application/json'
+        }
 
-        print(f"Userinfo response status: {userinfo_response.status_code}")  # Debug log
+        print(f"Requesting user info from: {userinfo_url}")
+        userinfo_response = requests.get(userinfo_url, headers=userinfo_headers, timeout=30)
+        
+        print(f"Userinfo response status: {userinfo_response.status_code}")
 
         if userinfo_response.status_code != 200:
-            print(f"User info request failed: {userinfo_response.status_code} - {userinfo_response.text}")  # Debug log
+            print(f"Userinfo request failed: {userinfo_response.status_code} - {userinfo_response.text}")
             flash('Failed to get user information from Google.', 'danger')
-            return redirect(url_for('patient_login'))
+            return redirect(url_for('patient_register'))
 
-        userinfo = userinfo_response.json()
-        print(f"User info received: {userinfo}")  # Debug log
+        # Parse user information
+        try:
+            userinfo = userinfo_response.json()
+            email = userinfo.get('email')
+            name = userinfo.get('name', 'Google User')
+            
+            if not email:
+                raise ValueError("No email in userinfo response")
+                
+            print(f"✓ User info received for: {email}")
+            
+        except Exception as e:
+            print(f"Failed to parse userinfo response: {str(e)}")
+            flash('Failed to get your email from Google.', 'danger')
+            return redirect(url_for('patient_register'))
 
-        # Validate that we got required fields
-        if not userinfo.get('email'):
-            flash('Could not get email from Google. Please try again.', 'danger')
-            return redirect(url_for('patient_login'))
-
-        # Find or create patient
-        patient = Patient.query.filter_by(email=userinfo['email']).first()
-
+        # Find or create patient account
+        patient = Patient.query.filter_by(email=email).first()
+        
         if not patient and oauth_action == 'register':
-            # Create new patient for registration
+            # Create new patient account
             patient = Patient(
-                full_name=userinfo.get('name', 'Google User'),
-                email=userinfo['email'],
-                mobile_number='0000000000',  # Will be updated later
-                age=1,  # Will be updated later
+                full_name=name,
+                email=email,
+                mobile_number='0000000000',  # To be updated by user
+                age=1,  # To be updated by user  
                 sex='',
-                is_registered=True  # Mark as registered since they used OAuth
+                is_registered=True
             )
             db.session.add(patient)
             db.session.commit()
-            flash('Successfully registered with Google!', 'success')
+            print(f"✓ Created new patient account for: {email}")
+            
         elif not patient and oauth_action == 'login':
-            flash('No account found with this email. Please register first.', 'warning')
+            flash('No account found with this Google email. Please register first.', 'warning')
             return redirect(url_for('patient_register'))
+        
+        elif patient:
+            print(f"✓ Found existing patient account for: {email}")
 
-        # Login the patient
+        # Log in the user
         login_user(patient)
-        print(f"✓ Patient logged in successfully: {patient.email}")  # Debug log
-
+        
         # Clear OAuth session data
         session.pop('oauth_state', None)
         session.pop('oauth_action', None)
 
+        print(f"✓ Patient logged in successfully")
+
+        # Success messages and redirects
         if oauth_action == 'register':
             flash('Successfully registered and logged in with Google!', 'success')
         else:
             flash('Successfully logged in with Google!', 'success')
 
-        # Check if profile is incomplete for new users
+        # Check if profile completion is needed
         if patient.mobile_number == '0000000000' or patient.age == 1:
-            flash('Please complete your profile to help us serve you better.', 'info')
-            print(f"Redirecting to profile completion")  # Debug log
+            flash('Please complete your profile information.', 'info')
             return redirect(url_for('patient_complete_profile'))
 
-        print(f"Redirecting to patient dashboard")  # Debug log
         return redirect(url_for('patient_dashboard'))
 
     except requests.exceptions.Timeout:
-        print("Timeout error during Google OAuth")  # Debug log
+        print("Timeout during Google OAuth")
         flash('Request to Google timed out. Please try again.', 'danger')
-        return redirect(url_for('patient_login'))
+        return redirect(url_for('patient_register'))
+        
     except requests.exceptions.RequestException as e:
-        print(f"Request error during Google OAuth: {str(e)}")  # Debug log
-        flash('Network error during Google authentication. Please try again.', 'danger')
-        return redirect(url_for('patient_login'))
+        print(f"Network error during Google OAuth: {str(e)}")
+        flash('Network error during authentication. Please check your connection.', 'danger')
+        return redirect(url_for('patient_register'))
+        
     except Exception as e:
-        print(f"=== UNEXPECTED ERROR ===")  # Debug log
-        print(f"Error: {str(e)}")  # Debug log
+        print(f"=== UNEXPECTED ERROR IN OAUTH CALLBACK ===")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error message: {str(e)}")
         import traceback
-        print(f"Full traceback: {traceback.format_exc()}")  # Debug log
-        flash(f'Error during Google authentication: {str(e)}', 'danger')
+        print(f"Full traceback:\n{traceback.format_exc()}")
+        
+        flash('An unexpected error occurred during authentication. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
 
 @app.route('/debug/oauth-config')
