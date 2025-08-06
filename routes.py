@@ -2208,9 +2208,12 @@ def patient_google_login():
 @app.route('/patient/google-callback')
 def patient_google_callback():
     """Google OAuth callback route"""
+    print(f"=== OAUTH CALLBACK START ===")  # Debug log
     print(f"OAuth callback received. Args: {request.args}")  # Debug log
     print(f"Request URL: {request.url}")  # Debug log
     print(f"Request method: {request.method}")  # Debug log
+    print(f"Session oauth_state: {session.get('oauth_state')}")  # Debug log
+    print(f"Session oauth_action: {session.get('oauth_action')}")  # Debug log
 
     # Check for OAuth errors
     if 'error' in request.args:
@@ -2277,7 +2280,9 @@ def patient_google_callback():
         successful_redirect_uri = None
 
         for redirect_uri in possible_redirect_uris:
-            print(f"Trying token exchange with redirect URI: {redirect_uri}")  # Debug log
+            print(f"=== TRYING TOKEN EXCHANGE ===")  # Debug log
+            print(f"Redirect URI: {redirect_uri}")  # Debug log
+            print(f"Code: {code[:20]}...")  # Debug log (partial for security)
 
             token_data = {
                 'code': code,
@@ -2290,17 +2295,28 @@ def patient_google_callback():
             # Add headers and timeout for better error handling
             headers = {'Content-Type': 'application/x-www-form-urlencoded'}
             try:
+                print(f"Making token request to: {token_url}")  # Debug log
                 token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
                 print(f"Token response status: {token_response.status_code}")  # Debug log
+                print(f"Token response headers: {dict(token_response.headers)}")  # Debug log
 
                 if token_response.status_code == 200:
                     successful_redirect_uri = redirect_uri
-                    print(f"Token exchange successful with redirect URI: {redirect_uri}")  # Debug log
+                    print(f"✓ Token exchange successful with redirect URI: {redirect_uri}")  # Debug log
                     break
                 else:
-                    print(f"Token request failed with {redirect_uri}: {token_response.status_code} - {token_response.text}")  # Debug log
+                    print(f"✗ Token request failed with {redirect_uri}")  # Debug log
+                    print(f"Status: {token_response.status_code}")  # Debug log
+                    print(f"Response: {token_response.text}")  # Debug log
+                    try:
+                        error_json = token_response.json()
+                        print(f"Error JSON: {error_json}")  # Debug log
+                    except:
+                        print("Could not parse error as JSON")  # Debug log
             except Exception as e:
-                print(f"Token request exception with {redirect_uri}: {str(e)}")  # Debug log
+                print(f"✗ Token request exception with {redirect_uri}: {str(e)}")  # Debug log
+                import traceback
+                print(f"Traceback: {traceback.format_exc()}")  # Debug log
                 continue
 
         if not token_response or token_response.status_code != 200:
@@ -2362,6 +2378,7 @@ def patient_google_callback():
 
         # Login the patient
         login_user(patient)
+        print(f"✓ Patient logged in successfully: {patient.email}")  # Debug log
 
         # Clear OAuth session data
         session.pop('oauth_state', None)
@@ -2375,8 +2392,10 @@ def patient_google_callback():
         # Check if profile is incomplete for new users
         if patient.mobile_number == '0000000000' or patient.age == 1:
             flash('Please complete your profile to help us serve you better.', 'info')
+            print(f"Redirecting to profile completion")  # Debug log
             return redirect(url_for('patient_complete_profile'))
 
+        print(f"Redirecting to patient dashboard")  # Debug log
         return redirect(url_for('patient_dashboard'))
 
     except requests.exceptions.Timeout:
@@ -2388,7 +2407,10 @@ def patient_google_callback():
         flash('Network error during Google authentication. Please try again.', 'danger')
         return redirect(url_for('patient_login'))
     except Exception as e:
-        print(f"Unexpected error during Google OAuth: {str(e)}")  # Debug log
+        print(f"=== UNEXPECTED ERROR ===")  # Debug log
+        print(f"Error: {str(e)}")  # Debug log
+        import traceback
+        print(f"Full traceback: {traceback.format_exc()}")  # Debug log
         flash(f'Error during Google authentication: {str(e)}', 'danger')
         return redirect(url_for('patient_register'))
 
