@@ -2120,22 +2120,12 @@ def patient_google_register():
     session['oauth_state'] = state
     session['oauth_action'] = 'register'
 
-    # Use consistent redirect URI generation
+    # Generate consistent redirect URI
     google_redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
     if not google_redirect_uri.startswith('https://'):
         google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
-    # Define possible redirect URIs to try
-    possible_redirect_uris = [
-        google_redirect_uri,
-        request.url_root + 'patient/google-callback', # Fallback with trailing slash removed
-        request.url_root.rstrip('/') + '/patient/google-callback' # Ensure no trailing slash
-    ]
-    # Remove duplicates and ensure they are clean
-    possible_redirect_uris = list(dict.fromkeys([uri.replace('//', '/') for uri in possible_redirect_uris]))
-
-
-    # Use proper URL encoding for parameters
+    # OAuth parameters
     params = {
         'client_id': google_client_id,
         'redirect_uri': google_redirect_uri,
@@ -2172,21 +2162,12 @@ def patient_google_login():
     session['oauth_state'] = state
     session['oauth_action'] = 'login'
 
-    # Use consistent redirect URI generation
+    # Generate consistent redirect URI  
     google_redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
     if not google_redirect_uri.startswith('https://'):
         google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
-    # Define possible redirect URIs to try
-    possible_redirect_uris = [
-        google_redirect_uri,
-        request.url_root + 'patient/google-callback', # Fallback with trailing slash removed
-        request.url_root.rstrip('/') + '/patient/google-callback' # Ensure no trailing slash
-    ]
-    # Remove duplicates and ensure they are clean
-    possible_redirect_uris = list(dict.fromkeys([uri.replace('//', '/') for uri in possible_redirect_uris]))
-
-    # Use proper URL encoding for parameters
+    # OAuth parameters
     params = {
         'client_id': google_client_id,
         'redirect_uri': google_redirect_uri,
@@ -2207,12 +2188,10 @@ def patient_google_login():
 
 @app.route('/patient/google-callback')
 def patient_google_callback():
-    """Google OAuth callback route with comprehensive error handling"""
+    """Google OAuth callback route"""
     print(f"=== OAUTH CALLBACK START ===")
     print(f"Full request URL: {request.url}")
     print(f"Request args: {dict(request.args)}")
-    print(f"Session state: {session.get('oauth_state')}")
-    print(f"Session action: {session.get('oauth_action')}")
 
     # Check for OAuth errors first
     if 'error' in request.args:
@@ -2226,40 +2205,39 @@ def patient_google_callback():
             flash(f'Google authentication failed: {error_description or error}', 'danger')
         return redirect(url_for('patient_register'))
 
-    # Verify state parameter
+    # Get authorization code
+    code = request.args.get('code')
+    if not code:
+        print("No authorization code received")
+        flash('No authorization code received from Google.', 'danger')
+        return redirect(url_for('patient_register'))
+
+    # Verify state parameter (simplified)
     received_state = request.args.get('state')
     stored_state = session.get('oauth_state')
     
     if not received_state or received_state != stored_state:
-        print(f"State verification failed. Received: {received_state}, Expected: {stored_state}")
+        print(f"State mismatch. Received: {received_state}, Expected: {stored_state}")
         flash('Security verification failed. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
 
-    # Get authorization code
-    code = request.args.get('code')
-    if not code:
-        flash('No authorization code received from Google.', 'danger')
-        return redirect(url_for('patient_register'))
-
     try:
-        oauth_action = session.get('oauth_action', 'login')
+        oauth_action = session.get('oauth_action', 'register')
         google_client_id = app.config.get('GOOGLE_CLIENT_ID')
         google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
 
         if not google_client_id or not google_client_secret:
+            print("Google OAuth credentials not configured")
             flash('Google OAuth is not properly configured.', 'danger')
             return redirect(url_for('patient_register'))
 
-        # Calculate the correct redirect URI that was used in the initial request
-        base_url = request.url_root.rstrip('/')
-        if not base_url.startswith('https://'):
-            base_url = base_url.replace('http://', 'https://')
-        
-        callback_path = '/patient/google-callback'
-        redirect_uri = base_url + callback_path
+        # Use the exact same redirect URI format as in the initial request
+        redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
+        if not redirect_uri.startswith('https://'):
+            redirect_uri = redirect_uri.replace('http://', 'https://')
 
         print(f"Using redirect URI: {redirect_uri}")
-        print(f"Authorization code: {code[:20]}...")
+        print(f"Authorization code received: {code[:20]}...")
 
         # Exchange authorization code for access token
         token_url = "https://oauth2.googleapis.com/token"
@@ -2271,86 +2249,67 @@ def patient_google_callback():
             'grant_type': 'authorization_code'
         }
 
-        print(f"Making token request to: {token_url}")
-        print(f"Token data keys: {list(token_data.keys())}")
+        print(f"Token request data: {dict((k, v if k != 'client_secret' else '***') for k, v in token_data.items())}")
 
-        headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-        }
-
+        # Make token request with proper headers
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
-        
+
         print(f"Token response status: {token_response.status_code}")
-        print(f"Token response headers: {dict(token_response.headers)}")
 
         if token_response.status_code != 200:
-            print(f"Token request failed with status {token_response.status_code}")
-            print(f"Response text: {token_response.text}")
-            
+            print(f"Token request failed: {token_response.text}")
             try:
                 error_data = token_response.json()
                 error_msg = error_data.get('error_description', error_data.get('error', 'Token exchange failed'))
-                print(f"Token error details: {error_data}")
             except:
-                error_msg = f'Token exchange failed with HTTP {token_response.status_code}'
-            
+                error_msg = f'HTTP {token_response.status_code}: Token exchange failed'
             flash(f'Authentication failed: {error_msg}', 'danger')
             return redirect(url_for('patient_register'))
 
-        # Parse token response
-        try:
-            tokens = token_response.json()
-            access_token = tokens.get('access_token')
-            
-            if not access_token:
-                raise ValueError("No access token in response")
-                
-            print(f"✓ Successfully received access token")
-            
-        except Exception as e:
-            print(f"Failed to parse token response: {str(e)}")
-            flash('Failed to process authentication response.', 'danger')
+        # Get access token
+        tokens = token_response.json()
+        access_token = tokens.get('access_token')
+        
+        if not access_token:
+            print("No access token in response")
+            flash('Failed to get access token from Google.', 'danger')
             return redirect(url_for('patient_register'))
 
-        # Get user information from Google
-        userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
-        userinfo_headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Accept': 'application/json'
-        }
+        print("✓ Successfully received access token")
 
-        print(f"Requesting user info from: {userinfo_url}")
-        userinfo_response = requests.get(userinfo_url, headers=userinfo_headers, timeout=30)
-        
+        # Get user information
+        userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
+        headers = {'Authorization': f'Bearer {access_token}'}
+        userinfo_response = requests.get(userinfo_url, headers=headers, timeout=30)
+
         print(f"Userinfo response status: {userinfo_response.status_code}")
 
         if userinfo_response.status_code != 200:
-            print(f"Userinfo request failed: {userinfo_response.status_code} - {userinfo_response.text}")
+            print(f"Userinfo request failed: {userinfo_response.text}")
             flash('Failed to get user information from Google.', 'danger')
             return redirect(url_for('patient_register'))
 
-        # Parse user information
-        try:
-            userinfo = userinfo_response.json()
-            email = userinfo.get('email')
-            name = userinfo.get('name', 'Google User')
-            
-            if not email:
-                raise ValueError("No email in userinfo response")
-                
-            print(f"✓ User info received for: {email}")
-            
-        except Exception as e:
-            print(f"Failed to parse userinfo response: {str(e)}")
+        userinfo = userinfo_response.json()
+        email = userinfo.get('email')
+        name = userinfo.get('name', 'Google User')
+        
+        if not email:
+            print("No email in userinfo response")
             flash('Failed to get your email from Google.', 'danger')
             return redirect(url_for('patient_register'))
+
+        print(f"✓ User info received for: {email}")
 
         # Find or create patient account
         patient = Patient.query.filter_by(email=email).first()
         
-        if not patient and oauth_action == 'register':
-            # Create new patient account
+        if not patient:
+            if oauth_action == 'login':
+                flash('No account found with this Google email. Please register first.', 'warning')
+                return redirect(url_for('patient_register'))
+            
+            # Create new patient account for registration
             patient = Patient(
                 full_name=name,
                 email=email,
@@ -2362,12 +2321,7 @@ def patient_google_callback():
             db.session.add(patient)
             db.session.commit()
             print(f"✓ Created new patient account for: {email}")
-            
-        elif not patient and oauth_action == 'login':
-            flash('No account found with this Google email. Please register first.', 'warning')
-            return redirect(url_for('patient_register'))
-        
-        elif patient:
+        else:
             print(f"✓ Found existing patient account for: {email}")
 
         # Log in the user
@@ -2377,9 +2331,9 @@ def patient_google_callback():
         session.pop('oauth_state', None)
         session.pop('oauth_action', None)
 
-        print(f"✓ Patient logged in successfully")
+        print("✓ Patient logged in successfully")
 
-        # Success messages and redirects
+        # Success message and redirect
         if oauth_action == 'register':
             flash('Successfully registered and logged in with Google!', 'success')
         else:
@@ -2392,24 +2346,12 @@ def patient_google_callback():
 
         return redirect(url_for('patient_dashboard'))
 
-    except requests.exceptions.Timeout:
-        print("Timeout during Google OAuth")
-        flash('Request to Google timed out. Please try again.', 'danger')
-        return redirect(url_for('patient_register'))
-        
-    except requests.exceptions.RequestException as e:
-        print(f"Network error during Google OAuth: {str(e)}")
-        flash('Network error during authentication. Please check your connection.', 'danger')
-        return redirect(url_for('patient_register'))
-        
     except Exception as e:
-        print(f"=== UNEXPECTED ERROR IN OAUTH CALLBACK ===")
-        print(f"Error type: {type(e).__name__}")
-        print(f"Error message: {str(e)}")
+        print(f"ERROR IN OAUTH CALLBACK: {type(e).__name__}: {str(e)}")
         import traceback
-        print(f"Full traceback:\n{traceback.format_exc()}")
+        print(f"Traceback:\n{traceback.format_exc()}")
         
-        flash('An unexpected error occurred during authentication. Please try again.', 'danger')
+        flash('An error occurred during authentication. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
 
 @app.route('/debug/oauth-config')
