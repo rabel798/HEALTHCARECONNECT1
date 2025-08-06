@@ -733,7 +733,7 @@ def patient_complete_profile():
         return redirect(url_for('index'))
 
     form = ProfileCompletionForm()
-    
+
     # Pre-populate form with existing data
     if request.method == 'GET':
         if current_user.mobile_number != '0000000000':
@@ -749,7 +749,7 @@ def patient_complete_profile():
             current_user.mobile_number = form.mobile_number.data
             current_user.age = form.age.data
             current_user.sex = form.sex.data
-            
+
             db.session.commit()
             flash('Profile completed successfully!', 'success')
             return redirect(url_for('patient_dashboard'))
@@ -769,7 +769,7 @@ def patient_edit_profile():
         return redirect(url_for('index'))
 
     form = PatientEditForm()
-    
+
     # Pre-populate form with existing data
     if request.method == 'GET':
         form.full_name.data = current_user.full_name
@@ -806,7 +806,7 @@ def patient_edit_profile():
             current_user.email = form.email.data
             current_user.age = form.age.data
             current_user.sex = form.sex.data
-            
+
             db.session.commit()
             flash('Profile updated successfully!', 'success')
             return redirect(url_for('patient_dashboard'))
@@ -2120,10 +2120,9 @@ def patient_google_register():
     session['oauth_state'] = state
     session['oauth_action'] = 'register'
 
-    # Ensure we use the correct redirect URI format for Replit
-    google_redirect_uri = url_for('patient_google_callback', _external=True)
-    # Always use HTTPS for Replit URLs
-    if 'replit.dev' in google_redirect_uri or 'sisko.replit.dev' in google_redirect_uri:
+    # Use consistent redirect URI generation
+    google_redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
+    if not google_redirect_uri.startswith('https://'):
         google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
     # Use proper URL encoding for parameters
@@ -2142,6 +2141,7 @@ def patient_google_register():
     oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
     print(f"OAuth URL: {oauth_url}")  # Debug log
     print(f"Redirect URI: {google_redirect_uri}")  # Debug log
+    print(f"Request URL root: {request.url_root}")  # Debug log
 
     # Redirect to Google's OAuth consent screen
     return redirect(oauth_url)
@@ -2164,10 +2164,9 @@ def patient_google_login():
     session['oauth_state'] = state
     session['oauth_action'] = 'login'
 
-    # Ensure we use the correct redirect URI format for Replit
-    google_redirect_uri = url_for('patient_google_callback', _external=True)
-    # Always use HTTPS for Replit URLs
-    if 'replit.dev' in google_redirect_uri or 'sisko.replit.dev' in google_redirect_uri:
+    # Use consistent redirect URI generation
+    google_redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
+    if not google_redirect_uri.startswith('https://'):
         google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
     # Use proper URL encoding for parameters
@@ -2186,6 +2185,7 @@ def patient_google_login():
     oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
     print(f"OAuth URL: {oauth_url}")  # Debug log
     print(f"Redirect URI: {google_redirect_uri}")  # Debug log
+    print(f"Request URL root: {request.url_root}")  # Debug log
 
     # Redirect to Google's OAuth consent screen
     return redirect(oauth_url)
@@ -2202,7 +2202,7 @@ def patient_google_callback():
         error = request.args.get('error')
         error_description = request.args.get('error_description', '')
         print(f"OAuth error: {error} - {error_description}")  # Debug log
-        
+
         # Handle specific OAuth errors
         if error == 'access_denied':
             flash('Google authentication was cancelled by user.', 'info')
@@ -2217,7 +2217,7 @@ def patient_google_callback():
     if not received_state:
         flash('Missing state parameter. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
-        
+
     if received_state != stored_state:
         print(f"State mismatch. Received: {received_state}, Stored: {stored_state}")  # Debug log
         flash('Invalid state parameter. Security check failed. Please try again.', 'danger')
@@ -2238,11 +2238,10 @@ def patient_google_callback():
         google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
 
         # Ensure redirect URI matches what we sent to Google
-        google_redirect_uri = url_for('patient_google_callback', _external=True)
-        # Always use HTTPS for Replit URLs and any external access
-        if 'replit.dev' in google_redirect_uri or 'sisko.replit.dev' in google_redirect_uri or request.is_secure:
+        google_redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
+        if not google_redirect_uri.startswith('https://'):
             google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
-        
+
         print(f"Using redirect URI for token exchange: {google_redirect_uri}")  # Debug log
 
         if not google_client_id or not google_client_secret:
@@ -2348,13 +2347,13 @@ def debug_oauth_config():
     """Debug route to check OAuth configuration - remove in production"""
     if not isinstance(current_user, Doctor):
         return "Access denied", 403
-    
+
     google_client_id = app.config.get('GOOGLE_CLIENT_ID')
     google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
-    redirect_uri = url_for('patient_google_callback', _external=True)
-    if 'replit.dev' in redirect_uri or 'sisko.replit.dev' in redirect_uri:
+    redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
+    if not redirect_uri.startswith('https://'):
         redirect_uri = redirect_uri.replace('http://', 'https://')
-    
+
     return f"""
     <h3>OAuth Configuration Debug</h3>
     <p><strong>Client ID configured:</strong> {'Yes' if google_client_id else 'No'}</p>
