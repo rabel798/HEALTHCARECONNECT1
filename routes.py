@@ -2189,35 +2189,25 @@ def patient_google_login():
 @app.route('/patient/google-callback')
 def patient_google_callback():
     """Google OAuth callback route"""
-    print(f"=== OAUTH CALLBACK START ===")
-    print(f"Full request URL: {request.url}")
-    print(f"Request args: {dict(request.args)}")
-
     # Check for OAuth errors first
     if 'error' in request.args:
         error = request.args.get('error')
-        error_description = request.args.get('error_description', '')
-        print(f"OAuth error received: {error} - {error_description}")
-        
         if error == 'access_denied':
             flash('Google authentication was cancelled.', 'info')
         else:
-            flash(f'Google authentication failed: {error_description or error}', 'danger')
+            flash('Google authentication failed.', 'danger')
         return redirect(url_for('patient_register'))
 
     # Get authorization code
     code = request.args.get('code')
     if not code:
-        print("No authorization code received")
-        flash('No authorization code received from Google.', 'danger')
+        flash('Authentication failed - no authorization code received.', 'danger')
         return redirect(url_for('patient_register'))
 
-    # Verify state parameter (simplified)
+    # Basic state verification
     received_state = request.args.get('state')
     stored_state = session.get('oauth_state')
-    
     if not received_state or received_state != stored_state:
-        print(f"State mismatch. Received: {received_state}, Expected: {stored_state}")
         flash('Security verification failed. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
 
@@ -2226,21 +2216,12 @@ def patient_google_callback():
         google_client_id = app.config.get('GOOGLE_CLIENT_ID')
         google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
 
-        if not google_client_id or not google_client_secret:
-            print("Google OAuth credentials not configured")
-            flash('Google OAuth is not properly configured.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        # Use the exact same redirect URI format as in the initial request
+        # Exchange code for access token
+        token_url = "https://oauth2.googleapis.com/token"
         redirect_uri = request.url_root.rstrip('/') + '/patient/google-callback'
         if not redirect_uri.startswith('https://'):
             redirect_uri = redirect_uri.replace('http://', 'https://')
 
-        print(f"Using redirect URI: {redirect_uri}")
-        print(f"Authorization code received: {code[:20]}...")
-
-        # Exchange authorization code for access token
-        token_url = "https://oauth2.googleapis.com/token"
         token_data = {
             'code': code,
             'client_id': google_client_id,
@@ -2249,44 +2230,27 @@ def patient_google_callback():
             'grant_type': 'authorization_code'
         }
 
-        print(f"Token request data: {dict((k, v if k != 'client_secret' else '***') for k, v in token_data.items())}")
-
-        # Make token request with proper headers
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
-
-        print(f"Token response status: {token_response.status_code}")
-
+        token_response = requests.post(token_url, data=token_data, timeout=30)
+        
         if token_response.status_code != 200:
-            print(f"Token request failed: {token_response.text}")
-            try:
-                error_data = token_response.json()
-                error_msg = error_data.get('error_description', error_data.get('error', 'Token exchange failed'))
-            except:
-                error_msg = f'HTTP {token_response.status_code}: Token exchange failed'
-            flash(f'Authentication failed: {error_msg}', 'danger')
+            flash('Authentication failed during token exchange.', 'danger')
             return redirect(url_for('patient_register'))
 
-        # Get access token
         tokens = token_response.json()
         access_token = tokens.get('access_token')
         
         if not access_token:
-            print("No access token in response")
-            flash('Failed to get access token from Google.', 'danger')
+            flash('Authentication failed - no access token received.', 'danger')
             return redirect(url_for('patient_register'))
 
-        print("✓ Successfully received access token")
-
         # Get user information
-        userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
-        headers = {'Authorization': f'Bearer {access_token}'}
-        userinfo_response = requests.get(userinfo_url, headers=headers, timeout=30)
-
-        print(f"Userinfo response status: {userinfo_response.status_code}")
+        userinfo_response = requests.get(
+            "https://www.googleapis.com/oauth2/v3/userinfo",
+            headers={'Authorization': f'Bearer {access_token}'},
+            timeout=30
+        )
 
         if userinfo_response.status_code != 200:
-            print(f"Userinfo request failed: {userinfo_response.text}")
             flash('Failed to get user information from Google.', 'danger')
             return redirect(url_for('patient_register'))
 
@@ -2295,11 +2259,8 @@ def patient_google_callback():
         name = userinfo.get('name', 'Google User')
         
         if not email:
-            print("No email in userinfo response")
             flash('Failed to get your email from Google.', 'danger')
             return redirect(url_for('patient_register'))
-
-        print(f"✓ User info received for: {email}")
 
         # Find or create patient account
         patient = Patient.query.filter_by(email=email).first()
@@ -2309,48 +2270,38 @@ def patient_google_callback():
                 flash('No account found with this Google email. Please register first.', 'warning')
                 return redirect(url_for('patient_register'))
             
-            # Create new patient account for registration
+            # Create new patient account
             patient = Patient(
                 full_name=name,
                 email=email,
-                mobile_number='0000000000',  # To be updated by user
-                age=1,  # To be updated by user  
+                mobile_number='0000000000',
+                age=1,
                 sex='',
                 is_registered=True
             )
             db.session.add(patient)
             db.session.commit()
-            print(f"✓ Created new patient account for: {email}")
-        else:
-            print(f"✓ Found existing patient account for: {email}")
 
         # Log in the user
         login_user(patient)
         
-        # Clear OAuth session data
+        # Clear session data
         session.pop('oauth_state', None)
         session.pop('oauth_action', None)
 
-        print("✓ Patient logged in successfully")
-
-        # Success message and redirect
+        # Success message
         if oauth_action == 'register':
-            flash('Successfully registered and logged in with Google!', 'success')
+            flash('Successfully registered with Google!', 'success')
         else:
             flash('Successfully logged in with Google!', 'success')
 
-        # Check if profile completion is needed
+        # Redirect to profile completion if needed
         if patient.mobile_number == '0000000000' or patient.age == 1:
-            flash('Please complete your profile information.', 'info')
             return redirect(url_for('patient_complete_profile'))
 
         return redirect(url_for('patient_dashboard'))
 
     except Exception as e:
-        print(f"ERROR IN OAUTH CALLBACK: {type(e).__name__}: {str(e)}")
-        import traceback
-        print(f"Traceback:\n{traceback.format_exc()}")
-        
         flash('An error occurred during authentication. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
 
