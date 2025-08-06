@@ -1,6 +1,7 @@
+
 {% extends 'layout.html' %}
 
-{% block title %}Gmail OTP Login - Dr. Richa's Eye Clinic{% endblock %}
+{% block title %}Gmail Login - Dr. Richa's Eye Clinic{% endblock %}
 
 {% block content %}
 <section class="py-5 bg-light">
@@ -10,22 +11,24 @@
                 <div class="card shadow-sm">
                     <div class="card-body p-4 p-md-5">
                         <div class="text-center mb-4">
-                            <i class="fab fa-google text-danger fa-3x mb-3"></i>
-                            <h2 class="card-title mb-1">Continue with Google</h2>
-                            <p class="text-muted">Enter your Gmail address to receive a secure verification code</p>
-                            <div class="alert alert-info">
-                                <small><i class="fas fa-shield-alt me-1"></i> New users will be automatically registered</small>
-                            </div>
+                            <i class="fas fa-envelope-open-text fa-3x text-primary mb-3"></i>
+                            <h2 class="card-title">Gmail OTP Login</h2>
+                            <p class="text-muted">Enter your Gmail address to receive a secure OTP code</p>
                         </div>
                         
-                        <form method="POST">
+                        <form method="POST" action="{{ url_for('patient_gmail_login') }}">
                             {{ form.hidden_tag() }}
                             
                             <div class="mb-4">
                                 {{ form.email.label(class="form-label") }}
-                                {{ form.email(class="form-control", placeholder="Enter your Gmail address") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    {{ form.email(class="form-control", placeholder="your.email@gmail.com") }}
+                                </div>
                                 {% if form.email.errors %}
-                                    <div class="text-danger">
+                                    <div class="text-danger mt-2">
                                         {% for error in form.email.errors %}
                                             <small>{{ error }}</small>
                                         {% endfor %}
@@ -33,15 +36,48 @@
                                 {% endif %}
                             </div>
                             
-                            <div class="d-grid gap-2 mb-3">
-                                {{ form.submit(class="btn btn-danger py-2") }}
+                            <div class="d-grid gap-2 mb-4">
+                                {{ form.submit(class="btn btn-primary btn-lg py-3") }}
                             </div>
                         </form>
                         
+                        <!-- How it works -->
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle me-2"></i>How it works:
+                            </h6>
+                            <ol class="mb-0 ps-3">
+                                <li>Enter your Gmail address</li>
+                                <li>We'll send a 6-digit code to your email</li>
+                                <li>Enter the code to access your account</li>
+                                <li>No password required!</li>
+                            </ol>
+                        </div>
+                        
+                        <!-- Back link -->
                         <div class="text-center mt-4">
                             <a href="{{ url_for('patient_login') }}" class="text-decoration-none">
-                                <i class="fas fa-arrow-left me-1"></i> Back to login options
+                                <i class="fas fa-arrow-left me-1"></i> Back to other login options
                             </a>
+                        </div>
+                        
+                        <!-- Benefits -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h6 class="text-center mb-3">Why use Gmail OTP?</h6>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <i class="fas fa-shield-alt text-success fa-2x mb-2"></i>
+                                    <small class="text-muted d-block">Secure</small>
+                                </div>
+                                <div class="col-4">
+                                    <i class="fas fa-clock text-primary fa-2x mb-2"></i>
+                                    <small class="text-muted d-block">Quick</small>
+                                </div>
+                                <div class="col-4">
+                                    <i class="fas fa-key text-warning fa-2x mb-2"></i>
+                                    <small class="text-muted d-block">No Password</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

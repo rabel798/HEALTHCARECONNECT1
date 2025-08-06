@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Patient Login - Dr. Richa's Eye Clinic{% endblock %}
@@ -10,22 +11,27 @@
                 <div class="card shadow-sm">
                     <div class="card-body p-4 p-md-5">
                         <h2 class="card-title text-center mb-4">Patient Login</h2>
-                        <p class="text-center mb-4">Access your appointments, medical records, and more.</p>
+                        <p class="text-center text-muted mb-4">Access your appointments, medical records, and more.</p>
                         
-                        <!-- OAuth Login Options -->
-                        <div class="text-center mb-4">
-                            <a href="{{ url_for('patient_gmail_login') }}" class="btn btn-danger w-100 py-2 mb-2">
-                                <i class="fab fa-google me-2"></i> Continue with Google (Gmail OTP)
+                        <!-- Google OAuth Login -->
+                        <div class="d-grid gap-2 mb-3">
+                            <a href="{{ url_for('patient_google_login') }}" class="btn btn-danger py-2">
+                                <i class="fab fa-google me-2"></i> Continue with Google
                             </a>
-                            <small class="text-muted d-block mb-3">Quick and secure authentication using your Gmail</small>
-                            
-                            <div class="divider my-3">
-                                <span class="text-muted">OR</span>
-                            </div>
-                            <div class="text-center my-3">
-                                <span class="border-bottom position-relative d-inline-block">
-                                    <span class="bg-light position-absolute px-3" style="top: -10px; left: 50%; transform: translateX(-50%);">OR</span>
-                                </span>
+                        </div>
+                        
+                        <!-- Gmail OTP Login -->
+                        <div class="d-grid gap-2 mb-4">
+                            <a href="{{ url_for('patient_gmail_login') }}" class="btn btn-outline-danger py-2">
+                                <i class="fas fa-envelope me-2"></i> Login with Gmail OTP
+                            </a>
+                        </div>
+                        
+                        <!-- Divider -->
+                        <div class="text-center my-4">
+                            <div class="position-relative">
+                                <hr>
+                                <span class="bg-light px-3 position-absolute top-50 start-50 translate-middle text-muted">OR</span>
                             </div>
                         </div>
                         
@@ -35,9 +41,9 @@
                             
                             <div class="mb-3">
                                 {{ form.email.label(class="form-label") }}
-                                {{ form.email(class="form-control", placeholder="Enter your email") }}
+                                {{ form.email(class="form-control", placeholder="Enter your email address") }}
                                 {% if form.email.errors %}
-                                    <div class="text-danger">
+                                    <div class="text-danger mt-1">
                                         {% for error in form.email.errors %}
                                             <small>{{ error }}</small>
                                         {% endfor %}
@@ -49,7 +55,7 @@
                                 {{ form.password.label(class="form-label") }}
                                 {{ form.password(class="form-control", placeholder="Enter your password") }}
                                 {% if form.password.errors %}
-                                    <div class="text-danger">
+                                    <div class="text-danger mt-1">
                                         {% for error in form.password.errors %}
                                             <small>{{ error }}</small>
                                         {% endfor %}
@@ -60,20 +66,33 @@
                             <div class="d-grid gap-2 mb-3">
                                 {{ form.submit(class="btn btn-primary py-2") }}
                             </div>
-
-                            <div class="text-center mb-3">
-                                <p class="text-muted">Or</p>
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <a href="{{ url_for('patient_google_login') }}" class="btn btn-danger py-2">
-                                    <i class="fab fa-google me-2"></i> Continue with Google
-                                </a>
-                            </div>
                         </form>
                         
-                        <div class="text-center mt-3">
-                            <p>Don't have an account? <a href="{{ url_for('patient_register') }}">Register here</a></p>
+                        <!-- Registration Link -->
+                        <div class="text-center mt-4">
+                            <p class="mb-2">Don't have an account?</p>
+                            <a href="{{ url_for('patient_register') }}" class="btn btn-outline-success">Create New Account</a>
+                        </div>
+                        
+                        <!-- Help Section -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h6 class="text-center mb-3">Need Help?</h6>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-question-circle me-1"></i>
+                                        Forgot password?<br>
+                                        <a href="{{ url_for('patient_gmail_login') }}" class="text-decoration-none">Use Gmail OTP</a>
+                                    </small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">
+                                        <i class="fas fa-phone me-1"></i>
+                                        Call us at<br>
+                                        <strong>+91 98765 43210</strong>
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
