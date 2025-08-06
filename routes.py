@@ -2257,15 +2257,22 @@ def patient_google_callback():
         }
 
         print(f"Token request - Redirect URI: {google_redirect_uri}")  # Debug log
+        print(f"Token request data: {token_data}")  # Debug log
 
         # Add headers and timeout for better error handling
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
 
+        print(f"Token response status: {token_response.status_code}")  # Debug log
+        print(f"Token response headers: {dict(token_response.headers)}")  # Debug log
+
         if token_response.status_code != 200:
             print(f"Token request failed: {token_response.status_code} - {token_response.text}")  # Debug log
-            error_data = token_response.json() if token_response.headers.get('content-type', '').startswith('application/json') else {}
-            error_msg = error_data.get('error_description', 'Failed to get access token from Google')
+            try:
+                error_data = token_response.json()
+                error_msg = error_data.get('error_description', error_data.get('error', 'Failed to get access token from Google'))
+            except:
+                error_msg = f'HTTP {token_response.status_code}: Failed to get access token from Google'
             flash(f'Authentication failed: {error_msg}', 'danger')
             return redirect(url_for('patient_register'))
 
@@ -2277,13 +2284,15 @@ def patient_google_callback():
         headers = {'Authorization': f"Bearer {tokens['access_token']}"}
         userinfo_response = requests.get(userinfo_url, headers=headers, timeout=30)
 
+        print(f"Userinfo response status: {userinfo_response.status_code}")  # Debug log
+
         if userinfo_response.status_code != 200:
             print(f"User info request failed: {userinfo_response.status_code} - {userinfo_response.text}")  # Debug log
             flash('Failed to get user information from Google.', 'danger')
             return redirect(url_for('patient_login'))
 
         userinfo = userinfo_response.json()
-        print(f"User info received: {userinfo.get('name')} - {userinfo.get('email')}")  # Debug log
+        print(f"User info received: {userinfo}")  # Debug log
 
         # Validate that we got required fields
         if not userinfo.get('email'):
@@ -2360,6 +2369,12 @@ def debug_oauth_config():
     <p><strong>Client Secret configured:</strong> {'Yes' if google_client_secret else 'No'}</p>
     <p><strong>Redirect URI:</strong> {redirect_uri}</p>
     <p><strong>Client ID (partial):</strong> {google_client_id[:20] + '...' if google_client_id else 'Not set'}</p>
+    <p><strong>Current URL root:</strong> {request.url_root}</p>
+    <p><strong>Request scheme:</strong> {request.scheme}</p>
+    <p><strong>Request host:</strong> {request.host}</p>
     <hr>
     <p><em>Make sure this redirect URI is added to your Google OAuth credentials in Google Cloud Console</em></p>
+    <h4>Test OAuth Flow:</h4>
+    <a href="/patient/google-register" target="_blank">Test Google Register</a><br>
+    <a href="/patient/google-login" target="_blank">Test Google Login</a>
     """
