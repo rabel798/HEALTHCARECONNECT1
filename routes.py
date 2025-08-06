@@ -17,6 +17,7 @@ from forms import (
     AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm, ProfileCompletionForm, PatientEditForm
 )
 import requests
+from urllib.parse import urlencode
 
 # Add context processor to make current datetime available to all templates
 @app.context_processor
@@ -907,7 +908,6 @@ def assistant_logout():
         flash('You have been logged out.', 'info')
 
     return redirect(url_for('auth_selection'))
-
 
 @app.route('/assistant/dashboard')
 @login_required
@@ -2125,9 +2125,17 @@ def patient_google_register():
     if not google_redirect_uri.startswith('https://'):
         google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
-    # Use proper URL encoding for parameters
-    from urllib.parse import urlencode
+    # Define possible redirect URIs to try
+    possible_redirect_uris = [
+        google_redirect_uri,
+        request.url_root + 'patient/google-callback', # Fallback with trailing slash removed
+        request.url_root.rstrip('/') + '/patient/google-callback' # Ensure no trailing slash
+    ]
+    # Remove duplicates and ensure they are clean
+    possible_redirect_uris = list(dict.fromkeys([uri.replace('//', '/') for uri in possible_redirect_uris]))
 
+
+    # Use proper URL encoding for parameters
     params = {
         'client_id': google_client_id,
         'redirect_uri': google_redirect_uri,
@@ -2169,9 +2177,16 @@ def patient_google_login():
     if not google_redirect_uri.startswith('https://'):
         google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
-    # Use proper URL encoding for parameters
-    from urllib.parse import urlencode
+    # Define possible redirect URIs to try
+    possible_redirect_uris = [
+        google_redirect_uri,
+        request.url_root + 'patient/google-callback', # Fallback with trailing slash removed
+        request.url_root.rstrip('/') + '/patient/google-callback' # Ensure no trailing slash
+    ]
+    # Remove duplicates and ensure they are clean
+    possible_redirect_uris = list(dict.fromkeys([uri.replace('//', '/') for uri in possible_redirect_uris]))
 
+    # Use proper URL encoding for parameters
     params = {
         'client_id': google_client_id,
         'redirect_uri': google_redirect_uri,
@@ -2242,37 +2257,63 @@ def patient_google_callback():
         if not google_redirect_uri.startswith('https://'):
             google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
 
+        # Define possible redirect URIs to try
+        possible_redirect_uris = [
+            google_redirect_uri,
+            request.url_root + 'patient/google-callback', # Fallback with trailing slash removed
+            request.url_root.rstrip('/') + '/patient/google-callback' # Ensure no trailing slash
+        ]
+        # Remove duplicates and ensure they are clean
+        possible_redirect_uris = list(dict.fromkeys([uri.replace('//', '/') for uri in possible_redirect_uris]))
+
         print(f"Using redirect URI for token exchange: {google_redirect_uri}")  # Debug log
 
         if not google_client_id or not google_client_secret:
             flash('Google OAuth configuration is incomplete.', 'danger')
             return redirect(url_for('patient_login'))
 
-        token_data = {
-            'code': code,
-            'client_id': google_client_id,
-            'client_secret': google_client_secret,
-            'redirect_uri': google_redirect_uri,
-            'grant_type': 'authorization_code'
-        }
+        # Try token exchange with different redirect URIs if the first one fails
+        token_response = None
+        successful_redirect_uri = None
 
-        print(f"Token request - Redirect URI: {google_redirect_uri}")  # Debug log
-        print(f"Token request data: {token_data}")  # Debug log
+        for redirect_uri in possible_redirect_uris:
+            print(f"Trying token exchange with redirect URI: {redirect_uri}")  # Debug log
 
-        # Add headers and timeout for better error handling
-        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
+            token_data = {
+                'code': code,
+                'client_id': google_client_id,
+                'client_secret': google_client_secret,
+                'redirect_uri': redirect_uri,
+                'grant_type': 'authorization_code'
+            }
 
-        print(f"Token response status: {token_response.status_code}")  # Debug log
-        print(f"Token response headers: {dict(token_response.headers)}")  # Debug log
-
-        if token_response.status_code != 200:
-            print(f"Token request failed: {token_response.status_code} - {token_response.text}")  # Debug log
+            # Add headers and timeout for better error handling
+            headers = {'Content-Type': 'application/x-www-form-urlencoded'}
             try:
-                error_data = token_response.json()
-                error_msg = error_data.get('error_description', error_data.get('error', 'Failed to get access token from Google'))
-            except:
-                error_msg = f'HTTP {token_response.status_code}: Failed to get access token from Google'
+                token_response = requests.post(token_url, data=token_data, headers=headers, timeout=30)
+                print(f"Token response status: {token_response.status_code}")  # Debug log
+
+                if token_response.status_code == 200:
+                    successful_redirect_uri = redirect_uri
+                    print(f"Token exchange successful with redirect URI: {redirect_uri}")  # Debug log
+                    break
+                else:
+                    print(f"Token request failed with {redirect_uri}: {token_response.status_code} - {token_response.text}")  # Debug log
+            except Exception as e:
+                print(f"Token request exception with {redirect_uri}: {str(e)}")  # Debug log
+                continue
+
+        if not token_response or token_response.status_code != 200:
+            print(f"All token requests failed. Last response: {token_response.status_code if token_response else 'None'}")  # Debug log
+            if token_response:
+                try:
+                    error_data = token_response.json()
+                    error_msg = error_data.get('error_description', error_data.get('error', 'Failed to get access token from Google'))
+                    print(f"Token error details: {error_data}")  # Debug log
+                except:
+                    error_msg = f'HTTP {token_response.status_code}: Failed to get access token from Google'
+            else:
+                error_msg = 'Failed to connect to Google token service'
             flash(f'Authentication failed: {error_msg}', 'danger')
             return redirect(url_for('patient_register'))
 
