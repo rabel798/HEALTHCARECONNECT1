@@ -2195,28 +2195,38 @@ def patient_google_callback():
     """Google OAuth callback route"""
     print(f"OAuth callback received. Args: {request.args}")  # Debug log
     print(f"Request URL: {request.url}")  # Debug log
+    print(f"Request method: {request.method}")  # Debug log
 
     # Check for OAuth errors
     if 'error' in request.args:
         error = request.args.get('error')
         error_description = request.args.get('error_description', '')
         print(f"OAuth error: {error} - {error_description}")  # Debug log
-        flash(f'Google authentication failed: {error_description}', 'danger')
-        return redirect(url_for('patient_login'))
+        
+        # Handle specific OAuth errors
+        if error == 'access_denied':
+            flash('Google authentication was cancelled by user.', 'info')
+        else:
+            flash(f'Google authentication failed: {error_description or error}', 'danger')
+        return redirect(url_for('patient_register'))
 
     # Verify state parameter
     received_state = request.args.get('state')
     stored_state = session.get('oauth_state')
 
-    if not received_state or received_state != stored_state:
+    if not received_state:
+        flash('Missing state parameter. Please try again.', 'danger')
+        return redirect(url_for('patient_register'))
+        
+    if received_state != stored_state:
         print(f"State mismatch. Received: {received_state}, Stored: {stored_state}")  # Debug log
-        flash('Invalid state parameter. Please try again.', 'danger')
-        return redirect(url_for('patient_login'))
+        flash('Invalid state parameter. Security check failed. Please try again.', 'danger')
+        return redirect(url_for('patient_register'))
 
     code = request.args.get('code')
     if not code:
-        flash('No authorization code received.', 'danger')
-        return redirect(url_for('patient_login'))
+        flash('No authorization code received from Google.', 'danger')
+        return redirect(url_for('patient_register'))
 
     try:
         # Get OAuth action from session
@@ -2229,9 +2239,11 @@ def patient_google_callback():
 
         # Ensure redirect URI matches what we sent to Google
         google_redirect_uri = url_for('patient_google_callback', _external=True)
-        # Always use HTTPS for Replit URLs
-        if 'replit.dev' in google_redirect_uri or 'sisko.replit.dev' in google_redirect_uri:
+        # Always use HTTPS for Replit URLs and any external access
+        if 'replit.dev' in google_redirect_uri or 'sisko.replit.dev' in google_redirect_uri or request.is_secure:
             google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
+        
+        print(f"Using redirect URI for token exchange: {google_redirect_uri}")  # Debug log
 
         if not google_client_id or not google_client_secret:
             flash('Google OAuth configuration is incomplete.', 'danger')
@@ -2253,8 +2265,10 @@ def patient_google_callback():
 
         if token_response.status_code != 200:
             print(f"Token request failed: {token_response.status_code} - {token_response.text}")  # Debug log
-            flash('Failed to get access token from Google. Please check your OAuth configuration.', 'danger')
-            return redirect(url_for('patient_login'))
+            error_data = token_response.json() if token_response.headers.get('content-type', '').startswith('application/json') else {}
+            error_msg = error_data.get('error_description', 'Failed to get access token from Google')
+            flash(f'Authentication failed: {error_msg}', 'danger')
+            return redirect(url_for('patient_register'))
 
         tokens = token_response.json()
         print(f"Received tokens: {list(tokens.keys())}")  # Debug log
@@ -2327,4 +2341,26 @@ def patient_google_callback():
     except Exception as e:
         print(f"Unexpected error during Google OAuth: {str(e)}")  # Debug log
         flash(f'Error during Google authentication: {str(e)}', 'danger')
-        return redirect(url_for('patient_login'))
+        return redirect(url_for('patient_register'))
+
+@app.route('/debug/oauth-config')
+def debug_oauth_config():
+    """Debug route to check OAuth configuration - remove in production"""
+    if not isinstance(current_user, Doctor):
+        return "Access denied", 403
+    
+    google_client_id = app.config.get('GOOGLE_CLIENT_ID')
+    google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
+    redirect_uri = url_for('patient_google_callback', _external=True)
+    if 'replit.dev' in redirect_uri or 'sisko.replit.dev' in redirect_uri:
+        redirect_uri = redirect_uri.replace('http://', 'https://')
+    
+    return f"""
+    <h3>OAuth Configuration Debug</h3>
+    <p><strong>Client ID configured:</strong> {'Yes' if google_client_id else 'No'}</p>
+    <p><strong>Client Secret configured:</strong> {'Yes' if google_client_secret else 'No'}</p>
+    <p><strong>Redirect URI:</strong> {redirect_uri}</p>
+    <p><strong>Client ID (partial):</strong> {google_client_id[:20] + '...' if google_client_id else 'Not set'}</p>
+    <hr>
+    <p><em>Make sure this redirect URI is added to your Google OAuth credentials in Google Cloud Console</em></p>
+    """
