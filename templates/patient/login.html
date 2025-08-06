@@ -27,46 +27,7 @@
                             </a>
                         </div>
                         
-                        <!-- Divider -->
-                        <div class="text-center my-4">
-                            <div class="position-relative">
-                                <hr>
-                                <span class="bg-light px-3 position-absolute top-50 start-50 translate-middle text-muted">OR</span>
-                            </div>
-                        </div>
                         
-                        <!-- Manual Login Form -->
-                        <form method="POST" action="{{ url_for('patient_login') }}">
-                            {{ form.hidden_tag() }}
-                            
-                            <div class="mb-3">
-                                {{ form.email.label(class="form-label") }}
-                                {{ form.email(class="form-control", placeholder="Enter your email address") }}
-                                {% if form.email.errors %}
-                                    <div class="text-danger mt-1">
-                                        {% for error in form.email.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mb-3">
-                                {{ form.password.label(class="form-label") }}
-                                {{ form.password(class="form-control", placeholder="Enter your password") }}
-                                {% if form.password.errors %}
-                                    <div class="text-danger mt-1">
-                                        {% for error in form.password.errors %}
-                                            <small>{{ error }}</small>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="d-grid gap-2 mb-3">
-                                {{ form.submit(class="btn btn-primary py-2") }}
-                            </div>
-                        </form>
                         
                         <!-- Registration Link -->
                         <div class="text-center mt-4">
@@ -77,21 +38,12 @@
                         <!-- Help Section -->
                         <div class="mt-4 pt-3 border-top">
                             <h6 class="text-center mb-3">Need Help?</h6>
-                            <div class="row text-center">
-                                <div class="col-6">
-                                    <small class="text-muted">
-                                        <i class="fas fa-question-circle me-1"></i>
-                                        Forgot password?<br>
-                                        <a href="{{ url_for('patient_gmail_login') }}" class="text-decoration-none">Use Gmail OTP</a>
-                                    </small>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">
-                                        <i class="fas fa-phone me-1"></i>
-                                        Call us at<br>
-                                        <strong>+91 98765 43210</strong>
-                                    </small>
-                                </div>
+                            <div class="text-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-phone me-1"></i>
+                                    Call us at <strong>+91 98765 43210</strong><br>
+                                    <small class="mt-2 d-block">Available during clinic hours</small>
+                                </small>
                             </div>
                         </div>
                     </div>
