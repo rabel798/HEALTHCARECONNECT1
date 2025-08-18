@@ -284,8 +284,10 @@ def available_slots():
                 "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"
             ]
 
-        # Get all appointments for the selected date
-        booked_appointments = Appointment.query.filter_by(appointment_date=selected_date).all()
+        # Get all non-cancelled appointments for the selected date
+        booked_appointments = Appointment.query.filter_by(
+            appointment_date=selected_date
+        ).filter(Appointment.status != 'cancelled').all()
 
         # Count appointments per time slot
         slot_counts = {}
