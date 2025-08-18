@@ -2194,7 +2194,7 @@ def patient_google_login():
 def patient_google_callback():
     """Google OAuth callback route"""
     print(f"Google callback received with args: {request.args}")  # Debug log
-    
+
     # Check for OAuth errors first
     if 'error' in request.args:
         error = request.args.get('error')
@@ -2252,7 +2252,7 @@ def patient_google_callback():
         print(f"Making token request to: {token_url}")  # Debug log
         token_response = requests.post(token_url, data=token_data, timeout=30)
         print(f"Token response status: {token_response.status_code}")  # Debug log
-        
+
         if token_response.status_code != 200:
             print(f"Token response error: {token_response.text}")  # Debug log
             flash('Authentication failed during token exchange.', 'danger')
@@ -2260,7 +2260,7 @@ def patient_google_callback():
 
         tokens = token_response.json()
         access_token = tokens.get('access_token')
-        
+
         if not access_token:
             print(f"No access token in response: {tokens}")  # Debug log
             flash('Authentication failed - no access token received.', 'danger')
@@ -2285,21 +2285,21 @@ def patient_google_callback():
         userinfo = userinfo_response.json()
         email = userinfo.get('email')
         name = userinfo.get('name', 'Google User')
-        
+
         print(f"User info received: email={email}, name={name}")  # Debug log
-        
+
         if not email:
             flash('Failed to get your email from Google.', 'danger')
             return redirect(url_for('patient_register'))
 
         # Find or create patient account
         patient = Patient.query.filter_by(email=email).first()
-        
+
         if not patient:
             if oauth_action == 'login':
                 flash('No account found with this Google email. Please register first.', 'warning')
                 return redirect(url_for('patient_register'))
-            
+
             # Create new patient account
             patient = Patient(
                 full_name=name,
@@ -2316,7 +2316,7 @@ def patient_google_callback():
         # Log in the user
         login_user(patient)
         print(f"Logged in patient: {patient.id}")  # Debug log
-        
+
         # Clear session data
         session.pop('oauth_state', None)
         session.pop('oauth_action', None)
@@ -2341,4 +2341,3 @@ def patient_google_callback():
         print(f"OAuth callback error: {str(e)}")  # Debug log
         flash('An error occurred during authentication. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
-

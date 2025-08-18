@@ -171,7 +171,7 @@
                     <div class="card-body">
                         <!-- Get the latest doctor prescription for this patient -->
                         {% set doctor_prescription = appointment.patient.doctor_prescriptions|sort(attribute='prescription_date', reverse=true)|first %}
-                        
+
                         {% if doctor_prescription %}
                         <!-- Clinical Information -->
                         {% if doctor_prescription.complaints or doctor_prescription.history or doctor_prescription.examination_notes or doctor_prescription.diagnosis %}
