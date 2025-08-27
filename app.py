@@ -44,8 +44,13 @@ app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID')
 app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET')  
 
 
-# Configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///drricha.db"
+# Configure the database - PostgreSQL
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith('postgres://'):
+    # Fix for newer SQLAlchemy versions
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url or "postgresql://localhost/drricha_dev"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Initialize extensions with app
@@ -73,55 +78,60 @@ def load_user(user_id):
 # Import routes after app is created
 from routes import *
 
-# Create database tables
-with app.app_context():
+# Initialize database function
+def init_database():
+    """Initialize database tables and default accounts"""
     try:
-        # Only create tables if they don't exist
+        # Create all tables
         db.create_all()
         print('Database tables initialized')
-    except Exception as e:
-        print(f'Error initializing database: {str(e)}')
+        
+        # Import here to avoid circular imports
+        from models import Doctor, Assistant
+        from datetime import date
 
-    # Create default accounts only if they don't exist
-    from models import Doctor, Assistant
-    from datetime import date
+        # Create default doctor account if it doesn't exist
+        doctor = Doctor.query.filter_by(username='drricha').first()
+        if not doctor:
+            doctor = Doctor(
+                username='drricha',
+                email='drricha@eyeclinic.com',
+                full_name='Dr. Richa Sharma',
+                mobile_number='9876543210',
+                qualifications='MBBS, MS, FPOS',
+                specialization='Ophthalmology, Pediatric Eye Care'
+            )
+            doctor.set_password('admin123')
+            db.session.add(doctor)
+            print('Default doctor account created')
 
-    # Create doctor account if it doesn't exist
-    doctor = Doctor.query.filter_by(username='drricha').first()
-    if not doctor:
-        doctor = Doctor(
-            username='drricha',
-            email='drricha@eyeclinic.com',
-            full_name='Dr. Richa Sharma',
-            mobile_number='9876543210',
-            qualifications='MBBS, MS, FPOS',
-            specialization='Ophthalmology, Pediatric Eye Care'
-        )
-        doctor.set_password('admin123')
-        db.session.add(doctor)
-        print('Default doctor account created')
+        # Create optometrist account if it doesn't exist
+        assistant = Assistant.query.filter_by(username='assistant').first()
+        if not assistant:
+            assistant = Assistant(
+                username='assistant',
+                email='assistant@eyeclinic.com',
+                full_name='Clinic Optometrist',
+                mobile_number='9876543211',
+                position='Optometrist',
+                joining_date=date.today()
+            )
+            assistant.set_password('assistant123')
+            db.session.add(assistant)
+            print('Default optometrist account created')
 
-    # Create optometrist account if it doesn't exist
-    assistant = Assistant.query.filter_by(username='assistant').first()
-    if not assistant:
-        assistant = Assistant(
-            username='assistant',
-            email='assistant@eyeclinic.com',
-            full_name='Clinic Optometrist',
-            mobile_number='9876543211',
-            position='Optometrist',
-            joining_date=date.today()
-        )
-        assistant.set_password('assistant123')
-        db.session.add(assistant)
-        print('Default optometrist account created')
-
-    try:
+        # Commit changes
         db.session.commit()
-        print('Default accounts initialized successfully')
+        print('Database initialization completed successfully')
+        
     except Exception as e:
         db.session.rollback()
-        print(f'Error initializing default accounts: {str(e)}')
+        print(f'Error initializing database: {str(e)}')
+        raise
+
+# Initialize database when app starts
+with app.app_context():
+    init_database()
 
 # Register error handlers
 @app.errorhandler(404)
