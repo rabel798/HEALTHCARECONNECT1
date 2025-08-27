@@ -35,10 +35,9 @@ function initMap() {
 
 // Function to open Google Maps with directions from user's location to clinic
 function getDirectionsToClinic() {
-    // Clinic location coordinates
-    const clinicLat = 13.090032977903189;
-    const clinicLng = 77.74095051096549;
-
+    // Use the business name and address instead of coordinates
+    const clinicAddress = "Dr. Richa Eye Clinic, New Airport Road, Karnataka, Bengaluru";
+    
     // Try to get user's current location
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -47,20 +46,20 @@ function getDirectionsToClinic() {
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
 
-                // Open Google Maps with directions from user's location to clinic
-                const directionsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${clinicLat},${clinicLng}`;
+                // Open Google Maps with directions from user's location to clinic using business name
+                const directionsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${encodeURIComponent(clinicAddress)}`;
                 window.open(directionsUrl, '_blank');
             },
             // Error callback
             function() {
-                // If cannot get user's location, just show directions to clinic
-                const directionsUrl = `https://www.google.com/maps/dir//${clinicLat},${clinicLng}`;
+                // If cannot get user's location, just show directions to clinic using business name
+                const directionsUrl = `https://www.google.com/maps/dir//${encodeURIComponent(clinicAddress)}`;
                 window.open(directionsUrl, '_blank');
             }
         );
     } else {
-        // Geolocation not supported
-        const directionsUrl = `https://www.google.com/maps/dir//${clinicLat},${clinicLng}`;
+        // Geolocation not supported - use business name
+        const directionsUrl = `https://www.google.com/maps/dir//${encodeURIComponent(clinicAddress)}`;
         window.open(directionsUrl, '_blank');
     }
 }
