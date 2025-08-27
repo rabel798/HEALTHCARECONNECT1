@@ -35,9 +35,9 @@ function initMap() {
 
 // Function to open Google Maps with directions from user's location to clinic
 function getDirectionsToClinic() {
-    // Use the business name and address for better Google Maps integration
-    const clinicAddress = "Dr. Richa's Eye Clinic, First floor, DVR Town Centre, near IGUS private limited, Mandur, Budigere Road, Bengaluru, Karnataka 560049";
-    const encodedAddress = encodeURIComponent(clinicAddress);
+    // Clinic location coordinates for Budigere Road, Bengaluru
+    const clinicLat = 13.090580;
+    const clinicLng = 77.741161;
     
     // Try to get user's current location
     if (navigator.geolocation) {
@@ -47,20 +47,20 @@ function getDirectionsToClinic() {
                 const userLat = position.coords.latitude;
                 const userLng = position.coords.longitude;
                 
-                // Open Google Maps with directions using business name and address
-                const mapsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${encodedAddress}`;
+                // Open Google Maps with directions using coordinates instead of address
+                const mapsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${clinicLat},${clinicLng}`;
                 window.open(mapsUrl, '_blank');
             },
             // Error callback
             function() {
-                // If cannot get user's location, just show the clinic location with business info
-                const mapsUrl = `https://www.google.com/maps/search/${encodedAddress}`;
+                // If cannot get user's location, just show directions to clinic
+                const mapsUrl = `https://www.google.com/maps/dir//${clinicLat},${clinicLng}`;
                 window.open(mapsUrl, '_blank');
             }
         );
     } else {
-        // Geolocation not supported - show clinic location with business info
-        const mapsUrl = `https://www.google.com/maps/search/${encodedAddress}`;
+        // Geolocation not supported
+        const mapsUrl = `https://www.google.com/maps/dir//${clinicLat},${clinicLng}`;
         window.open(mapsUrl, '_blank');
     }
 }
