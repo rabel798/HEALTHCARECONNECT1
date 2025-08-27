@@ -58,20 +58,42 @@ document.addEventListener('DOMContentLoaded', function() {
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
     }, false);
 
-    // Add fade-in animation to elements
-    const fadeElements = document.querySelectorAll('.fade-in');
-    fadeElements.forEach(element => {
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
+    // Enhanced scroll animations system
+    function initScrollAnimations() {
+        const animationClasses = ['.fade-in', '.slide-up', '.slide-up-delayed', '.slide-up-stagger', '.scale-in'];
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    // Add stagger delay for elements with stagger class
+                    if (entry.target.classList.contains('slide-up-stagger')) {
+                        const staggerElements = document.querySelectorAll('.slide-up-stagger');
+                        const elementIndex = Array.from(staggerElements).indexOf(entry.target);
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, elementIndex * 100);
+                    } else {
+                        entry.target.classList.add('visible');
+                    }
                     observer.unobserve(entry.target);
                 }
             });
-        });
+        }, observerOptions);
 
-        observer.observe(element);
-    });
+        // Observe all animation elements
+        animationClasses.forEach(className => {
+            const elements = document.querySelectorAll(className);
+            elements.forEach(element => observer.observe(element));
+        });
+    }
+
+    // Initialize scroll animations
+    initScrollAnimations();
 
     // Payment method selection
     const paymentMethods = document.querySelectorAll('.payment-method-card');
