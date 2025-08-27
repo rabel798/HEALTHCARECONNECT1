@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const animationClasses = ['.fade-in', '.slide-up', '.slide-up-delayed', '.slide-up-stagger', '.scale-in'];
         
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.05,
+            rootMargin: '0px 0px 50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const elementIndex = Array.from(staggerElements).indexOf(entry.target);
                         setTimeout(() => {
                             entry.target.classList.add('visible');
-                        }, elementIndex * 100);
+                        }, elementIndex * 50);
                     } else {
                         entry.target.classList.add('visible');
                     }
