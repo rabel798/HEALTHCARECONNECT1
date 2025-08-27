@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initMap() {
     // Clinic location coordinates for Budigere Road, Bengaluru
-    const clinicLocation = [13.090580, 77.741161]; // Budigere Road, Bengaluru coordinates
+    const clinicLocation = [13.090032977903189, 77.74095051096549]; // Updated clinic coordinates
 
     // Initialize map
     const map = L.map('map').setView(clinicLocation, 15);
@@ -36,8 +36,8 @@ function initMap() {
 // Function to open Google Maps with directions from user's location to clinic
 function getDirectionsToClinic() {
     // Clinic location coordinates
-    const clinicLat = 13.090212588091367;
-    const clinicLng = 77.74085395143828;
+    const clinicLat = 13.090032977903189;
+    const clinicLng = 77.74095051096549;
 
     // Try to get user's current location
     if (navigator.geolocation) {
