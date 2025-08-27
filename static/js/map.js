@@ -38,26 +38,7 @@ function getDirectionsToClinic() {
     // Direct Google Maps business page URL for Dr. Richa's Eye Clinic
     const clinicBusinessUrl = "https://maps.app.goo.gl/L9w8fpfiAgQ1RgTb8";
 
-    // Try to get user's current location
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            // Success callback
-            function(position) {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-
-                // Open Google Maps with directions from user's location to the clinic
-                const directionsUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/13.0900245,77.7409076`;
-                window.open(directionsUrl, '_blank');
-            },
-            // Error callback
-            function() {
-                // If cannot get user's location, just show the clinic business page
-                window.open(clinicBusinessUrl, '_blank');
-            }
-        );
-    } else {
-        // Geolocation not supported - show clinic business page
-        window.open(clinicBusinessUrl, '_blank');
-    }
+    // Always open the business page directly - this will show the clinic info
+    // and Google Maps will automatically detect user's location for directions
+    window.open(clinicBusinessUrl, '_blank');
 }
