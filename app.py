@@ -82,52 +82,60 @@ from routes import *
 def init_database():
     """Initialize database tables and default accounts"""
     try:
-        # Create all tables
-        db.create_all()
-        print('Database tables initialized')
-        
         # Import here to avoid circular imports
         from models import Doctor, Assistant
         from datetime import date
+        
+        # Create all tables first
+        db.create_all()
+        print('Database tables initialized')
 
-        # Create default doctor account if it doesn't exist
-        doctor = Doctor.query.filter_by(username='drricha').first()
-        if not doctor:
-            doctor = Doctor(
-                username='drricha',
-                email='drricha@eyeclinic.com',
-                full_name='Dr. Richa Sharma',
-                mobile_number='9876543210',
-                qualifications='MBBS, MS, FPOS',
-                specialization='Ophthalmology, Pediatric Eye Care'
-            )
-            doctor.set_password('admin123')
-            db.session.add(doctor)
-            print('Default doctor account created')
+        # Check if we need to create default accounts
+        try:
+            # Create default doctor account if it doesn't exist
+            doctor = Doctor.query.filter_by(username='drricha').first()
+            if not doctor:
+                doctor = Doctor(
+                    username='drricha',
+                    email='drricha@eyeclinic.com',
+                    full_name='Dr. Richa Sharma',
+                    mobile_number='9876543210',
+                    qualifications='MBBS, MS, FPOS',
+                    specialization='Ophthalmology, Pediatric Eye Care'
+                )
+                doctor.set_password('admin123')
+                db.session.add(doctor)
+                print('Default doctor account created')
 
-        # Create optometrist account if it doesn't exist
-        assistant = Assistant.query.filter_by(username='assistant').first()
-        if not assistant:
-            assistant = Assistant(
-                username='assistant',
-                email='assistant@eyeclinic.com',
-                full_name='Clinic Optometrist',
-                mobile_number='9876543211',
-                position='Optometrist',
-                joining_date=date.today()
-            )
-            assistant.set_password('assistant123')
-            db.session.add(assistant)
-            print('Default optometrist account created')
+            # Create optometrist account if it doesn't exist
+            assistant = Assistant.query.filter_by(username='assistant').first()
+            if not assistant:
+                assistant = Assistant(
+                    username='assistant',
+                    email='assistant@eyeclinic.com',
+                    full_name='Clinic Optometrist',
+                    mobile_number='9876543211',
+                    position='Optometrist',
+                    joining_date=date.today()
+                )
+                assistant.set_password('assistant123')
+                db.session.add(assistant)
+                print('Default optometrist account created')
 
-        # Commit changes
-        db.session.commit()
-        print('Database initialization completed successfully')
+            # Commit changes
+            db.session.commit()
+            print('Database initialization completed successfully')
+            
+        except Exception as query_error:
+            # If there's an issue with queries, just create tables and continue
+            print(f'Note: {str(query_error)}')
+            print('Tables created successfully. You may need to run init_db.py separately.')
         
     except Exception as e:
         db.session.rollback()
         print(f'Error initializing database: {str(e)}')
-        raise
+        # Don't raise the error, just print it and continue
+        print('Continuing without default accounts...')
 
 # Initialize database when app starts
 with app.app_context():

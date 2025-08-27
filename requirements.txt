@@ -1,30 +1,14 @@
-�#Flask and extensions
-flask = 3.1.0
-flask-wtf = 1.2.2
-flask-sqlalchemy = 3.1.1
-flask-login = 0.1.3
-gunicorn = 23.0.0
 
-#Databasesqlalchemy = 2.0.39
-psycopg2-binary = 2.9.10
-
-#Forms and validatiom
-wtforms = 3.2.1
-email-validator = 2.2.0
-
-#Maps
-leaflet = 0.0.3
-#WSGI server
-werkzeug = 3.1.3
-flask
-flask-login
-flask-sqlalchemy
-flask-wtf
-requests
-sqlalchemy
-werkzeug
-wtforms
+flask==3.1.0
+flask-wtf==1.2.2
+flask-sqlalchemy==3.1.1
+flask-login==0.1.3
+gunicorn==23.0.0
+sqlalchemy==2.0.39
+psycopg2-binary==2.9.10
+wtforms==3.2.1
+email-validator==2.2.0
+leaflet==0.0.3
+werkzeug==3.1.3
 python-dotenv
 requests
-psycopg2-binary
-psycopg2-binary
