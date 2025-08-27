@@ -40,56 +40,66 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize dark mode
     initDarkMode();
     
-    // Navbar hide on scroll
+    // Navbar hide on scroll - Throttled for performance
     const navbar = document.querySelector('.navbar');
     let lastScrollTop = 0;
+    let ticking = false;
     
-    window.addEventListener('scroll', function() {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    function updateNavbar() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
         if (scrollTop > lastScrollTop && scrollTop > 100) {
-            // Scrolling down & past the threshold
             navbar.classList.add('navbar-hidden');
         } else {
-            // Scrolling up
             navbar.classList.remove('navbar-hidden');
         }
         
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-    }, false);
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        ticking = false;
+    }
+    
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateNavbar);
+            ticking = true;
+        }
+    }, { passive: true });
 
-    // Enhanced scroll animations system
+    // Enhanced scroll animations system - Optimized
     function initScrollAnimations() {
-        const animationClasses = ['.fade-in', '.slide-up', '.slide-up-delayed', '.slide-up-stagger', '.scale-in'];
-        
         const observerOptions = {
             threshold: 0.05,
             rootMargin: '0px 0px 50px 0px'
         };
 
+        // Cache stagger elements once
+        const staggerElements = Array.from(document.querySelectorAll('.slide-up-stagger'));
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    // Add stagger delay for elements with stagger class
-                    if (entry.target.classList.contains('slide-up-stagger')) {
-                        const staggerElements = document.querySelectorAll('.slide-up-stagger');
-                        const elementIndex = Array.from(staggerElements).indexOf(entry.target);
-                        setTimeout(() => {
+                    // Use requestAnimationFrame for better performance
+                    requestAnimationFrame(() => {
+                        if (entry.target.classList.contains('slide-up-stagger')) {
+                            const elementIndex = staggerElements.indexOf(entry.target);
+                            if (elementIndex !== -1) {
+                                setTimeout(() => {
+                                    entry.target.classList.add('visible');
+                                }, elementIndex * 25); // Reduced from 50ms
+                            }
+                        } else {
                             entry.target.classList.add('visible');
-                        }, elementIndex * 50);
-                    } else {
-                        entry.target.classList.add('visible');
-                    }
+                        }
+                    });
                     observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // Observe all animation elements
-        animationClasses.forEach(className => {
-            const elements = document.querySelectorAll(className);
-            elements.forEach(element => observer.observe(element));
-        });
+        // Observe all animation elements efficiently
+        const animationSelectors = '.fade-in, .slide-up, .slide-up-delayed, .slide-up-stagger, .scale-in';
+        const elements = document.querySelectorAll(animationSelectors);
+        elements.forEach(element => observer.observe(element));
     }
 
     // Initialize scroll animations
