@@ -41,6 +41,22 @@
             
             <!-- Main Content -->
             <div class="col-lg-9">
+                <!-- Print Both Prescriptions Option -->
+                {% if current_user.doctor_prescriptions and current_user.optometrist_prescriptions %}
+                <div class="card shadow-sm mb-4 border-success">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-print me-2"></i>Print Combined Prescriptions</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="mb-3">Print both your doctor and optometrist prescriptions together in one document.</p>
+                        <a href="{{ url_for('patient_print_combined_prescription', patient_id=current_user.id) }}" 
+                           class="btn btn-success btn-lg" target="_blank">
+                            <i class="fas fa-print me-2"></i>Print Both Prescriptions
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
                 <!-- Doctor Prescriptions -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-primary text-white">

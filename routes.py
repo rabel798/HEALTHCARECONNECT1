@@ -2050,6 +2050,37 @@ def print_combined_prescription(patient_id):
                          doctor_prescription=doctor_prescription,
                          optometrist_prescription=optometrist_prescription)
 
+@app.route('/patient/print-combined-prescription/<int:patient_id>')
+@login_required
+def patient_print_combined_prescription(patient_id):
+    """Patient route to print combined doctor and optometrist prescriptions"""
+    # Ensure patient can only access their own prescriptions
+    if not isinstance(current_user, Patient) or current_user.id != patient_id:
+        flash('Access denied. You can only view your own prescriptions.', 'danger')
+        return redirect(url_for('patient_dashboard'))
+
+    # Get patient
+    patient = Patient.query.get_or_404(patient_id)
+
+    # Get latest doctor prescription
+    doctor_prescription = DoctorPrescription.query.filter_by(
+        patient_id=patient_id
+    ).order_by(DoctorPrescription.created_at.desc()).first()
+
+    # Get latest optometrist prescription
+    optometrist_prescription = OptometristPrescription.query.filter_by(
+        patient_id=patient_id
+    ).order_by(OptometristPrescription.created_at.desc()).first()
+
+    if not doctor_prescription and not optometrist_prescription:
+        flash('No prescriptions found.', 'warning')
+        return redirect(url_for('patient_medical_records'))
+
+    return render_template('print_combined_prescription.html',
+                         patient=patient,
+                         doctor_prescription=doctor_prescription,
+                         optometrist_prescription=optometrist_prescription)
+
 @app.route('/delete-prescription/<string:type>/<int:prescription_id>', methods=['POST'])
 @login_required
 def delete_prescription(type, prescription_id):
