@@ -6,49 +6,52 @@
     <style>
         @media print {
             body { 
-                font-family: 'Arial', sans-serif;
+                font-family: 'Times New Roman', 'Georgia', serif;
                 margin: 0;
                 padding: 20px;
-                line-height: 1.4;
-                color: #333;
-                font-size: 12px;
-                background-image: 
-                    radial-gradient(circle at 20% 20%, rgba(26, 115, 232, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 80%, rgba(26, 115, 232, 0.06) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 40%, rgba(26, 115, 232, 0.04) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(26, 115, 232, 0.03) 0%, rgba(26, 115, 232, 0.05) 50%, rgba(26, 115, 232, 0.03) 100%);
-                background-size: 200px 200px, 150px 150px, 100px 100px, 100% 100%;
-                background-repeat: repeat, repeat, repeat, no-repeat;
+                line-height: 1.6;
+                color: #2c3e50;
+                font-size: 13px;
+                background: 
+                    radial-gradient(circle at 25% 25%, rgba(52, 152, 219, 0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, rgba(52, 152, 219, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 10%, rgba(41, 128, 185, 0.06) 0%, transparent 40%),
+                    radial-gradient(circle at 10% 90%, rgba(52, 152, 219, 0.08) 0%, transparent 40%),
+                    linear-gradient(135deg, rgba(52, 152, 219, 0.05) 0%, rgba(41, 128, 185, 0.08) 50%, rgba(52, 152, 219, 0.05) 100%);
+                background-size: 300px 300px, 250px 250px, 200px 200px, 180px 180px, 100% 100%;
+                background-repeat: repeat, repeat, repeat, repeat, no-repeat;
                 position: relative;
             }
             body::before {
                 content: '';
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill-opacity='0.04' fill='%231a73e8'%3E%3Cpath d='M40 10c16.569 0 30 13.431 30 30S56.569 70 40 70 10 56.569 10 40 23.431 10 40 10zm0 8c-12.15 0-22 9.85-22 22s9.85 22 22 22 22-9.85 22-22-9.85-22-22-22z'/%3E%3Cpath d='M40 20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20zm0 4c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16z'/%3E%3Cpath d='M40 32a8 8 0 1 1 0 16 8 8 0 0 1 0-16z'/%3E%3C/g%3E%3C/svg%3E");
-                background-size: 80px 80px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23498db8' stroke-width='1' stroke-opacity='0.08'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Ccircle cx='50' cy='50' r='28'/%3E%3Ccircle cx='50' cy='50' r='16'/%3E%3Ccircle cx='50' cy='50' r='6'/%3E%3Cpath d='M25 50h50M50 25v50'/%3E%3Cpath d='M35 35l30 30M65 35l-30 30'/%3E%3C/g%3E%3C/svg%3E");
+                background-size: 100px 100px;
                 background-repeat: repeat;
                 pointer-events: none;
-                z-index: -1;
+                z-index: -2;
+                opacity: 0.4;
             }
             body::after {
-                content: 'Dr. Richa\'s Eye Clinic';
-                position: absolute;
+                content: 'DR. RICHA\'S EYE CLINIC';
+                position: fixed;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%) rotate(-45deg);
-                font-size: 36px;
-                font-weight: bold;
-                color: rgba(26, 115, 232, 0.03);
-                font-family: 'Arial', sans-serif;
+                font-size: 60px;
+                font-weight: 900;
+                color: rgba(52, 152, 219, 0.08);
+                font-family: 'Times New Roman', serif;
                 white-space: nowrap;
                 pointer-events: none;
                 z-index: -1;
                 text-transform: uppercase;
-                letter-spacing: 6px;
+                letter-spacing: 10px;
+                text-shadow: 2px 2px 4px rgba(52, 152, 219, 0.05);
             }
             .header {
                 text-align: center;
