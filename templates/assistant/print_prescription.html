@@ -514,69 +514,75 @@
     {% endif %}
 
     {% if prescription.type_of_glasses or prescription.product %}
-    <div class="section">
-        <h4>Glass & Lens Details:</h4>
-        {% if prescription.type_of_glasses %}
-        <div class="field-row">
-            <span class="field-label">Type of Glasses:</span>
-            <span>{{ prescription.type_of_glasses }}</span>
+    <div class="prescription-content">
+        <div class="section">
+            <h4>Glass & Lens Details:</h4>
+            {% if prescription.type_of_glasses %}
+            <div class="field-row">
+                <span class="field-label">Type of Glasses:</span>
+                <span>{{ prescription.type_of_glasses }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.glass_usage %}
+            <div class="field-row">
+                <span class="field-label">Usage:</span>
+                <span>{{ prescription.glass_usage }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.product %}
+            <div class="field-row">
+                <span class="field-label">Product:</span>
+                <span>{{ prescription.product }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.type_of_lens %}
+            <div class="field-row">
+                <span class="field-label">Type of Lens:</span>
+                <span>{{ prescription.type_of_lens }}</span>
+            </div>
+            {% endif %}
+            {% if prescription.lens_material %}
+            <div class="field-row">
+                <span class="field-label">Lens Material:</span>
+                <span>{{ prescription.lens_material }}</span>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-        {% if prescription.glass_usage %}
-        <div class="field-row">
-            <span class="field-label">Usage:</span>
-            <span>{{ prescription.glass_usage }}</span>
-        </div>
-        {% endif %}
-        {% if prescription.product %}
-        <div class="field-row">
-            <span class="field-label">Product:</span>
-            <span>{{ prescription.product }}</span>
-        </div>
-        {% endif %}
-        {% if prescription.type_of_lens %}
-        <div class="field-row">
-            <span class="field-label">Type of Lens:</span>
-            <span>{{ prescription.type_of_lens }}</span>
-        </div>
-        {% endif %}
-        {% if prescription.lens_material %}
-        <div class="field-row">
-            <span class="field-label">Lens Material:</span>
-            <span>{{ prescription.lens_material }}</span>
-        </div>
-        {% endif %}
     </div>
     {% endif %}
 
     {% if prescription.keratometer_readings %}
-    <div class="section">
-        <h4>Keratometer Readings:</h4>
-        <p>{{ prescription.keratometer_readings }}</p>
+    <div class="prescription-content">
+        <div class="section">
+            <h4>Keratometer Readings:</h4>
+            <p>{{ prescription.keratometer_readings }}</p>
+        </div>
     </div>
     {% endif %}
 
     {% if prescription.general_remarks or prescription.recommendations or prescription.notes %}
-    <div class="section">
-        <h4>Remarks & Recommendations:</h4>
-        {% if prescription.general_remarks %}
-        <div style="margin-bottom: 10px;">
-            <strong>General Remarks:</strong><br>
-            {{ prescription.general_remarks }}
+    <div class="prescription-content">
+        <div class="section">
+            <h4>Remarks & Recommendations:</h4>
+            {% if prescription.general_remarks %}
+            <div style="margin-bottom: 10px;">
+                <strong>General Remarks:</strong><br>
+                {{ prescription.general_remarks }}
+            </div>
+            {% endif %}
+            {% if prescription.recommendations %}
+            <div style="margin-bottom: 10px;">
+                <strong>Recommendations:</strong><br>
+                {{ prescription.recommendations }}
+            </div>
+            {% endif %}
+            {% if prescription.notes %}
+            <div>
+                <strong>Additional Notes:</strong><br>
+                {{ prescription.notes }}
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-        {% if prescription.recommendations %}
-        <div style="margin-bottom: 10px;">
-            <strong>Recommendations:</strong><br>
-            {{ prescription.recommendations }}
-        </div>
-        {% endif %}
-        {% if prescription.notes %}
-        <div>
-            <strong>Additional Notes:</strong><br>
-            {{ prescription.notes }}
-        </div>
-        {% endif %}
     </div>
     {% endif %}
 
