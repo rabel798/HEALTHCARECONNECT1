@@ -1875,14 +1875,8 @@ def assistant_add_prescription(patient_id):
     return render_template('assistant/add_prescription.html', form=form, patient=patient)
 
 @app.route('/print-prescription/<string:type>/<int:prescription_id>')
-@login_required
 def print_prescription(type, prescription_id):
     """Print prescription route"""
-    # Ensure only staff members can access this page
-    if not (isinstance(current_user, Doctor) or isinstance(current_user, Assistant) or isinstance(current_user, Admin)):
-        flash('Access denied. Staff privileges required.', 'danger')
-        return redirect(url_for('index'))
-
     if type == 'doctor':
         prescription = DoctorPrescription.query.get_or_404(prescription_id)
         template = 'doctor/print_prescription.html'
