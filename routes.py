@@ -592,8 +592,8 @@ def verify_login_otp(email):
             flash('Patient record not found.', 'danger')
             return redirect(url_for('patient_gmail_login'))
 
-        # Login the patient
-        login_user(patient)
+        # Login the patient with remember=True for session persistence
+        login_user(patient, remember=True)
 
         try:
             db.session.commit()
@@ -2054,8 +2054,17 @@ def print_combined_prescription(patient_id):
 @login_required
 def patient_print_combined_prescription(patient_id):
     """Patient route to print combined doctor and optometrist prescriptions"""
+    # Check if user is authenticated and is a Patient
+    if not current_user.is_authenticated:
+        flash('Please log in to access your prescriptions.', 'warning')
+        return redirect(url_for('patient_login'))
+    
+    if not isinstance(current_user, Patient):
+        flash('Access denied. Patient privileges required.', 'danger')
+        return redirect(url_for('patient_login'))
+    
     # Ensure patient can only access their own prescriptions
-    if not isinstance(current_user, Patient) or current_user.id != patient_id:
+    if current_user.id != patient_id:
         flash('Access denied. You can only view your own prescriptions.', 'danger')
         return redirect(url_for('patient_dashboard'))
 
