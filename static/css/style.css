@@ -904,3 +904,22 @@ footer a:hover {
     color: #6c757d;
     font-size: 0.9em;
 }
+
+/* Services Overview Section */
+.services-overview {
+  padding: 4rem 0;
+}
+
+.services-overview .container {
+  max-width: 1200px;
+}
+
+.services-overview .row {
+  margin: 0 -15px;
+}
+
+.services-overview [class*="col-"] {
+  padding: 0 15px;
+}
+
+/* Services Overview */
