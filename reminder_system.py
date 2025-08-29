@@ -172,7 +172,7 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
     <body>
         <div class="container">
             <div class="header">
-                {f'<img src="data:image/jpeg;base64,{logo_base64}" alt="Dr. Richa\'s Eye Clinic Logo" class="logo">' if logo_base64 else ''}
+                {f'<img src="data:image/jpeg;base64,{logo_base64}" alt="Dr. Richa&#39;s Eye Clinic Logo" class="logo">' if logo_base64 else ''}
                 <h1>Dr. Richa's Eye Clinic</h1>
                 <p>Eyes that Shine, Care that matters</p>
             </div>
