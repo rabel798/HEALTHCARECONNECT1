@@ -147,6 +147,14 @@ def init_database():
 with app.app_context():
     init_database()
 
+# Start the reminder service
+try:
+    from reminder_system import start_reminder_service
+    start_reminder_service()
+    print("Appointment reminder service initialized")
+except Exception as e:
+    print(f"Could not start reminder service: {str(e)}")
+
 # Register error handlers
 @app.errorhandler(404)
 def page_not_found(e):

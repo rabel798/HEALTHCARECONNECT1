@@ -1207,6 +1207,8 @@ Confirmed Appointment Details:
 
 Please arrive 15 minutes before your scheduled time.
 
+You will receive a reminder email 7-8 hours before your appointment.
+
 Location: First floor, DVR Town Centre, near to IGUS private limited, 
 Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
 
@@ -1889,6 +1891,32 @@ def print_prescription(type, prescription_id):
 
     return render_template(template, prescription=prescription)
 
+@app.route('/admin/test-reminder/<int:appointment_id>')
+@login_required
+def admin_test_reminder(appointment_id):
+    """Admin route to test reminder email for a specific appointment"""
+    if not isinstance(current_user, Doctor):
+        flash('Access denied. Doctor privileges required.', 'danger')
+        return redirect(url_for('index'))
+
+    try:
+        from reminder_system import send_test_reminder
+        appointment = Appointment.query.get_or_404(appointment_id)
+        
+        if not appointment.patient.email:
+            flash('Patient does not have an email address for reminder.', 'warning')
+            return redirect(url_for('admin_appointment_view', appointment_id=appointment_id))
+        
+        if send_test_reminder(appointment_id):
+            flash(f'Test reminder email sent successfully to {appointment.patient.email}!', 'success')
+        else:
+            flash('Failed to send test reminder email.', 'danger')
+            
+    except Exception as e:
+        flash(f'Error sending test reminder: {str(e)}', 'danger')
+
+    return redirect(url_for('admin_appointment_view', appointment_id=appointment_id))
+
 @app.route('/admin/fix-payment-status')
 @login_required
 def admin_fix_payment_status():
@@ -1944,6 +1972,39 @@ def admin_fix_payment_status():
         db.session.rollback()
         flash(f'Error fixing payment statuses: {str(e)}', 'danger')
         return redirect(url_for('admin_revenue'))
+
+@app.route('/admin/reminder-management')
+@login_required
+def admin_reminder_management():
+    """Admin route to manage appointment reminders"""
+    if not isinstance(current_user, Doctor):
+        flash('Access denied. Doctor privileges required.', 'danger')
+        return redirect(url_for('index'))
+
+    try:
+        # Get tomorrow's confirmed appointments
+        tomorrow = (datetime.now() + timedelta(days=1)).date()
+        tomorrow_appointments = Appointment.query.filter(
+            Appointment.appointment_date == tomorrow,
+            Appointment.status == 'confirmed'
+        ).order_by(Appointment.appointment_time).all()
+
+        # Get appointments in the next 7 days
+        next_week = datetime.now().date() + timedelta(days=7)
+        upcoming_appointments = Appointment.query.filter(
+            Appointment.appointment_date > datetime.now().date(),
+            Appointment.appointment_date <= next_week,
+            Appointment.status == 'confirmed'
+        ).order_by(Appointment.appointment_date, Appointment.appointment_time).all()
+
+        return render_template('admin/reminder_management.html', 
+                             tomorrow_appointments=tomorrow_appointments,
+                             upcoming_appointments=upcoming_appointments,
+                             tomorrow_date=tomorrow)
+                             
+    except Exception as e:
+        flash(f'Error loading reminder management: {str(e)}', 'danger')
+        return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/revenue', methods=['GET', 'POST'])
 @login_required
