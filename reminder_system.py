@@ -1,16 +1,51 @@
-
 import threading
 import time
 from datetime import datetime, timedelta
-from app import app, db
-from models import Appointment
-from routes import send_email_notification
-import base64
+from models import Appointment, Patient, db
+from flask import current_app
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import os
+import logging
+
+def send_email_notification(to_email, subject, message):
+    """Send email notification"""
+    try:
+        # Email configuration
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+        sender_email = os.getenv('SMTP_EMAIL')
+        sender_password = os.getenv('SMTP_PASSWORD')
+
+        if not sender_email or not sender_password:
+            print("Email credentials not configured")
+            return False
+
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = to_email
+        msg['Subject'] = subject
+
+        msg.attach(MIMEText(message, 'html'))
+
+        # Send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+
+        print(f"Email sent successfully to {to_email}")
+        return True
+
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
 
 def send_beautiful_reminder_email(patient_email, patient_name, appointment_date, appointment_time):
     """Send a beautiful HTML reminder email with clinic logo"""
-    
+
     # Read and encode the logo image
     logo_path = os.path.join('static', 'img', 'clinic_logo.jpg')
     try:
@@ -18,9 +53,9 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
             logo_base64 = base64.b64encode(img_file.read()).decode('utf-8')
     except FileNotFoundError:
         logo_base64 = ""  # Fallback if logo not found
-    
+
     subject = "🔔 Appointment Reminder - Dr. Richa's Eye Clinic"
-    
+
     html_message = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -176,12 +211,12 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
                 <h1>Dr. Richa's Eye Clinic</h1>
                 <p>Eyes that Shine, Care that matters</p>
             </div>
-            
+
             <div class="content">
                 <div class="greeting">
                     Dear {patient_name},
                 </div>
-                
+
                 <div class="reminder-card">
                     <div style="text-align: center;">
                         <div class="reminder-icon">⏰</div>
@@ -192,22 +227,22 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
 
                 <div class="appointment-details">
                     <h4 style="text-align: center; color: #007bff; margin-bottom: 20px;">Appointment Details</h4>
-                    
+
                     <div class="detail-row">
                         <span class="detail-label">📅 Date:</span>
                         <span class="detail-value date-time">{appointment_date.strftime('%A, %B %d, %Y')}</span>
                     </div>
-                    
+
                     <div class="detail-row">
                         <span class="detail-label">🕒 Time:</span>
                         <span class="detail-value date-time">{appointment_time.strftime('%I:%M %p')}</span>
                     </div>
-                    
+
                     <div class="detail-row">
                         <span class="detail-label">👩‍⚕️ Doctor:</span>
                         <span class="detail-value">Dr. Richa Sharma</span>
                     </div>
-                    
+
                     <div class="detail-row">
                         <span class="detail-label">💰 Consultation Fee:</span>
                         <span class="detail-value">₹500</span>
@@ -240,7 +275,7 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer">
                 <div class="contact-info">
                     📧 Email: drrichaeyeclinic@gmail.com<br>
@@ -255,42 +290,8 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
     </body>
     </html>
     """
-    
-    return send_html_email_notification(patient_email, subject, html_message)
 
-def send_html_email_notification(to_email, subject, html_message):
-    """Send HTML email notification"""
-    try:
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
-        
-        smtp_server = app.config['MAIL_SERVER']
-        smtp_port = app.config['MAIL_PORT']
-        sender_email = app.config['MAIL_USERNAME']
-        sender_password = app.config['MAIL_PASSWORD']
-
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['From'] = sender_email
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        
-        # Create HTML part
-        html_part = MIMEText(html_message, 'html')
-        msg.attach(html_part)
-
-        # Send email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-        
-        print(f"Reminder email sent successfully to {to_email}")
-        return True
-    except Exception as e:
-        print(f"Error sending reminder email: {str(e)}")
-        return False
+    return send_email_notification(patient_email, subject, html_message)
 
 def check_and_send_reminders():
     """Check for appointments that need reminder emails"""
@@ -300,9 +301,9 @@ def check_and_send_reminders():
             now = datetime.now()
             target_start = now + timedelta(hours=7)
             target_end = now + timedelta(hours=8)
-            
+
             print(f"Checking for appointments between {target_start} and {target_end}")
-            
+
             # Find confirmed appointments that need reminders
             appointments_needing_reminders = Appointment.query.filter(
                 Appointment.status == 'confirmed',
@@ -310,9 +311,9 @@ def check_and_send_reminders():
                 Appointment.appointment_time >= target_start.time(),
                 Appointment.appointment_time <= target_end.time()
             ).all()
-            
+
             print(f"Found {len(appointments_needing_reminders)} appointments needing reminders")
-            
+
             for appointment in appointments_needing_reminders:
                 if appointment.patient.email:
                     print(f"Sending reminder to {appointment.patient.email} for appointment on {appointment.appointment_date} at {appointment.appointment_time}")
@@ -324,7 +325,7 @@ def check_and_send_reminders():
                     )
                 else:
                     print(f"No email found for patient {appointment.patient.full_name}")
-                    
+
         except Exception as e:
             print(f"Error in reminder check: {str(e)}")
 
@@ -339,7 +340,7 @@ def start_reminder_service():
             except Exception as e:
                 print(f"Error in reminder service: {str(e)}")
                 time.sleep(300)  # Wait 5 minutes before retrying
-    
+
     # Start the reminder service in a separate thread
     reminder_thread = threading.Thread(target=reminder_loop, daemon=True)
     reminder_thread.start()
