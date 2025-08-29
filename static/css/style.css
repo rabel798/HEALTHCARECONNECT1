@@ -119,7 +119,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(rgba(0, 123, 255, 0.85), rgba(0, 123, 255, 0.85)), url('https://images.unsplash.com/photo-1481277542470-605612bd2d61');
+  background: linear-gradient(rgba(0, 123, 255, 0.85), rgba(0, 123, 255, 0.85)), url('../img/setup.jpg');
   background-size: cover;
   background-position: center;
   color: var(--white);
@@ -703,7 +703,7 @@ footer a:hover {
 }
 
 [data-theme="dark"] .hero {
-    background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('https://images.unsplash.com/photo-1481277542470-605612bd2d61');
+    background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('../img/setup.jpg');
 }
 
 [data-theme="dark"] .doctor-profile {

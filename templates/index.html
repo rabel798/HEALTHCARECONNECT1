@@ -41,7 +41,7 @@
             </div>
             <div class="col-lg-6 slide-up-delayed">
                 <div class="rounded overflow-hidden shadow">
-                    <img src="https://images.unsplash.com/photo-1481277542470-605612bd2d61" alt="Modern Eye Clinic Interior" class="img-fluid w-100">
+                    <img src="{{ url_for('static', filename='img/reception.jpg') }}" alt="Dr. Richa's Eye Clinic Reception Area" class="img-fluid w-100">
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
         <div class="row">
             <div class="col-md-4 mb-4 slide-up-stagger">
                 <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1635012641245-0adf659dac97" alt="Comprehensive Eye Examination" class="card-img-top">
+                    <img src="{{ url_for('static', filename='img/machine.jpg') }}" alt="Advanced Eye Examination Equipment at Dr. Richa's Clinic" class="card-img-top">
                     <div class="card-body">
                         <h4 class="card-title">Comprehensive Eye Examination</h4>
                         <p class="card-text">Complete evaluation of your vision and eye health using advanced diagnostic equipment.</p>
@@ -68,20 +68,20 @@
             </div>
             <div class="col-md-4 mb-4 slide-up-stagger">
                 <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1635012861357-4742bd877c0c" alt="Cataract Surgery" class="card-img-top">
+                    <img src="{{ url_for('static', filename='img/glass_section.jpg') }}" alt="Eyewear and Optical Services at Dr. Richa's Clinic" class="card-img-top">
                     <div class="card-body">
-                        <h4 class="card-title">Cataract Surgery</h4>
-                        <p class="card-text">State-of-the-art cataract removal and lens replacement procedures for clearer vision.</p>
+                        <h4 class="card-title">Prescription Eyewear</h4>
+                        <p class="card-text">Wide selection of frames and lenses to suit your style and vision needs.</p>
                         <a href="{{ url_for('services') }}" class="btn btn-outline-primary">Learn More</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4 slide-up-stagger">
                 <div class="service-card">
-                    <img src="https://images.unsplash.com/photo-1634982839177-9ccc2cf896c5" alt="Glaucoma Management" class="card-img-top">
+                    <img src="{{ url_for('static', filename='img/setup.jpg') }}" alt="Modern Clinical Setup at Dr. Richa's Eye Clinic" class="card-img-top">
                     <div class="card-body">
-                        <h4 class="card-title">Glaucoma Management</h4>
-                        <p class="card-text">Early detection and comprehensive management of glaucoma to preserve your vision.</p>
+                        <h4 class="card-title">Clinical Consultations</h4>
+                        <p class="card-text">Professional eye care consultations in our modern, well-equipped facility.</p>
                         <a href="{{ url_for('services') }}" class="btn btn-outline-primary">Learn More</a>
                     </div>
                 </div>
@@ -181,40 +181,28 @@
             <p class="lead">Take a look at our modern facility and equipment</p>
         </div>
         <div class="row gallery">
-            <div class="col-md-4 slide-up-stagger">
+            <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1445510861639-5651173bc5d5" alt="Clinic Reception Area">
-                    <div class="gallery-caption">Reception Area</div>
+                    <img src="{{ url_for('static', filename='img/reception.jpg') }}" alt="Dr. Richa's Eye Clinic Reception Area">
+                    <div class="gallery-caption">Welcome to Dr. Richa's Eye Clinic</div>
                 </div>
             </div>
-            <div class="col-md-4 slide-up-stagger">
+            <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88" alt="Waiting Room">
-                    <div class="gallery-caption">Patient Waiting Area</div>
+                    <img src="{{ url_for('static', filename='img/machine.jpg') }}" alt="Advanced Eye Examination Equipment">
+                    <div class="gallery-caption">State-of-the-Art Diagnostic Equipment</div>
                 </div>
             </div>
-            <div class="col-md-4 slide-up-stagger">
+            <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1597764690523-15bea4c581c9" alt="Eye Examination">
-                    <div class="gallery-caption">Examination Room</div>
+                    <img src="{{ url_for('static', filename='img/glass_section.jpg') }}" alt="Eyewear and Optical Services">
+                    <div class="gallery-caption">Premium Eyewear Collection</div>
                 </div>
             </div>
-            <div class="col-md-4 slide-up-stagger">
+            <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1635012641245-0adf659dac97" alt="Diagnostic Equipment">
-                    <div class="gallery-caption">Advanced Diagnostic Equipment</div>
-                </div>
-            </div>
-            <div class="col-md-4 slide-up-stagger">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1550792436-181701c71f63" alt="Patient Consultation">
-                    <div class="gallery-caption">Doctor Consultation</div>
-                </div>
-            </div>
-            <div class="col-md-4 slide-up-stagger">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1584515933487-779824d29309" alt="Medical Team">
-                    <div class="gallery-caption">Our Medical Team</div>
+                    <img src="{{ url_for('static', filename='img/setup.jpg') }}" alt="Clinical Setup and Consultation Area">
+                    <div class="gallery-caption">Professional Clinical Environment</div>
                 </div>
             </div>
         </div>
