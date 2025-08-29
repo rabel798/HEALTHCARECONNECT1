@@ -39,6 +39,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize dark mode
     initDarkMode();
+
+    // Hamburger menu animation
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    
+    if (navbarToggler && navbarCollapse) {
+        navbarToggler.addEventListener('click', function() {
+            // Toggle the collapsed class for animation
+            this.classList.toggle('collapsed');
+        });
+        
+        // Handle collapse events to keep animation in sync
+        navbarCollapse.addEventListener('shown.bs.collapse', function() {
+            navbarToggler.classList.remove('collapsed');
+        });
+        
+        navbarCollapse.addEventListener('hidden.bs.collapse', function() {
+            navbarToggler.classList.add('collapsed');
+        });
+    }
     
     // Navbar hide on scroll - Throttled for performance
     const navbar = document.querySelector('.navbar');
