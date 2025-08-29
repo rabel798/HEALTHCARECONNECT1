@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-4 mb-md-0">
                         <div class="pe-md-4">
@@ -71,8 +71,13 @@
                                     <li>Digital retinal imaging</li>
                                 </ul>
                                 <p class="card-text"><small class="text-muted">Consultation Fee: ₹500/- INR</small></p>
+                                <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('comprehensive')">Details</button>
                             </div>
                         </div>
+                    </div>
+                    <div id="comprehensive-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>Our comprehensive eye examination includes a detailed review of your medical history, lifestyle, and visual needs. We use state-of-the-art equipment to ensure accurate diagnosis and personalized treatment plans.</p>
                     </div>
                 </div>
             </div>
@@ -82,7 +87,7 @@
                 <div class="card border-0 shadow h-100 services-page-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="YOUR_CATARACT_IMAGE_URL_HERE" class="img-fluid rounded-start h-100" alt="Cataract Surgery" style="object-fit: cover;">
+                            <img src="https://images.pexels.com/photos/4386427/pexels-photo-4386427.jpeg?cs=srgb&dl=pexels-monstera-4386427.jpg&fm=jpg" class="img-fluid rounded-start h-100" alt="Cataract Surgery" style="object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -94,8 +99,13 @@
                                     <li>Laser-assisted cataract surgery</li>
                                     <li>Post-operative care and follow-up</li>
                                 </ul>
+                                <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('cataract')">Details</button>
                             </div>
                         </div>
+                    </div>
+                    <div id="cataract-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>We offer the latest in cataract surgery techniques, including femtosecond laser-assisted surgery and a range of premium intraocular lenses (IOLs) to correct vision and reduce dependence on glasses after surgery.</p>
                     </div>
                 </div>
             </div>
@@ -105,7 +115,7 @@
                 <div class="card border-0 shadow h-100 services-page-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="YOUR_PEDIATRIC_IMAGE_URL_HERE" class="img-fluid rounded-start h-100" alt="Pediatric Eye Care" style="object-fit: cover;">
+                            <img src="https://images.pexels.com/photos/3992933/pexels-photo-3992933.jpeg?cs=srgb&dl=pexels-artem-podrez-3992933.jpg&fm=jpg" class="img-fluid rounded-start h-100" alt="Pediatric Eye Care" style="object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -117,8 +127,13 @@
                                     <li>Childhood refractive errors</li>
                                     <li>Pediatric cataract management</li>
                                 </ul>
+                                <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('pediatric')">Details</button>
                             </div>
                         </div>
+                    </div>
+                    <div id="pediatric-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>Ensuring healthy vision for children is crucial. We provide comprehensive eye exams for infants and children, focusing on early detection and treatment of conditions like strabismus, amblyopia, and refractive errors.</p>
                     </div>
                 </div>
             </div>
@@ -140,8 +155,13 @@
                                     <li>Retinal detachment surgery</li>
                                     <li>OCT and fundus photography</li>
                                 </ul>
+                                <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('retina')">Details</button>
                             </div>
                         </div>
+                    </div>
+                    <div id="retina-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>Our retina specialists are equipped to diagnose and treat a wide range of retinal conditions, including diabetic retinopathy, macular degeneration, and retinal detachments, using advanced imaging and surgical techniques.</p>
                     </div>
                 </div>
             </div>
@@ -163,8 +183,13 @@
                                     <li>Medical and surgical glaucoma treatment</li>
                                     <li>Visual field testing</li>
                                 </ul>
+                                <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('glaucoma')">Details</button>
                             </div>
                         </div>
+                    </div>
+                    <div id="glaucoma-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>Glaucoma can lead to irreversible vision loss if not managed properly. We provide thorough glaucoma screenings, intraocular pressure monitoring, and tailored treatment plans, including medication and laser therapy.</p>
                     </div>
                 </div>
             </div>
@@ -189,6 +214,11 @@
                         </div>
                         <h4 class="card-title">Dry Eye Management</h4>
                         <p class="card-text">Comprehensive evaluation and treatment of dry eye syndrome using advanced diagnostic tests and customized treatment plans.</p>
+                        <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('dry-eye')">Details</button>
+                    </div>
+                    <div id="dry-eye-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>We offer advanced diagnostics and personalized treatment plans for dry eye syndrome, including prescription eye drops, punctal plugs, and lifestyle recommendations.</p>
                     </div>
                 </div>
             </div>
@@ -201,6 +231,11 @@
                         </div>
                         <h4 class="card-title">Computer Vision Syndrome</h4>
                         <p class="card-text">Specialized care for digital eye strain with customized solutions to reduce symptoms and improve comfort during screen time.</p>
+                        <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('computer-vision')">Details</button>
+                    </div>
+                    <div id="computer-vision-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>Combat digital eye strain with our specialized care. We provide solutions to reduce symptoms and improve comfort during extended screen use, including ergonomic advice and vision therapy.</p>
                     </div>
                 </div>
             </div>
@@ -213,6 +248,11 @@
                         </div>
                         <h4 class="card-title">Low Vision Rehabilitation</h4>
                         <p class="card-text">Assessment and management for patients with reduced vision, providing aids and strategies to maximize remaining vision.</p>
+                        <button class="btn btn-outline-info btn-sm" onclick="toggleServiceDetails('low-vision')">Details</button>
+                    </div>
+                    <div id="low-vision-details" style="display: none;" class="card-footer">
+                        <h6>More Details:</h6>
+                        <p>We assist patients with reduced vision by providing comprehensive assessments, low vision aids, and personalized strategies to maximize their functional vision and independence.</p>
                     </div>
                 </div>
             </div>
@@ -234,4 +274,71 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleServiceDetails(service) {
+    const details = document.getElementById(service + '-details');
+    const button = event.target;
+
+    if (details.style.display === 'none' || details.style.display === '') { // Check for both 'none' and empty string
+        details.style.display = 'block';
+        button.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Details';
+        button.classList.remove('btn-outline-info');
+        button.classList.add('btn-info');
+    } else {
+        details.style.display = 'none';
+        button.innerHTML = '<i class="fas fa-info-circle"></i> Details';
+        button.classList.remove('btn-info');
+        button.classList.add('btn-outline-info');
+    }
+}
+
+// Enhanced scroll animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scrolling to anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add loading state to buttons
+    document.querySelectorAll('.btn-primary, .btn-success').forEach(button => {
+        button.addEventListener('click', function() {
+            if (!this.classList.contains('btn-loading')) {
+                this.classList.add('btn-loading');
+                // Simulate a longer loading time for demonstration
+                setTimeout(() => {
+                    this.classList.remove('btn-loading');
+                }, 1500); // 1.5 seconds loading time
+            }
+        });
+    });
+
+    // Parallax effect for service cards (simplified for demonstration)
+    // Note: A true parallax effect often requires more complex calculations and CSS.
+    // This example adds a subtle scroll-based translation.
+    const cards = document.querySelectorAll('.services-page-card');
+    if (cards.length > 0) {
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            cards.forEach((card, index) => {
+                // Adjust speed and offset as needed for desired effect
+                const speed = 0.1;
+                const offset = (index % 2 === 0 ? -50 : 50); // Stagger effect
+                card.style.transform = `translateY(${scrollTop * speed + offset}px)`;
+            });
+        });
+    }
+});
+</script>
 {% endblock %}
