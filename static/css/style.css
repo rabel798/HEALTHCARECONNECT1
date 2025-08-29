@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: flex-start;
   transition: var(--transition);
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 #interactive-logo-container:hover {
@@ -106,7 +106,7 @@ h1, h2, h3, h4, h5, h6 {
   #interactive-logo-container {
     width: 280px;
     height: 42px !important;
-    margin-right: 5px;
+    margin-right: 10px;
   }
   
   #interactive-logo-container svg {
@@ -118,7 +118,7 @@ h1, h2, h3, h4, h5, h6 {
   #interactive-logo-container {
     width: 220px;
     height: 35px !important;
-    margin-right: 4px;
+    margin-right: 8px;
   }
   
   #interactive-logo-container svg {
