@@ -30,9 +30,10 @@
 /* Global Styles */
 body {
   font-family: 'Roboto', sans-serif;
-  color: var(--text-color, var(--dark-color));
+  color: var(--dark-wood);
   line-height: 1.6;
-  background-color: var(--bg-color, var(--white));
+  background: linear-gradient(135deg, var(--wood-accent) 0%, var(--light-wood) 50%, var(--wood-accent) 100%);
+  background-attachment: fixed;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -43,9 +44,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Navbar Styles */
 .navbar {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(139, 69, 19, 0.2);
   padding: 1rem 2rem;
-  background-color: var(--card-bg, var(--white));
+  background: linear-gradient(135deg, var(--wood-accent), var(--light-wood));
+  border-bottom: 2px solid var(--dark-wood);
   transition: background-color 0.3s ease;
 }
 
@@ -151,10 +153,11 @@ h1, h2, h3, h4, h5, h6 {
 .service-card {
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+  border: 3px solid var(--medium-wood);
   transition: var(--transition);
   margin-bottom: 2rem;
-  background-color: var(--white);
+  background: linear-gradient(145deg, var(--wood-accent), var(--light-wood));
   height: 100%;
 }
 
@@ -182,7 +185,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Doctor Profile */
 .doctor-profile {
-  background-color: var(--light-blue);
+  background: linear-gradient(135deg, var(--medium-wood), var(--light-wood));
+  border-top: 4px solid var(--dark-wood);
+  border-bottom: 4px solid var(--dark-wood);
   padding: 4rem 0;
 }
 
@@ -203,9 +208,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Reviews Section */
 .review-card {
-  background-color: var(--white);
+  background: linear-gradient(145deg, var(--wood-accent), var(--light-wood));
+  border: 2px solid var(--medium-wood);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
   padding: 1.5rem;
   margin-bottom: 2rem;
   transition: var(--transition);
@@ -336,9 +342,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Footer */
 footer {
-  background-color: var(--dark-color);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--dark-wood), var(--medium-wood));
+  color: var(--wood-accent);
   padding: 3rem 0 2rem;
+  border-top: 4px solid var(--dark-wood);
 }
 
 footer h5 {
