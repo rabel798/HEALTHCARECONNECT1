@@ -43,6 +43,33 @@ h1, h2, h3, h4, h5, h6 {
   transition: background-color 0.3s ease;
 }
 
+/* Mobile navbar adjustments */
+@media (max-width: 991px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+  
+  .navbar-toggler {
+    padding: 0.25rem 0.5rem;
+    font-size: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+}
+
 .navbar-brand {
   font-weight: 700;
   color: var(--primary-color);
@@ -69,6 +96,31 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: auto;
   max-height: 45px;
+}
+
+/* Mobile responsive logo */
+@media (max-width: 991px) {
+  #interactive-logo-container {
+    width: 200px;
+    height: 35px !important;
+    margin-right: 10px;
+  }
+  
+  #interactive-logo-container svg {
+    max-height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
+  #interactive-logo-container {
+    width: 150px;
+    height: 30px !important;
+    margin-right: 8px;
+  }
+  
+  #interactive-logo-container svg {
+    max-height: 30px;
+  }
 }
 
 /* Hide navbar on scroll up */
