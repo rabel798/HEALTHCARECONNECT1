@@ -11,6 +11,12 @@
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
 
+  /* Wooden theme variables */
+  --light-wood: #e0c9a6;
+  --medium-wood: #a07b4f;
+  --dark-wood: #654321;
+  --wood-accent: #f0e6d2;
+
   /* Dark mode variables */
   --bg-color: #ffffff;
   --text-color: #343a40;
@@ -903,4 +909,34 @@ footer a:hover {
     padding: 0 15px;
     color: #6c757d;
     font-size: 0.9em;
+}
+
+/* Services Overview Section */
+.services-overview {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, var(--light-wood), var(--medium-wood));
+  border-top: 3px solid var(--dark-wood);
+  border-bottom: 3px solid var(--dark-wood);
+}
+
+.services-overview .container {
+  max-width: 1200px;
+}
+
+.services-overview .row {
+  margin: 0 -15px;
+}
+
+.services-overview [class*="col-"] {
+  padding: 0 15px;
+}
+
+.services-overview h2 {
+  color: var(--primary-color);
+  text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.2);
+}
+
+.services-overview .lead {
+  color: var(--dark-color);
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
 }
