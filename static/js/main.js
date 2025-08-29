@@ -45,17 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbarCollapse = document.querySelector('.navbar-collapse');
     
     if (navbarToggler && navbarCollapse) {
-        navbarToggler.addEventListener('click', function() {
-            // Toggle the collapsed class for animation
-            this.classList.toggle('collapsed');
-        });
+        // Set initial state - collapsed by default
+        navbarToggler.classList.add('collapsed');
         
         // Handle collapse events to keep animation in sync
-        navbarCollapse.addEventListener('shown.bs.collapse', function() {
+        navbarCollapse.addEventListener('show.bs.collapse', function() {
             navbarToggler.classList.remove('collapsed');
         });
         
-        navbarCollapse.addEventListener('hidden.bs.collapse', function() {
+        navbarCollapse.addEventListener('hide.bs.collapse', function() {
             navbarToggler.classList.add('collapsed');
         });
     }

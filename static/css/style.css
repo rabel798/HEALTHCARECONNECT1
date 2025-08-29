@@ -167,9 +167,10 @@ h1, h2, h3, h4, h5, h6 {
 .navbar-toggler {
   border: none;
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 15px;
   background: transparent;
+  padding: 0;
 }
 
 .navbar-toggler:focus {
@@ -183,19 +184,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Custom hamburger lines */
-.navbar-toggler::before,
-.navbar-toggler::after,
-.navbar-toggler {
-  position: relative;
-}
-
 .navbar-toggler span {
   display: block;
   position: absolute;
-  height: 3px;
+  height: 2px;
   width: 100%;
   background: var(--dark-color);
-  border-radius: 3px;
+  border-radius: 2px;
   opacity: 1;
   left: 0;
   transform: rotate(0deg);
@@ -208,30 +203,30 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar-toggler span:nth-child(2),
 .navbar-toggler span:nth-child(3) {
-  top: 9px;
+  top: 6px;
 }
 
 .navbar-toggler span:nth-child(4) {
-  top: 18px;
+  top: 12px;
 }
 
-/* Transform to X when expanded */
-.navbar-toggler.collapsed span:nth-child(1) {
-  top: 9px;
+/* Transform to X when NOT collapsed (when menu is open) */
+.navbar-toggler:not(.collapsed) span:nth-child(1) {
+  top: 6px;
   width: 0%;
   left: 50%;
 }
 
-.navbar-toggler.collapsed span:nth-child(2) {
+.navbar-toggler:not(.collapsed) span:nth-child(2) {
   transform: rotate(45deg);
 }
 
-.navbar-toggler.collapsed span:nth-child(3) {
+.navbar-toggler:not(.collapsed) span:nth-child(3) {
   transform: rotate(-45deg);
 }
 
-.navbar-toggler.collapsed span:nth-child(4) {
-  top: 9px;
+.navbar-toggler:not(.collapsed) span:nth-child(4) {
+  top: 6px;
   width: 0%;
   left: 50%;
 }
