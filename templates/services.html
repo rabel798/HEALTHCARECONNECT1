@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Our Services - Dr. Richa's Eye Clinic{% endblock %}
@@ -24,7 +25,7 @@
                     <h2 class="mb-4">Comprehensive Eye Care</h2>
                     <div class="row">
                         <div class="col-lg-8 offset-lg-2">
-                            <p class="lead mb-4">At Dr. Richa's Eye Clinic, we offer a wide range of eye care services using the latest technologies and treatment methods.</p>
+                            <p class="lead mb-4">At Dr. Richa's Eye Clinic, we offer specialized eye care services using the latest technologies and treatment methods.</p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +40,7 @@
                     <div class="col-md-6">
                         <div class="ps-md-4">
                             <h4 class="text-primary mb-3">Expert Care</h4>
-                            <p class="mb-0">Whether you need a routine eye examination, treatment for an eye condition, or surgical intervention, our experienced professionals are here to help you achieve optimal eye health.</p>
+                            <p class="mb-0">Whether you need a routine eye examination, specialized treatment, or ongoing management of eye conditions, our experienced professionals are here to help you achieve optimal eye health.</p>
                         </div>
                     </div>
                 </div>
@@ -52,17 +53,17 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="row justify-content-center">
-            <!-- Service: Comprehensive Eye Examination -->
+            <!-- Service: Comprehensive Eye Examination for Adults -->
             <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="{{ url_for('static', filename='img/machine.jpg') }}" class="img-fluid rounded-start h-100" alt="Comprehensive Eye Examination" style="object-fit: cover;">
+                            <img src="{{ url_for('static', filename='img/machine.jpg') }}" class="img-fluid rounded-start h-100" alt="Comprehensive Eye Examination for Adults" style="object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h3 class="card-title text-primary">Comprehensive Eye Examination</h3>
-                                <p class="card-text">Thorough eye health and vision assessment:</p>
+                                <h3 class="card-title text-primary">Comprehensive Eye Examination for Adults</h3>
+                                <p class="card-text">Thorough eye health and vision assessment for adults:</p>
                                 <ul>
                                     <li>Visual acuity testing</li>
                                     <li>Refraction assessment</li>
@@ -77,45 +78,22 @@
                 </div>
             </div>
 
-            <!-- Service: Cataract Surgery -->
+            <!-- Service: Pediatric Eye Examination -->
             <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="YOUR_CATARACT_IMAGE_URL_HERE" class="img-fluid rounded-start h-100" alt="Cataract Surgery" style="object-fit: cover;">
+                            <img src="{{ url_for('static', filename='img/glass_section.jpg') }}" class="img-fluid rounded-start h-100" alt="Pediatric Eye Examination" style="object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h3 class="card-title text-primary">Cataract Surgery</h3>
-                                <p class="card-text">Advanced cataract treatment and surgical procedures:</p>
-                                <ul>
-                                    <li>Phacoemulsification surgery</li>
-                                    <li>Premium intraocular lens implants</li>
-                                    <li>Laser-assisted cataract surgery</li>
-                                    <li>Post-operative care and follow-up</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Service: Pediatric Eye Care -->
-            <div class="col-lg-8 mb-5 fade-in">
-                <div class="card border-0 shadow h-100 services-page-card">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="YOUR_PEDIATRIC_IMAGE_URL_HERE" class="img-fluid rounded-start h-100" alt="Pediatric Eye Care" style="object-fit: cover;">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h3 class="card-title text-primary">Pediatric Eye Care</h3>
+                                <h3 class="card-title text-primary">Pediatric Eye Examination</h3>
                                 <p class="card-text">Specialized eye care for children:</p>
                                 <ul>
-                                    <li>Squint correction and treatment</li>
-                                    <li>Amblyopia (lazy eye) therapy</li>
-                                    <li>Childhood refractive errors</li>
-                                    <li>Pediatric cataract management</li>
+                                    <li>Child-friendly examination techniques</li>
+                                    <li>Early detection of vision problems</li>
+                                    <li>Childhood refractive error assessment</li>
+                                    <li>Developmental vision screening</li>
                                 </ul>
                             </div>
                         </div>
@@ -123,22 +101,22 @@
                 </div>
             </div>
 
-            <!-- Service: Retina Care -->
+            <!-- Service: Computer Vision Syndrome -->
             <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/5996690/pexels-photo-5996690.jpeg?cs=srgb&dl=pexels-pavel-danilyuk-5996690.jpg&fm=jpg" class="img-fluid rounded-start h-100" alt="Retina Care" style="object-fit: cover;">
+                            <img src="{{ url_for('static', filename='img/setup.jpg') }}" class="img-fluid rounded-start h-100" alt="Computer Vision Syndrome" style="object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h3 class="card-title text-primary">Retina Care</h3>
-                                <p class="card-text">Advanced retinal diagnostics and treatment:</p>
+                                <h3 class="card-title text-primary">Computer Vision Syndrome</h3>
+                                <p class="card-text">Specialized care for digital eye strain:</p>
                                 <ul>
-                                    <li>Diabetic retinopathy management</li>
-                                    <li>Macular degeneration treatment</li>
-                                    <li>Retinal detachment surgery</li>
-                                    <li>OCT and fundus photography</li>
+                                    <li>Digital eye strain assessment</li>
+                                    <li>Blue light protection solutions</li>
+                                    <li>Ergonomic recommendations</li>
+                                    <li>Computer glasses prescription</li>
                                 </ul>
                             </div>
                         </div>
@@ -146,73 +124,140 @@
                 </div>
             </div>
 
-            <!-- Service: Glaucoma Management -->
+            <!-- Service: Glaucoma Evaluation and Treatment -->
             <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/5843474/pexels-photo-5843474.jpeg" class="img-fluid rounded-start h-100" alt="Glaucoma Management" style="object-fit: cover;">
+                            <img src="https://images.pexels.com/photos/5843474/pexels-photo-5843474.jpeg" class="img-fluid rounded-start h-100" alt="Glaucoma Evaluation and Treatment" style="object-fit: cover;">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h3 class="card-title text-primary">Glaucoma Management</h3>
-                                <p class="card-text">Comprehensive glaucoma care and treatment:</p>
+                                <h3 class="card-title text-primary">Glaucoma Evaluation and Treatment</h3>
+                                <p class="card-text">Comprehensive glaucoma care:</p>
                                 <ul>
                                     <li>Early glaucoma detection</li>
                                     <li>Intraocular pressure monitoring</li>
-                                    <li>Medical and surgical glaucoma treatment</li>
                                     <li>Visual field testing</li>
+                                    <li>Treatment and management plans</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
 
-<!-- Additional Services -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5 fade-in">
-            <h2>Additional Services</h2>
-            <p class="lead">Beyond our core services, we offer specialized treatments and procedures</p>
-        </div>
-
-        <div class="row fade-in">
-            <div class="col-md-4 mb-4">
+            <!-- Service: Diabetic Retinopathy -->
+            <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
-                    <div class="card-body text-center p-4">
-                        <div class="mb-3">
-                            <i class="fas fa-eye fa-3x text-primary"></i>
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="https://images.pexels.com/photos/5996690/pexels-photo-5996690.jpeg?cs=srgb&dl=pexels-pavel-danilyuk-5996690.jpg&fm=jpg" class="img-fluid rounded-start h-100" alt="Diabetic Retinopathy" style="object-fit: cover;">
                         </div>
-                        <h4 class="card-title">Dry Eye Management</h4>
-                        <p class="card-text">Comprehensive evaluation and treatment of dry eye syndrome using advanced diagnostic tests and customized treatment plans.</p>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title text-primary">Diabetic Retinopathy</h3>
+                                <p class="card-text">Specialized diabetic eye care:</p>
+                                <ul>
+                                    <li>Diabetic retinopathy screening</li>
+                                    <li>Retinal imaging and monitoring</li>
+                                    <li>Early intervention strategies</li>
+                                    <li>Coordinated care with diabetes management</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4 mb-4">
+            <!-- Service: Myopia Control Program -->
+            <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
-                    <div class="card-body text-center p-4">
-                        <div class="mb-3">
-                            <i class="fas fa-glasses fa-3x text-primary"></i>
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='img/reception.jpg') }}" class="img-fluid rounded-start h-100" alt="Myopia Control Program" style="object-fit: cover;">
                         </div>
-                        <h4 class="card-title">Computer Vision Syndrome</h4>
-                        <p class="card-text">Specialized care for digital eye strain with customized solutions to reduce symptoms and improve comfort during screen time.</p>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title text-primary">Myopia Control Program</h3>
+                                <p class="card-text">Advanced myopia management for children and adults:</p>
+                                <ul>
+                                    <li>Myopia progression monitoring</li>
+                                    <li>Specialized contact lens fitting</li>
+                                    <li>Lifestyle and environmental guidance</li>
+                                    <li>Advanced myopia control techniques</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4 mb-4">
+            <!-- Service: Squint and Lazy Eye Treatment -->
+            <div class="col-lg-8 mb-5 fade-in">
                 <div class="card border-0 shadow h-100 services-page-card">
-                    <div class="card-body text-center p-4">
-                        <div class="mb-3">
-                            <i class="fas fa-low-vision fa-3x text-primary"></i>
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='img/machine.jpg') }}" class="img-fluid rounded-start h-100" alt="Squint and Lazy Eye Treatment" style="object-fit: cover;">
                         </div>
-                        <h4 class="card-title">Low Vision Rehabilitation</h4>
-                        <p class="card-text">Assessment and management for patients with reduced vision, providing aids and strategies to maximize remaining vision.</p>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title text-primary">Squint and Lazy Eye Treatment</h3>
+                                <p class="card-text">Comprehensive treatment for squint and amblyopia:</p>
+                                <ul>
+                                    <li>Squint assessment and correction</li>
+                                    <li>Amblyopia (lazy eye) therapy</li>
+                                    <li>Vision therapy programs</li>
+                                    <li>Surgical and non-surgical options</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service: Dry Eye Management -->
+            <div class="col-lg-8 mb-5 fade-in">
+                <div class="card border-0 shadow h-100 services-page-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='img/setup.jpg') }}" class="img-fluid rounded-start h-100" alt="Dry Eye Management" style="object-fit: cover;">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title text-primary">Dry Eye Management</h3>
+                                <p class="card-text">Comprehensive dry eye evaluation and treatment:</p>
+                                <ul>
+                                    <li>Dry eye syndrome assessment</li>
+                                    <li>Tear film analysis</li>
+                                    <li>Customized treatment plans</li>
+                                    <li>Advanced dry eye therapies</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service: Opticals and Contact Lens -->
+            <div class="col-lg-8 mb-5 fade-in">
+                <div class="card border-0 shadow h-100 services-page-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='img/glass_section.jpg') }}" class="img-fluid rounded-start h-100" alt="Opticals and Contact Lens" style="object-fit: cover;">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h3 class="card-title text-primary">Opticals and Contact Lens</h3>
+                                <p class="card-text">Complete optical services and contact lens solutions:</p>
+                                <ul>
+                                    <li>Premium eyewear collection</li>
+                                    <li>Contact lens fitting and care</li>
+                                    <li>Specialized contact lenses</li>
+                                    <li>Frame selection guidance</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -225,8 +270,14 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 fade-in">
-                <h2 class="mb-3">Have Questions About Our Services?</h2>
-                <p class="lead mb-0">Our team is available to help you understand which services are best for your needs. Contact us or schedule a consultation today.</p>
+                <h2 class="mb-3">Schedule an Appointment Today</h2>
+                <p class="lead mb-0">Our team is available to help you with all your eye care needs. Contact us or book a consultation today.</p>
+                <div class="mt-3">
+                    <p class="mb-1"><strong>Call:</strong> 8792595004</p>
+                    <p class="mb-1"><strong>Email:</strong> drrichaeyeclinic@gmail.com</p>
+                    <p class="mb-1"><strong>Weekdays:</strong> 5:00 PM to 8:00 PM</p>
+                    <p class="mb-0"><strong>Sunday:</strong> 10:00 AM to 1:00 PM (by appointment only)</p>
+                </div>
             </div>
             <div class="col-lg-4 text-lg-end mt-4 mt-lg-0 fade-in">
                 <a href="{{ url_for('appointment') }}" class="btn btn-light btn-lg">Book a Consultation</a>
