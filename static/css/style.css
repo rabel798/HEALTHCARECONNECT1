@@ -453,20 +453,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .qr-code-box {
-  background-color: var(--white);
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 200px;
+  background: linear-gradient(135deg, var(--white) 0%, var(--light-blue) 100%);
+  border: 2px solid var(--primary-color);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+  max-width: 220px;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.qr-code-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(0, 123, 255, 0.1), transparent);
+  transform: rotate(-45deg);
+  transition: var(--transition);
+  opacity: 0;
+}
+
+.qr-code-box:hover::before {
+  opacity: 1;
+  animation: shimmer 1.5s ease-in-out;
+}
+
+.qr-code-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 123, 255, 0.25);
+  border-color: var(--accent-color);
 }
 
 .qr-code-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
+  width: 160px;
+  height: 160px;
+  border-radius: 12px;
+  border: 2px solid var(--primary-color);
+  background-color: var(--white);
+  padding: 5px;
+  transition: var(--transition);
+  position: relative;
+  z-index: 1;
+}
+
+.qr-code-box:hover .qr-code-image {
+  transform: scale(1.05);
+  border-color: var(--accent-color);
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(-45deg); }
+  50% { transform: translateX(0%) translateY(0%) rotate(-45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(-45deg); }
+}
+
+/* Dark mode adjustments for QR code */
+[data-theme="dark"] .qr-code-box {
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--light-blue) 100%);
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .qr-code-image {
+  background-color: var(--white);
 }
 
 /* Footer */
