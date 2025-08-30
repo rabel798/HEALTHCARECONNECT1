@@ -39,18 +39,6 @@
                         <i class="fas fa-directions"></i> Get Directions from Your Location
                     </button>
                 </div>
-
-                <!-- QR Code Section -->
-                <div class="text-center mt-4">
-                    <div class="qr-code-container">
-                        <h5 class="mb-3">Quick Directions</h5>
-                        <div class="qr-code-box">
-                            <img src="{{ url_for('static', filename='img/directions_qr.png') }}" alt="QR Code for Directions" class="qr-code-image">
-                            <p class="mt-2 mb-1 text-muted"><small><i class="fas fa-qrcode me-1"></i> Scan this QR code to get directions</small></p>
-                            <p class="text-muted"><small>Use your phone's camera to scan</small></p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="col-lg-4 fade-in">
@@ -79,6 +67,17 @@
                         <h5><i class="fas fa-clock"></i> Hours of Operation</h5>
                         <p class="mb-0">Monday - Saturday: 5:00 PM - 8:00 PM</p>
                         <p>Sunday: 10:00 AM - 1:00 PM</p>
+                    </div>
+
+                    <!-- QR Code Section -->
+                    <div class="text-center mt-4">
+                        <h5><i class="fas fa-qrcode"></i> Quick Directions</h5>
+                        <div class="qr-code-container">
+                            <div class="qr-code-box mx-auto">
+                                <img src="{{ url_for('static', filename='img/directions_qr.png') }}" alt="QR Code for Directions" class="qr-code-image d-block mx-auto">
+                                <p class="mt-2 mb-0 text-muted text-center"><small>Scan for directions</small></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
