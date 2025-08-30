@@ -421,6 +421,10 @@ h1, h2, h3, h4, h5, h6 {
   position: relative !important;
   overflow: visible !important;
   min-height: 300px;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
 }
 
 .clinic-address i {
@@ -453,17 +457,11 @@ h1, h2, h3, h4, h5, h6 {
   right: 15px;
   text-align: center;
   z-index: 10;
-  background: white;
-  padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ddd;
 }
 
 .qr-corner-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 4px;
+  width: 120px;
+  height: 120px;
   display: block;
   object-fit: contain;
 }
@@ -473,11 +471,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .qr-corner-text {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: #666;
-  margin-top: 4px;
+  margin-top: 6px;
   margin-bottom: 0;
   font-weight: 500;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 3px;
 }
 
 /* Responsive QR corner */
@@ -485,38 +486,37 @@ h1, h2, h3, h4, h5, h6 {
   .qr-corner-section {
     top: 10px;
     right: 10px;
-    padding: 6px;
   }
 
   .qr-corner-image {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
   }
 
   .qr-corner-text {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 576px) {
   .qr-corner-image {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
   }
 
   .qr-corner-text {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
   }
 }
 
 /* Dark mode adjustments for QR corner */
-[data-theme="dark"] .qr-corner-section {
-  background: #1e1e1e;
-  border-color: #333;
+[data-theme="dark"] .qr-corner-text {
+  background: rgba(30, 30, 30, 0.9);
+  color: #ccc;
 }
 
-[data-theme="dark"] .qr-corner-text {
-  color: #ccc;
+[data-theme="dark"] .clinic-address {
+  background-color: var(--card-bg);
 }
 
 /* Footer */
