@@ -70,8 +70,11 @@
                     </div>
 
                     <!-- QR Code Section -->
-                    <div class="qr-corner-section">
-                        <img src="{{ url_for('static', filename='img/directions_qr.png') }}" alt="QR Code for Directions" class="qr-corner-image">
+                    <div class="qr-corner-section" style="display: block !important; visibility: visible !important;">
+                        <img src="{{ url_for('static', filename='img/directions_qr.png') }}" 
+                             alt="QR Code for Directions" 
+                             class="qr-corner-image"
+                             style="display: block !important; visibility: visible !important;">
                         <p class="qr-corner-text">Scan for directions</p>
                     </div>
                 </div>
