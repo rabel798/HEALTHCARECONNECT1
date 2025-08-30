@@ -447,6 +447,28 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-2px);
 }
 
+/* QR Code Styling */
+.qr-code-container {
+  margin-top: 1.5rem;
+}
+
+.qr-code-box {
+  background-color: var(--white);
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.qr-code-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
 /* Footer */
 footer {
   background-color: var(--dark-color);
