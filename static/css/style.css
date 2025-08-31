@@ -244,6 +244,49 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--white);
   padding: 6rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hero Background Slideshow */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+  animation: heroSlideshow 20s infinite;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 123, 255, 0.85);
+  z-index: -1;
+}
+
+@keyframes heroSlideshow {
+  0%, 25% {
+    background-image: url('../img/reception.jpg');
+  }
+  25%, 50% {
+    background-image: url('../img/machine.jpg');
+  }
+  50%, 75% {
+    background-image: url('../img/glass_section.jpg');
+  }
+  75%, 100% {
+    background-image: url('../img/setup.jpg');
+  }
 }
 
 .hero h1 {
