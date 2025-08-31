@@ -241,6 +241,7 @@
             Mandur, Budigere Road (New Airport Road),<br>
             Bengaluru, Karnataka 560049
         </div>
+        <h2 style="color: #2980b9; margin-top: 20px; font-size: 22px; font-weight: bold;">Optometrist Prescription</h2>
     </div>
 
     <div class="patient-info">
@@ -587,8 +588,8 @@
     {% endif %}
 
     <div class="footer">
-        <p class="signature">Dr. Richa</p>
-        <p>MBBS, MS, FPOS<br>
+        <p class="signature">{{ prescription.assistant.full_name if prescription.assistant else 'Optometrist' }}</p>
+        <p>Optometrist<br>
         Dr. Richa's Eye Clinic</p>
     </div>
 
