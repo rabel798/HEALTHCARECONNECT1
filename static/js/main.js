@@ -364,13 +364,13 @@ function initSlideshowNavigation() {
     
     let currentSlide = 0;
     let autoSlideInterval;
+    let isUserInteracting = false;
     
-    // Function to update the background image
+    // Function to update the background image manually
     function updateSlide(slideIndex) {
-        // Stop the CSS animation and manually control the background
-        hero.style.animation = 'none';
+        isUserInteracting = true;
         
-        // Update the ::before pseudo-element background
+        // Create dynamic style to override CSS animation
         const style = document.createElement('style');
         style.textContent = `
             .hero::before {
@@ -394,85 +394,48 @@ function initSlideshowNavigation() {
         });
         
         currentSlide = slideIndex;
-    }
-    
-    // Auto slideshow functionality
-    function startAutoSlide() {
-        autoSlideInterval = setInterval(() => {
-            currentSlide = (currentSlide + 1) % images.length;
-            updateSlide(currentSlide);
-        }, 5000); // Change every 5 seconds
-    }
-    
-    function stopAutoSlide() {
-        if (autoSlideInterval) {
-            clearInterval(autoSlideInterval);
-        }
-    }
-    
-    // Restart CSS animation when auto slideshow starts
-    function restartCSSAnimation() {
-        hero.style.animation = 'none';
-        // Force reflow
-        hero.offsetHeight;
-        hero.style.animation = '';
         
-        // Remove dynamic style to let CSS animation take over
-        const existingStyle = document.getElementById('hero-dynamic-style');
-        if (existingStyle) {
-            existingStyle.remove();
-        }
+        // Reset user interaction flag after 10 seconds
+        setTimeout(() => {
+            isUserInteracting = false;
+            // Remove dynamic style to let CSS animation resume
+            const dynamicStyle = document.getElementById('hero-dynamic-style');
+            if (dynamicStyle) {
+                dynamicStyle.remove();
+            }
+        }, 10000);
+    }
+    
+    // Sync dots with CSS animation
+    function syncDotsWithAnimation() {
+        if (isUserInteracting) return;
+        
+        // Calculate which slide should be active based on animation timing
+        const animationDuration = 20000; // 20 seconds total (5 seconds × 4 images)
+        const slideTime = animationDuration / 4; // 5 seconds per slide
+        const now = Date.now();
+        const elapsed = now % animationDuration;
+        const activeSlide = Math.floor(elapsed / slideTime);
+        
+        // Update dots only if no user interaction
+        navDots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeSlide);
+        });
+        currentSlide = activeSlide;
     }
     
     // Dot click handlers
     navDots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            stopAutoSlide();
             updateSlide(index);
-            // Restart CSS animation after 10 seconds of inactivity
-            setTimeout(() => {
-                restartCSSAnimation();
-                startAutoSlide();
-            }, 10000);
         });
     });
     
-    // Initialize with CSS animation
-    restartCSSAnimation();
-    startAutoSlide();
-    
-    // Pause auto slideshow on hero hover
-    hero.addEventListener('mouseenter', () => {
-        stopAutoSlide();
-        updateSlide(currentSlide); // Keep current image when paused
-    });
-    
-    hero.addEventListener('mouseleave', () => {
-        // Restart CSS animation when mouse leaves
-        setTimeout(() => {
-            restartCSSAnimation();
-            startAutoSlide();
-        }, 1000);
-    });
-    
-    // Update dots based on CSS animation timing
-    function syncDotsWithAnimation() {
-        setInterval(() => {
-            // Calculate which slide should be active based on animation timing
-            const animationDuration = 20000; // 20 seconds total
-            const slideTime = animationDuration / 4; // 5 seconds per slide
-            const elapsed = Date.now() % animationDuration;
-            const activeSlide = Math.floor(elapsed / slideTime);
-            
-            // Only update if no manual interaction
-            if (!document.getElementById('hero-dynamic-style')) {
-                navDots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === activeSlide);
-                });
-                currentSlide = activeSlide;
-            }
-        }, 100);
+    // Initialize first dot as active
+    if (navDots.length > 0) {
+        navDots[0].classList.add('active');
     }
     
-    syncDotsWithAnimation();
+    // Sync dots with animation every 100ms
+    setInterval(syncDotsWithAnimation, 100);
 }

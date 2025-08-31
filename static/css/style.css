@@ -276,16 +276,16 @@ h1, h2, h3, h4, h5, h6 {
 
 @keyframes heroSlideshow {
   0%, 25% {
-    background-image: url('../img/reception.jpg');
+    background-image: url('/static/img/reception.jpg');
   }
   25%, 50% {
-    background-image: url('../img/machine.jpg');
+    background-image: url('/static/img/machine.jpg');
   }
   50%, 75% {
-    background-image: url('../img/glass_section.jpg');
+    background-image: url('/static/img/glass_section.jpg');
   }
   75%, 100% {
-    background-image: url('../img/setup.jpg');
+    background-image: url('/static/img/setup.jpg');
   }
 }
 
