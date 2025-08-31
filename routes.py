@@ -1891,195 +1891,6 @@ def print_prescription(type, prescription_id):
 
     return render_template(template, prescription=prescription)
 
-@app.route('/admin/test-reminder/<int:appointment_id>')
-@login_required
-def admin_test_reminder(appointment_id):
-    """Admin route to test reminder email for a specific appointment"""
-    if not isinstance(current_user, Doctor):
-        flash('Access denied. Doctor privileges required.', 'danger')
-        return redirect(url_for('index'))
-
-    try:
-        from reminder_system import send_test_reminder
-        appointment = Appointment.query.get_or_404(appointment_id)
-        
-        if not appointment.patient.email:
-            flash('Patient does not have an email address for reminder.', 'warning')
-            return redirect(url_for('admin_appointment_view', appointment_id=appointment_id))
-        
-        if send_test_reminder(appointment_id):
-            flash(f'Test reminder email sent successfully to {appointment.patient.email}!', 'success')
-        else:
-            flash('Failed to send test reminder email.', 'danger')
-            
-    except Exception as e:
-        flash(f'Error sending test reminder: {str(e)}', 'danger')
-
-    return redirect(url_for('admin_appointment_view', appointment_id=appointment_id))
-
-@app.route('/admin/fix-payment-status')
-@login_required
-def admin_fix_payment_status():
-    """Debug route to fix inconsistent payment statuses"""
-    if not isinstance(current_user, Doctor):
-        flash('Access denied. Doctor privileges required.', 'danger')
-        return redirect(url_for('index'))
-
-    try:
-        fixed_count = 0
-        cancelled_count = 0
-
-        # Find payments where appointment is confirmed but payment is still pending
-        inconsistent_payments = db.session.query(Payment).join(Appointment).filter(
-            Appointment.status == 'confirmed',
-            Payment.status == 'pending'
-        ).all()
-
-        # Fix them
-        for payment in inconsistent_payments:
-            payment.status = 'completed'
-            fixed_count += 1
-            print(f"Fixed payment {payment.id} for appointment {payment.appointment_id}")
-
-        # Find payments where appointment is cancelled but payment is not cancelled
-        cancelled_payments = db.session.query(Payment).join(Appointment).filter(
-            Appointment.status == 'cancelled',
-            Payment.status != 'cancelled'
-        ).all()
-
-        for payment in cancelled_payments:
-            payment.status = 'cancelled'
-            cancelled_count += 1
-            print(f"Fixed cancelled payment {payment.id} for appointment {payment.appointment_id}")
-
-        # Also check for payments with completed status where appointment is still scheduled
-        completed_payments_wrong = db.session.query(Payment).join(Appointment).filter(
-            Appointment.status == 'scheduled',
-            Payment.status == 'completed'
-        ).all()
-
-        for payment in completed_payments_wrong:
-            payment.status = 'pending'
-            fixed_count += 1
-            print(f"Reset payment {payment.id} for scheduled appointment {payment.appointment_id}")
-
-        db.session.commit()
-
-        flash(f'Fixed {fixed_count} payments and cancelled {cancelled_count} payments', 'success')
-        return redirect(url_for('admin_revenue'))
-
-    except Exception as e:
-        db.session.rollback()
-        flash(f'Error fixing payment statuses: {str(e)}', 'danger')
-        return redirect(url_for('admin_revenue'))
-
-@app.route('/admin/reminder-management')
-@login_required
-def admin_reminder_management():
-    """Admin route to manage appointment reminders"""
-    if not isinstance(current_user, Doctor):
-        flash('Access denied. Doctor privileges required.', 'danger')
-        return redirect(url_for('index'))
-
-    try:
-        # Get tomorrow's confirmed appointments
-        tomorrow = (datetime.now() + timedelta(days=1)).date()
-        tomorrow_appointments = Appointment.query.filter(
-            Appointment.appointment_date == tomorrow,
-            Appointment.status == 'confirmed'
-        ).order_by(Appointment.appointment_time).all()
-
-        # Get appointments in the next 7 days
-        next_week = datetime.now().date() + timedelta(days=7)
-        upcoming_appointments = Appointment.query.filter(
-            Appointment.appointment_date > datetime.now().date(),
-            Appointment.appointment_date <= next_week,
-            Appointment.status == 'confirmed'
-        ).order_by(Appointment.appointment_date, Appointment.appointment_time).all()
-
-        return render_template('admin/reminder_management.html', 
-                             tomorrow_appointments=tomorrow_appointments,
-                             upcoming_appointments=upcoming_appointments,
-                             tomorrow_date=tomorrow)
-                             
-    except Exception as e:
-        flash(f'Error loading reminder management: {str(e)}', 'danger')
-        return redirect(url_for('admin_dashboard'))
-
-@app.route('/admin/revenue', methods=['GET', 'POST'])
-@login_required
-def admin_revenue():
-    """Revenue management route"""
-    if not isinstance(current_user, Doctor):
-        flash('Access denied. Doctor privileges required.', 'danger')
-        return redirect(url_for('index'))
-
-    form = FlaskForm()  # Create a basic form for CSRF protection
-
-    if request.method == 'POST':
-        try:
-            patient_name = request.form.get('patient_name')
-
-            # Try to find existing patient by name
-            patient = Patient.query.filter_by(full_name=patient_name).first()
-
-            # If patient doesn't exist, create a new one with minimal info
-            if not patient:
-                patient = Patient(
-                    full_name=patient_name,
-                    mobile_number='0000000000',  # Default placeholder
-                    email='',  # Empty email
-                    age=1,  # Default age
-                    sex='',  # Empty sex
-                    is_registered=False
-                )
-                db.session.add(patient)
-                db.session.flush()  # Get patient ID before commit
-
-            new_treatment = Treatment(
-                patient_id=patient.id,
-                treatment_name=request.form.get('treatment_name'),
-                treatment_date=datetime.strptime(request.form.get('treatment_date'), '%Y-%m-%d').date(),
-                amount=float(request.form.get('amount')),
-                notes=request.form.get('notes')
-            )
-            db.session.add(new_treatment)
-            db.session.commit()
-
-            if patient.mobile_number == '0000000000':
-                flash(f'Treatment record added successfully for new patient: {patient_name}!', 'success')
-            else:
-                flash('Treatment record added successfully!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error adding treatment: {str(e)}', 'danger')
-
-    # Get all payments with patient details (exclude cancelled payments and payments from cancelled appointments)
-    payments = (
-        db.session.query(Payment, Patient)
-        .join(Appointment, Payment.appointment_id == Appointment.id)
-        .join(Patient, Appointment.patient_id == Patient.id)
-        .filter(
-            Payment.status != 'cancelled',
-            Appointment.status != 'cancelled'
-        )
-        .order_by(Payment.created_at.desc())
-        .all()
-    )
-
-    # Get all treatments
-    treatments = Treatment.query.order_by(Treatment.treatment_date.desc()).all()
-
-    # Calculate total revenue (exclude cancelled payments)
-    appointment_revenue = sum(payment.amount for payment, _ in payments if payment.status == 'completed')
-    treatment_revenue = sum(treatment.amount for treatment in treatments)
-    total_revenue = appointment_revenue + treatment_revenue
-
-    # Get all patients for the treatment form
-    patients = Patient.query.order_by(Patient.full_name).all()
-
-    return render_template('admin/revenue.html', payments=payments, treatments=treatments, patients=patients, total_revenue=total_revenue, form=form)
-
 @app.route('/print-combined-prescription/<int:patient_id>')
 @login_required
 def print_combined_prescription(patient_id):
@@ -2119,11 +1930,11 @@ def patient_print_combined_prescription(patient_id):
     if not current_user.is_authenticated:
         flash('Please log in to access your prescriptions.', 'warning')
         return redirect(url_for('patient_login'))
-    
+
     if not isinstance(current_user, Patient):
         flash('Access denied. Patient privileges required.', 'danger')
         return redirect(url_for('patient_login'))
-    
+
     # Ensure patient can only access their own prescriptions
     if current_user.id != patient_id:
         flash('Access denied. You can only view your own prescriptions.', 'danger')
@@ -2438,3 +2249,133 @@ def patient_google_callback():
         print(f"OAuth callback error: {str(e)}")  # Debug log
         flash('An error occurred during authentication. Please try again.', 'danger')
         return redirect(url_for('patient_register'))
+
+@app.route('/admin/fix-payment-status')
+@login_required
+def admin_fix_payment_status():
+    """Debug route to fix inconsistent payment statuses"""
+    if not isinstance(current_user, Doctor):
+        flash('Access denied. Doctor privileges required.', 'danger')
+        return redirect(url_for('index'))
+
+    try:
+        fixed_count = 0
+        cancelled_count = 0
+
+        # Find payments where appointment is confirmed but payment is still pending
+        inconsistent_payments = db.session.query(Payment).join(Appointment).filter(
+            Appointment.status == 'confirmed',
+            Payment.status == 'pending'
+        ).all()
+
+        # Fix them
+        for payment in inconsistent_payments:
+            payment.status = 'completed'
+            fixed_count += 1
+            print(f"Fixed payment {payment.id} for appointment {payment.appointment_id}")
+
+        # Find payments where appointment is cancelled but payment is not cancelled
+        cancelled_payments = db.session.query(Payment).join(Appointment).filter(
+            Appointment.status == 'cancelled',
+            Payment.status != 'cancelled'
+        ).all()
+
+        for payment in cancelled_payments:
+            payment.status = 'cancelled'
+            cancelled_count += 1
+            print(f"Fixed cancelled payment {payment.id} for appointment {payment.appointment_id}")
+
+        # Also check for payments with completed status where appointment is still scheduled
+        completed_payments_wrong = db.session.query(Payment).join(Appointment).filter(
+            Appointment.status == 'scheduled',
+            Payment.status == 'completed'
+        ).all()
+
+        for payment in completed_payments_wrong:
+            payment.status = 'pending'
+            fixed_count += 1
+            print(f"Reset payment {payment.id} for scheduled appointment {payment.appointment_id}")
+
+        db.session.commit()
+
+        flash(f'Fixed {fixed_count} payments and cancelled {cancelled_count} payments', 'success')
+        return redirect(url_for('admin_revenue'))
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error fixing payment statuses: {str(e)}', 'danger')
+        return redirect(url_for('admin_revenue'))
+
+@app.route('/admin/revenue', methods=['GET', 'POST'])
+@login_required
+def admin_revenue():
+    """Revenue management route"""
+    if not isinstance(current_user, Doctor):
+        flash('Access denied. Doctor privileges required.', 'danger')
+        return redirect(url_for('index'))
+
+    form = FlaskForm()  # Create a basic form for CSRF protection
+
+    if request.method == 'POST':
+        try:
+            patient_name = request.form.get('patient_name')
+
+            # Try to find existing patient by name
+            patient = Patient.query.filter_by(full_name=patient_name).first()
+
+            # If patient doesn't exist, create a new one with minimal info
+            if not patient:
+                patient = Patient(
+                    full_name=patient_name,
+                    mobile_number='0000000000',  # Default placeholder
+                    email='',  # Empty email
+                    age=1,  # Default age
+                    sex='',  # Empty sex
+                    is_registered=False
+                )
+                db.session.add(patient)
+                db.session.flush()  # Get patient ID before commit
+
+            new_treatment = Treatment(
+                patient_id=patient.id,
+                treatment_name=request.form.get('treatment_name'),
+                treatment_date=datetime.strptime(request.form.get('treatment_date'), '%Y-%m-%d').date(),
+                amount=float(request.form.get('amount')),
+                notes=request.form.get('notes')
+            )
+            db.session.add(new_treatment)
+            db.session.commit()
+
+            if patient.mobile_number == '0000000000':
+                flash(f'Treatment record added successfully for new patient: {patient_name}!', 'success')
+            else:
+                flash('Treatment record added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error adding treatment: {str(e)}', 'danger')
+
+    # Get all payments with patient details (exclude cancelled payments and payments from cancelled appointments)
+    payments = (
+        db.session.query(Payment, Patient)
+        .join(Appointment, Payment.appointment_id == Appointment.id)
+        .join(Patient, Appointment.patient_id == Patient.id)
+        .filter(
+            Payment.status != 'cancelled',
+            Appointment.status != 'cancelled'
+        )
+        .order_by(Payment.created_at.desc())
+        .all()
+    )
+
+    # Get all treatments
+    treatments = Treatment.query.order_by(Treatment.treatment_date.desc()).all()
+
+    # Calculate total revenue (exclude cancelled payments)
+    appointment_revenue = sum(payment.amount for payment, _ in payments if payment.status == 'completed')
+    treatment_revenue = sum(treatment.amount for treatment in treatments)
+    total_revenue = appointment_revenue + treatment_revenue
+
+    # Get all patients for the treatment form
+    patients = Patient.query.order_by(Patient.full_name).all()
+
+    return render_template('admin/revenue.html', payments=payments, treatments=treatments, patients=patients, total_revenue=total_revenue, form=form)
