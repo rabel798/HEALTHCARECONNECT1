@@ -89,7 +89,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: flex-start;
   transition: var(--transition);
   margin-right: 20px;
-  margin-left: -45px;
+  margin-left: -60px;
 }
 
 #interactive-logo-container:hover {
@@ -1111,82 +1111,6 @@ footer a:hover {
 
 .services-overview [class*="col-"] {
   padding: 0 15px;
-}
-
-/* Enhanced Clinic Introduction Styles */
-.clinic-intro .highlight-box {
-  border-left: 4px solid var(--primary-color);
-  background-color: var(--light-color);
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.clinic-intro .highlight-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.feature-item {
-  transition: all 0.3s ease;
-  padding: 8px;
-  border-radius: 8px;
-}
-
-.feature-item:hover {
-  background-color: rgba(0,123,255,0.05);
-  transform: translateX(10px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.feature-item i {
-  transition: all 0.3s ease;
-}
-
-.feature-item:hover i {
-  transform: scale(1.1);
-}
-
-.stats-row {
-  background-color: var(--primary-color);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  border: none;
-}
-
-.stats-row > div {
-  transition: all 0.3s ease;
-}
-
-.stats-row > div:hover {
-  transform: translateY(-3px);
-}
-
-.stats-row i {
-  transition: all 0.3s ease;
-}
-
-.stats-row > div:hover i {
-  transform: scale(1.1);
-}
-
-/* Dark mode adjustments for clinic intro */
-[data-theme="dark"] .clinic-intro .highlight-box {
-  background-color: var(--card-bg);
-  border-left-color: var(--primary-color);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-[data-theme="dark"] .clinic-intro .highlight-box:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
-
-[data-theme="dark"] .feature-item:hover {
-  background-color: rgba(0,123,255,0.1);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-[data-theme="dark"] .stats-row {
-  background-color: var(--primary-color);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
 }
 
 /* Services Overview */
