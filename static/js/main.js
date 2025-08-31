@@ -123,6 +123,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize scroll animations
     initScrollAnimations();
 
+    // Hero slideshow navigation
+    initSlideshowNavigation();
+
     // Payment method selection
     const paymentMethods = document.querySelectorAll('.payment-method-card');
     if (paymentMethods.length > 0) {
@@ -343,4 +346,70 @@ function formatTimeSlot(timeString) {
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const hour12 = hour % 12 || 12;
     return `${hour12}:${minutes} ${ampm}`;
+}
+
+// Slideshow navigation functionality
+function initSlideshowNavigation() {
+    const hero = document.querySelector('.hero');
+    const navDots = document.querySelectorAll('.nav-dot');
+    
+    if (!hero || navDots.length === 0) return;
+    
+    const images = [
+        'url("../img/reception.jpg")',
+        'url("../img/machine.jpg")',
+        'url("../img/glass_section.jpg")',
+        'url("../img/setup.jpg")'
+    ];
+    
+    let currentSlide = 0;
+    let autoSlideInterval;
+    
+    // Function to update the background image
+    function updateSlide(slideIndex) {
+        hero.style.setProperty('--hero-bg-image', images[slideIndex]);
+        
+        // Update hero background immediately
+        const heroStyle = hero.querySelector('::before') || hero;
+        hero.style.backgroundImage = `linear-gradient(rgba(0, 123, 255, 0.85), rgba(0, 123, 255, 0.85)), ${images[slideIndex]}`;
+        
+        // Update active dot
+        navDots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === slideIndex);
+        });
+        
+        currentSlide = slideIndex;
+    }
+    
+    // Auto slideshow functionality
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % images.length;
+            updateSlide(currentSlide);
+        }, 5000); // Change every 5 seconds
+    }
+    
+    function stopAutoSlide() {
+        if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+        }
+    }
+    
+    // Dot click handlers
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            stopAutoSlide();
+            updateSlide(index);
+            // Restart auto slideshow after 10 seconds of inactivity
+            setTimeout(startAutoSlide, 10000);
+        });
+    });
+    
+    // Initialize first slide and start auto slideshow
+    updateSlide(0);
+    startAutoSlide();
+    
+    // Pause auto slideshow on hero hover
+    hero.addEventListener('mouseenter', stopAutoSlide);
+    hero.addEventListener('mouseleave', startAutoSlide);
 }
