@@ -366,27 +366,22 @@ function initSlideshowNavigation() {
     let autoSlideInterval;
     let isUserInteracting = false;
     
-    // Function to update the background image manually
-    function updateSlide(slideIndex) {
-        isUserInteracting = true;
+    // Function to update the background image
+    function updateSlide(slideIndex, forceUpdate = false) {
+        // Create or update dynamic style to control the background
+        let style = document.getElementById('hero-dynamic-style');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'hero-dynamic-style';
+            document.head.appendChild(style);
+        }
         
-        // Create dynamic style to override CSS animation
-        const style = document.createElement('style');
         style.textContent = `
             .hero::before {
                 background-image: url('${images[slideIndex]}') !important;
                 animation: none !important;
             }
         `;
-        
-        // Remove any existing dynamic styles
-        const existingStyle = document.getElementById('hero-dynamic-style');
-        if (existingStyle) {
-            existingStyle.remove();
-        }
-        
-        style.id = 'hero-dynamic-style';
-        document.head.appendChild(style);
         
         // Update active dot
         navDots.forEach((dot, index) => {
@@ -395,47 +390,47 @@ function initSlideshowNavigation() {
         
         currentSlide = slideIndex;
         
-        // Reset user interaction flag after 10 seconds
-        setTimeout(() => {
-            isUserInteracting = false;
-            // Remove dynamic style to let CSS animation resume
-            const dynamicStyle = document.getElementById('hero-dynamic-style');
-            if (dynamicStyle) {
-                dynamicStyle.remove();
-            }
-        }, 10000);
+        if (forceUpdate) {
+            isUserInteracting = true;
+            // Reset user interaction flag after 8 seconds
+            setTimeout(() => {
+                isUserInteracting = false;
+            }, 8000);
+        }
     }
     
-    // Sync dots with CSS animation
-    function syncDotsWithAnimation() {
+    // Auto slideshow function
+    function autoSlideshow() {
         if (isUserInteracting) return;
         
-        // Calculate which slide should be active based on animation timing
-        const animationDuration = 20000; // 20 seconds total (5 seconds × 4 images)
-        const slideTime = animationDuration / 4; // 5 seconds per slide
-        const now = Date.now();
-        const elapsed = now % animationDuration;
-        const activeSlide = Math.floor(elapsed / slideTime);
-        
-        // Update dots only if no user interaction
-        navDots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === activeSlide);
-        });
-        currentSlide = activeSlide;
+        currentSlide = (currentSlide + 1) % images.length;
+        updateSlide(currentSlide);
     }
     
     // Dot click handlers
     navDots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            updateSlide(index);
+            clearInterval(autoSlideInterval);
+            updateSlide(index, true);
+            // Restart auto slideshow after user interaction
+            setTimeout(() => {
+                autoSlideInterval = setInterval(autoSlideshow, 5000);
+            }, 8000);
         });
     });
     
-    // Initialize first dot as active
-    if (navDots.length > 0) {
-        navDots[0].classList.add('active');
-    }
+    // Initialize first slide and start auto slideshow
+    updateSlide(0);
+    autoSlideInterval = setInterval(autoSlideshow, 5000);
     
-    // Sync dots with animation every 100ms
-    setInterval(syncDotsWithAnimation, 100);
+    // Pause slideshow on hover
+    hero.addEventListener('mouseenter', () => {
+        clearInterval(autoSlideInterval);
+    });
+    
+    hero.addEventListener('mouseleave', () => {
+        if (!isUserInteracting) {
+            autoSlideInterval = setInterval(autoSlideshow, 5000);
+        }
+    });
 }
