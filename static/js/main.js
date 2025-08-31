@@ -367,70 +367,89 @@ function initSlideshowNavigation() {
     let isUserInteracting = false;
     
     // Function to update the background image
-    function updateSlide(slideIndex, forceUpdate = false) {
-        // Create or update dynamic style to control the background
-        let style = document.getElementById('hero-dynamic-style');
-        if (!style) {
-            style = document.createElement('style');
-            style.id = 'hero-dynamic-style';
-            document.head.appendChild(style);
+    function updateSlide(slideIndex) {
+        console.log('Updating slide to:', slideIndex, 'Image:', images[slideIndex]);
+        
+        // Remove existing dynamic style
+        const existingStyle = document.getElementById('hero-dynamic-style');
+        if (existingStyle) {
+            existingStyle.remove();
         }
         
+        // Create new style element
+        const style = document.createElement('style');
+        style.id = 'hero-dynamic-style';
         style.textContent = `
             .hero::before {
                 background-image: url('${images[slideIndex]}') !important;
-                animation: none !important;
+                background-size: cover !important;
+                background-position: center !important;
+                background-repeat: no-repeat !important;
+                transition: opacity 0.5s ease-in-out !important;
             }
         `;
+        document.head.appendChild(style);
         
         // Update active dot
         navDots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === slideIndex);
+            dot.classList.remove('active');
+            if (index === slideIndex) {
+                dot.classList.add('active');
+            }
         });
         
         currentSlide = slideIndex;
-        
-        if (forceUpdate) {
-            isUserInteracting = true;
-            // Reset user interaction flag after 8 seconds
-            setTimeout(() => {
-                isUserInteracting = false;
-            }, 8000);
-        }
     }
     
     // Auto slideshow function
     function autoSlideshow() {
-        if (isUserInteracting) return;
+        if (isUserInteracting) {
+            console.log('User is interacting, skipping auto slide');
+            return;
+        }
         
         currentSlide = (currentSlide + 1) % images.length;
+        console.log('Auto advancing to slide:', currentSlide);
         updateSlide(currentSlide);
     }
     
     // Dot click handlers
     navDots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
+            console.log('Dot clicked:', index);
+            isUserInteracting = true;
             clearInterval(autoSlideInterval);
-            updateSlide(index, true);
-            // Restart auto slideshow after user interaction
+            updateSlide(index);
+            
+            // Reset user interaction after 10 seconds and restart slideshow
             setTimeout(() => {
+                isUserInteracting = false;
                 autoSlideInterval = setInterval(autoSlideshow, 5000);
-            }, 8000);
+                console.log('Auto slideshow restarted after user interaction');
+            }, 10000);
         });
     });
     
-    // Initialize first slide and start auto slideshow
+    // Initialize first slide
     updateSlide(0);
-    autoSlideInterval = setInterval(autoSlideshow, 5000);
+    
+    // Start auto slideshow after 3 seconds
+    setTimeout(() => {
+        autoSlideInterval = setInterval(autoSlideshow, 5000);
+        console.log('Auto slideshow started');
+    }, 3000);
     
     // Pause slideshow on hover
     hero.addEventListener('mouseenter', () => {
+        console.log('Mouse entered hero, pausing slideshow');
         clearInterval(autoSlideInterval);
     });
     
     hero.addEventListener('mouseleave', () => {
+        console.log('Mouse left hero');
         if (!isUserInteracting) {
             autoSlideInterval = setInterval(autoSlideshow, 5000);
+            console.log('Slideshow resumed');
         }
     });
 }
