@@ -1894,11 +1894,6 @@ def print_prescription(type, prescription_id):
 @app.route('/print-combined-prescription/<int:patient_id>')
 def print_combined_prescription(patient_id):
     """Print combined doctor and optometrist prescriptions route"""
-    # Ensure only staff members can access this page
-    if not current_user.is_authenticated or not (isinstance(current_user, Doctor) or isinstance(current_user, Assistant) or isinstance(current_user, Admin)):
-        flash('Access denied. Staff privileges required.', 'danger')
-        return redirect(url_for('index'))
-
     # Get patient
     patient = Patient.query.get_or_404(patient_id)
 
