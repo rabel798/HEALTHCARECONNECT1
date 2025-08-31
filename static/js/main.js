@@ -356,10 +356,10 @@ function initSlideshowNavigation() {
     if (!hero || navDots.length === 0) return;
     
     const images = [
-        'url("../img/reception.jpg")',
-        'url("../img/machine.jpg")',
-        'url("../img/glass_section.jpg")',
-        'url("../img/setup.jpg")'
+        '../img/reception.jpg',
+        '../img/machine.jpg',
+        '../img/glass_section.jpg',
+        '../img/setup.jpg'
     ];
     
     let currentSlide = 0;
@@ -367,11 +367,26 @@ function initSlideshowNavigation() {
     
     // Function to update the background image
     function updateSlide(slideIndex) {
-        hero.style.setProperty('--hero-bg-image', images[slideIndex]);
+        // Stop the CSS animation and manually control the background
+        hero.style.animation = 'none';
         
-        // Update hero background immediately
-        const heroStyle = hero.querySelector('::before') || hero;
-        hero.style.backgroundImage = `linear-gradient(rgba(0, 123, 255, 0.85), rgba(0, 123, 255, 0.85)), ${images[slideIndex]}`;
+        // Update the ::before pseudo-element background
+        const style = document.createElement('style');
+        style.textContent = `
+            .hero::before {
+                background-image: url('${images[slideIndex]}') !important;
+                animation: none !important;
+            }
+        `;
+        
+        // Remove any existing dynamic styles
+        const existingStyle = document.getElementById('hero-dynamic-style');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        
+        style.id = 'hero-dynamic-style';
+        document.head.appendChild(style);
         
         // Update active dot
         navDots.forEach((dot, index) => {
@@ -395,21 +410,69 @@ function initSlideshowNavigation() {
         }
     }
     
+    // Restart CSS animation when auto slideshow starts
+    function restartCSSAnimation() {
+        hero.style.animation = 'none';
+        // Force reflow
+        hero.offsetHeight;
+        hero.style.animation = '';
+        
+        // Remove dynamic style to let CSS animation take over
+        const existingStyle = document.getElementById('hero-dynamic-style');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+    }
+    
     // Dot click handlers
     navDots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
             stopAutoSlide();
             updateSlide(index);
-            // Restart auto slideshow after 10 seconds of inactivity
-            setTimeout(startAutoSlide, 10000);
+            // Restart CSS animation after 10 seconds of inactivity
+            setTimeout(() => {
+                restartCSSAnimation();
+                startAutoSlide();
+            }, 10000);
         });
     });
     
-    // Initialize first slide and start auto slideshow
-    updateSlide(0);
+    // Initialize with CSS animation
+    restartCSSAnimation();
     startAutoSlide();
     
     // Pause auto slideshow on hero hover
-    hero.addEventListener('mouseenter', stopAutoSlide);
-    hero.addEventListener('mouseleave', startAutoSlide);
+    hero.addEventListener('mouseenter', () => {
+        stopAutoSlide();
+        updateSlide(currentSlide); // Keep current image when paused
+    });
+    
+    hero.addEventListener('mouseleave', () => {
+        // Restart CSS animation when mouse leaves
+        setTimeout(() => {
+            restartCSSAnimation();
+            startAutoSlide();
+        }, 1000);
+    });
+    
+    // Update dots based on CSS animation timing
+    function syncDotsWithAnimation() {
+        setInterval(() => {
+            // Calculate which slide should be active based on animation timing
+            const animationDuration = 20000; // 20 seconds total
+            const slideTime = animationDuration / 4; // 5 seconds per slide
+            const elapsed = Date.now() % animationDuration;
+            const activeSlide = Math.floor(elapsed / slideTime);
+            
+            // Only update if no manual interaction
+            if (!document.getElementById('hero-dynamic-style')) {
+                navDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === activeSlide);
+                });
+                currentSlide = activeSlide;
+            }
+        }, 100);
+    }
+    
+    syncDotsWithAnimation();
 }
