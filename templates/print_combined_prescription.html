@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,100 +10,284 @@
                 margin: 0.8cm;
             }
             body { 
-                font-family: 'Arial', sans-serif;
+                font-family: 'Times New Roman', 'Georgia', serif;
                 margin: 0;
-                padding: 15px;
-                line-height: 1.4;
-                color: #333;
-                font-size: 12px;
+                padding: 20px;
+                line-height: 1.8;
+                color: #2c3e50;
+                font-size: 14px;
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
+                background: 
+                    radial-gradient(circle at 25% 25%, rgba(52, 152, 219, 0.12) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, rgba(52, 152, 219, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 10%, rgba(41, 128, 185, 0.06) 0%, transparent 40%),
+                    radial-gradient(circle at 10% 90%, rgba(52, 152, 219, 0.08) 0%, transparent 40%),
+                    linear-gradient(135deg, rgba(52, 152, 219, 0.05) 0%, rgba(41, 128, 185, 0.08) 50%, rgba(52, 152, 219, 0.05) 100%);
+                background-size: 300px 300px, 250px 250px, 200px 200px, 180px 180px, 100% 100%;
+                background-repeat: repeat, repeat, repeat, repeat, no-repeat;
+                position: relative;
+            }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: 
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='3' stroke-opacity='1'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Ccircle cx='30' cy='30' r='6'/%3E%3Cpath d='M10 30h40M30 10v40'/%3E%3Cpath d='M18 18l24 24M42 18l-24 24'/%3E%3C/g%3E%3C/svg%3E"),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cg fill='%23dc3545' fill-opacity='1'%3E%3Ccircle cx='15' cy='15' r='5'/%3E%3C/g%3E%3C/svg%3E"),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23198754' stroke-width='4' stroke-opacity='1'%3E%3Cpath d='M50 10 L90 50 L50 90 L10 50 Z'/%3E%3Cpath d='M50 25 L75 50 L50 75 L25 50 Z'/%3E%3Cpath d='M50 40 L60 50 L50 60 L40 50 Z'/%3E%3C/g%3E%3C/svg%3E"),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23fd7e14' stroke-width='3' stroke-opacity='1'%3E%3Cpath d='M0 0L80 80M80 0L0 80'/%3E%3Cpath d='M40 0v80M0 40h80'/%3E%3Crect x='25' y='25' width='30' height='30' fill='none'/%3E%3C/g%3E%3C/svg%3E");
+                background-size: 60px 60px, 30px 30px, 100px 100px, 80px 80px;
+                background-position: 0 0, 15px 15px, 25px 25px, 40px 40px;
+                background-repeat: repeat;
+                pointer-events: none;
+                z-index: -2;
+                opacity: 0.25;
+            }
+            body::after {
+                content: 'DR. RICHA\'S EYE CLINIC';
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 72px;
+                font-weight: 900;
+                color: rgba(52, 152, 219, 0.08);
+                font-family: 'Times New Roman', serif;
+                white-space: nowrap;
+                pointer-events: none;
+                z-index: -1;
+                text-transform: uppercase;
+                letter-spacing: 12px;
+                text-shadow: 2px 2px 4px rgba(52, 152, 219, 0.05);
             }
             .header {
                 text-align: center;
-                padding: 8px 0;
-                border-bottom: 2px solid #1a73e8;
-                margin-bottom: 15px;
+                padding: 25px 0;
+                border-bottom: 3px solid #2980b9;
+                margin-bottom: 35px;
+                position: relative;
+                z-index: 1;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(236, 240, 241, 0.9));
+                border-radius: 8px 8px 0 0;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .header h1 {
-                color: #1a73e8;
+                color: #2980b9;
                 margin: 0;
-                font-size: 20px;
+                font-size: 28px;
+                font-weight: bold;
+                font-family: 'Times New Roman', serif;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                letter-spacing: 1px;
             }
             .clinic-info {
-                font-size: 11px;
-                color: #666;
-                margin-top: 5px;
+                font-size: 15px;
+                color: #34495e;
+                margin-top: 12px;
+                font-style: italic;
+                line-height: 1.6;
+            }
+            .combined-title {
+                color: #2980b9;
+                margin-top: 20px;
+                font-size: 22px;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
             }
             .patient-info {
-                background: #f8f9fa;
-                padding: 12px;
-                border-radius: 8px;
-                margin-bottom: 15px;
+                background: linear-gradient(145deg, rgba(248, 249, 250, 0.98), rgba(236, 240, 241, 0.92));
+                padding: 25px;
+                border-radius: 10px;
+                margin-bottom: 35px;
+                position: relative;
+                z-index: 1;
+                border: 1px solid rgba(52, 152, 219, 0.2);
+                box-shadow: 0 3px 10px rgba(0,0,0,0.08);
             }
             .prescription-section {
-                margin-bottom: 20px;
-                border: 1px solid #dee2e6;
-                padding: 12px;
-                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.9);
+                margin-bottom: 25px;
+                border: 2px solid #3498db;
+                padding: 20px;
+                border-radius: 12px;
+                position: relative;
+                z-index: 1;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
-            .findings-section {
-                display: flex;
-                justify-content: space-between;
-                margin: 12px 0;
-                gap: 12px;
-            }
-            .eye-findings {
-                flex: 1;
-                border: 1px solid #dee2e6;
-                padding: 12px;
-                border-radius: 8px;
+            .prescription-section h3 {
+                background: linear-gradient(145deg, #2980b9, #3498db);
+                color: white;
+                margin: -20px -20px 20px -20px;
+                padding: 15px 20px;
+                border-radius: 10px 10px 0 0;
+                font-family: 'Times New Roman', serif;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             }
             .section-title {
-                color: #1a73e8;
-                font-size: 14px;
+                color: #2980b9;
+                font-size: 18px;
                 font-weight: bold;
-                margin-bottom: 8px;
-                border-bottom: 1px solid #dee2e6;
-                padding-bottom: 4px;
+                margin-bottom: 12px;
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 6px;
+                font-family: 'Times New Roman', serif;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
-            .additional-notes {
-                margin: 12px 0;
-                border: 1px solid #dee2e6;
-                padding: 12px;
+            .section {
+                background: rgba(255, 255, 255, 0.7);
+                padding: 18px;
+                margin: 15px 0;
                 border-radius: 8px;
+                border-left: 4px solid #3498db;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            }
+            .section h4 {
+                color: #2c3e50;
+                font-size: 16px;
+                margin-bottom: 8px;
+                font-family: 'Times New Roman', serif;
+                font-weight: bold;
+            }
+            .eye-section {
+                display: flex;
+                justify-content: space-between;
+                margin: 15px 0;
+                gap: 20px;
+            }
+            .eye-box {
+                flex: 1;
+                background: rgba(255, 255, 255, 1);
+                border: 1px solid #dee2e6;
+                padding: 15px;
+                border-radius: 8px;
+                text-align: left;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            }
+            .eye-title {
+                font-weight: bold;
+                color: #2980b9;
+                margin-bottom: 10px;
+                font-size: 16px;
+                font-family: 'Times New Roman', serif;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                text-align: center;
+            }
+            .prescription-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+                font-size: 14px;
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            }
+            .prescription-table th,
+            .prescription-table td {
+                border: 1px solid #dee2e6;
+                padding: 12px 8px;
+                text-align: center;
+                background: rgba(255, 255, 255, 1);
+            }
+            .prescription-table th {
+                background: linear-gradient(145deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9));
+                color: white;
+                font-weight: bold;
+                font-family: 'Times New Roman', serif;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .prescription-table td {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+            .field-row {
+                display: flex;
+                justify-content: space-between;
+                margin: 8px 0;
+                font-size: 14px;
+                line-height: 1.6;
+                text-align: left;
+            }
+            .field-label {
+                font-weight: bold;
+                color: #34495e;
+                font-family: 'Times New Roman', serif;
+            }
+            .divider {
+                border-top: 3px dashed #2980b9;
+                margin: 30px 0;
+                position: relative;
+                z-index: 1;
+            }
+            .divider::after {
+                content: 'SEPARATE PRESCRIPTIONS';
+                position: absolute;
+                top: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 255, 255, 0.95);
+                padding: 0 20px;
+                color: #2980b9;
+                font-weight: bold;
+                font-size: 12px;
+                letter-spacing: 1px;
             }
             .signatures {
                 display: flex;
                 justify-content: space-between;
-                margin-top: 20px;
-                padding-top: 12px;
-                border-top: 1px solid #dee2e6;
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 2px solid #2980b9;
+                position: relative;
+                z-index: 1;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .signature {
                 width: 45%;
-            }
-            .signature p {
-                margin: 4px 0;
+                text-align: center;
             }
             .signature-name {
                 font-weight: bold;
-                color: #1a73e8;
-                font-size: 13px;
+                color: #2980b9;
+                font-size: 16px;
+                font-family: 'Times New Roman', serif;
+                margin-bottom: 8px;
+            }
+            .signature p {
+                margin: 4px 0;
+                font-size: 14px;
+                color: #34495e;
+                line-height: 1.5;
+            }
+            .footer {
+                margin-top: auto;
             }
             .no-print {
                 display: none;
             }
             p {
-                margin: 4px 0;
+                margin: 8px 0;
+                font-size: 14px;
+                line-height: 1.7;
+                color: #2c3e50;
             }
-            .divider {
-                border-top: 2px dashed #1a73e8;
-                margin: 20px 0;
-            }
-            .footer {
-                margin-top: auto;
+            .patient-info p {
+                font-size: 15px;
+                font-weight: 500;
             }
         }
     </style>
@@ -115,6 +300,7 @@
             Mandur, Budigere Road (New Airport Road),<br>
             Bengaluru, Karnataka 560049
         </div>
+        <h2 class="combined-title">Combined Medical Prescription</h2>
     </div>
 
     <div class="patient-info">
@@ -126,51 +312,175 @@
     </div>
 
     <!-- Doctor's Prescription -->
+    {% if doctor_prescription %}
     <div class="prescription-section">
-        <div class="section-title">Doctor's Prescription</div>
-        <div class="findings-section">
-            <div class="eye-findings">
-                <div class="section-title">Left Eye</div>
-                <p>{{ doctor_prescription.diagnosis }}</p>
-            </div>
-            <div class="eye-findings">
-                <div class="section-title">Right Eye</div>
-                <p>{{ doctor_prescription.medications }}</p>
-            </div>
+        <h3>Doctor's Prescription</h3>
+        
+        {% if doctor_prescription.complaints %}
+        <div class="section">
+            <h4>Chief Complaints:</h4>
+            <p>{{ doctor_prescription.complaints }}</p>
+        </div>
+        {% endif %}
+
+        {% if doctor_prescription.history %}
+        <div class="section">
+            <h4>History:</h4>
+            <p>{{ doctor_prescription.history }}</p>
+        </div>
+        {% endif %}
+
+        {% if doctor_prescription.examination_notes %}
+        <div class="section">
+            <h4>Examination Notes:</h4>
+            <p>{{ doctor_prescription.examination_notes }}</p>
+        </div>
+        {% endif %}
+
+        <div class="section">
+            <h4>Diagnosis:</h4>
+            <p>{{ doctor_prescription.diagnosis }}</p>
         </div>
 
-        <div class="additional-notes">
-            <div class="section-title">Instructions</div>
+        {% if doctor_prescription.left_eye_findings or doctor_prescription.right_eye_findings %}
+        <div class="section">
+            <h4>Eye Examination Findings:</h4>
+            {% if doctor_prescription.left_eye_findings %}
+            <p><strong>Left Eye:</strong> {{ doctor_prescription.left_eye_findings }}</p>
+            {% endif %}
+            {% if doctor_prescription.right_eye_findings %}
+            <p><strong>Right Eye:</strong> {{ doctor_prescription.right_eye_findings }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="section">
+            <h4>Medications:</h4>
+            <p>{{ doctor_prescription.medications }}</p>
+        </div>
+
+        <div class="section">
+            <h4>Instructions:</h4>
             <p>{{ doctor_prescription.instructions }}</p>
         </div>
 
-        <div class="additional-notes">
-            <div class="section-title">Follow Up</div>
+        {% if doctor_prescription.follow_up %}
+        <div class="section">
+            <h4>Follow-up:</h4>
             <p>{{ doctor_prescription.follow_up }}</p>
         </div>
+        {% endif %}
     </div>
+    {% endif %}
 
     <div class="divider"></div>
 
     <!-- Optometrist's Prescription -->
+    {% if optometrist_prescription %}
     <div class="prescription-section">
-        <div class="section-title">Optometrist's Prescription</div>
-        <div class="findings-section">
-            <div class="eye-findings">
-                <div class="section-title">Left Eye Findings</div>
-                <p>{{ optometrist_prescription.eye_power }}</p>
-            </div>
-            <div class="eye-findings">
-                <div class="section-title">Right Eye Findings</div>
-                <p>{{ optometrist_prescription.recommendations }}</p>
+        <h3>Optometrist's Prescription</h3>
+        
+        {% if optometrist_prescription.present_complaints %}
+        <div class="section">
+            <h4>Present Complaints:</h4>
+            <p>{{ optometrist_prescription.present_complaints }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Vision Assessment -->
+        <div class="section">
+            <h4>Vision Assessment:</h4>
+            <div class="eye-section">
+                <div class="eye-box">
+                    <div class="eye-title">Right Eye (RE)</div>
+                    <div class="field-row">
+                        <span class="field-label">Distance:</span>
+                        <span>{{ optometrist_prescription.vision_distance_re or 'N/A' }}</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Near:</span>
+                        <span>{{ optometrist_prescription.vision_near_re or 'N/A' }}</span>
+                    </div>
+                </div>
+                <div class="eye-box">
+                    <div class="eye-title">Left Eye (LE)</div>
+                    <div class="field-row">
+                        <span class="field-label">Distance:</span>
+                        <span>{{ optometrist_prescription.vision_distance_le or 'N/A' }}</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Near:</span>
+                        <span>{{ optometrist_prescription.vision_near_le or 'N/A' }}</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="additional-notes">
-            <div class="section-title">Additional Notes</div>
-            <p>{{ optometrist_prescription.notes }}</p>
+        <!-- Final Glasses Prescription -->
+        {% if optometrist_prescription.final_re_sph or optometrist_prescription.final_le_sph %}
+        <div class="section">
+            <h4>Final Glasses Prescription:</h4>
+            <table class="prescription-table">
+                <thead>
+                    <tr>
+                        <th>Eye</th>
+                        <th>Sph</th>
+                        <th>Cyl</th>
+                        <th>Axis</th>
+                        <th>Prism</th>
+                        <th>VA</th>
+                        <th>NV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>RE</strong></td>
+                        <td>{{ optometrist_prescription.final_re_sph or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_re_cyl or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_re_axis or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_re_prism or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_re_va or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_re_nv or '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LE</strong></td>
+                        <td>{{ optometrist_prescription.final_le_sph or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_le_cyl or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_le_axis or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_le_prism or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_le_va or '-' }}</td>
+                        <td>{{ optometrist_prescription.final_le_nv or '-' }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+        {% endif %}
+
+        {% if optometrist_prescription.general_remarks or optometrist_prescription.recommendations or optometrist_prescription.notes %}
+        <div class="section">
+            <h4>Remarks & Recommendations:</h4>
+            {% if optometrist_prescription.general_remarks %}
+            <div style="margin-bottom: 10px;">
+                <strong>General Remarks:</strong><br>
+                {{ optometrist_prescription.general_remarks }}
+            </div>
+            {% endif %}
+            {% if optometrist_prescription.recommendations %}
+            <div style="margin-bottom: 10px;">
+                <strong>Recommendations:</strong><br>
+                {{ optometrist_prescription.recommendations }}
+            </div>
+            {% endif %}
+            {% if optometrist_prescription.notes %}
+            <div>
+                <strong>Additional Notes:</strong><br>
+                {{ optometrist_prescription.notes }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
+    {% endif %}
 
     <div class="signatures">
         <div class="signature">
@@ -179,9 +489,8 @@
             Dr. Richa's Eye Clinic</p>
         </div>
         <div class="signature">
-            <p class="signature-name">{{ current_user.full_name }}</p>
-            <p>Optometrist<br>
-            Dr. Richa's Eye Clinic</p>
+            <p class="signature-name">Optometrist</p>
+            <p>Dr. Richa's Eye Clinic</p>
         </div>
     </div>
 
@@ -189,4 +498,4 @@
         <button onclick="window.print()" class="btn btn-primary">Print Combined Prescription</button>
     </div>
 </body>
-</html> 
+</html>
