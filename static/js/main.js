@@ -356,10 +356,10 @@ function initSlideshowNavigation() {
     if (!hero || navDots.length === 0) return;
     
     const images = [
-        '../img/reception.jpg',
-        '../img/machine.jpg',
-        '../img/glass_section.jpg',
-        '../img/setup.jpg'
+        '/static/img/reception.jpg',
+        '/static/img/machine.jpg',
+        '/static/img/glass_section.jpg',
+        '/static/img/setup.jpg'
     ];
     
     let currentSlide = 0;
