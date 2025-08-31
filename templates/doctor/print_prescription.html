@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -195,159 +194,127 @@
         <div class="section-title">Patient Information</div>
         <p><strong>Name:</strong> {{ prescription.patient.full_name }}</p>
         <p><strong>Age:</strong> {{ prescription.patient.age }} years</p>
-        <p><strong>Sex:</strong> {{ prescription.patient.sex or 'Not specified' }}</p>
         <p><strong>Contact:</strong> {{ prescription.patient.mobile_number }}</p>
         <p><strong>Date:</strong> {{ prescription.prescription_date.strftime('%d %B, %Y') }}</p>
     </div>
 
     <div class="prescription-content">
-        <!-- Clinical Information -->
-        {% if prescription.complaints %}
-        <div class="section">
-            <h4>Chief Complaints:</h4>
-            <p>{{ prescription.complaints }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.complaints %}
+                <div class="section">
+                    <h4>Chief Complaints:</h4>
+                    <p>{{ prescription.complaints }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.history %}
-        <div class="section">
-            <h4>History:</h4>
-            <p>{{ prescription.history }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.history %}
+                <div class="section">
+                    <h4>History:</h4>
+                    <p>{{ prescription.history }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.examination_notes %}
-        <div class="section">
-            <h4>Examination Notes:</h4>
-            <p>{{ prescription.examination_notes }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.examination_notes %}
+                <div class="section">
+                    <h4>Examination Notes:</h4>
+                    <p>{{ prescription.examination_notes }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.diagnosis %}
-        <div class="section">
-            <h4>Diagnosis:</h4>
-            <p>{{ prescription.diagnosis }}</p>
-        </div>
-        {% endif %}
+                <div class="section">
+                    <h4>Diagnosis:</h4>
+                    <p>{{ prescription.diagnosis }}</p>
+                </div>
 
-        <!-- Eye Examination Findings -->
-        {% if prescription.left_eye_findings or prescription.right_eye_findings %}
-        <div class="section">
-            <h4>Eye Examination Findings:</h4>
-            {% if prescription.left_eye_findings %}
-            <p><strong>Left Eye:</strong> {{ prescription.left_eye_findings }}</p>
-            {% endif %}
-            {% if prescription.right_eye_findings %}
-            <p><strong>Right Eye:</strong> {{ prescription.right_eye_findings }}</p>
-            {% endif %}
-        </div>
-        {% endif %}
+                {% if prescription.left_eye_findings or prescription.right_eye_findings %}
+                <div class="section">
+                    <h4>Eye Examination Findings:</h4>
+                    {% if prescription.left_eye_findings %}
+                    <p><strong>Left Eye:</strong> {{ prescription.left_eye_findings }}</p>
+                    {% endif %}
+                    {% if prescription.right_eye_findings %}
+                    <p><strong>Right Eye:</strong> {{ prescription.right_eye_findings }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
 
-        <!-- Investigation & Assessment -->
-        {% if prescription.investigation %}
-        <div class="section">
-            <h4>Investigation:</h4>
-            <p>{{ prescription.investigation }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.investigation %}
+                <div class="section">
+                    <h4>Investigation:</h4>
+                    <p>{{ prescription.investigation }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.fall_risk %}
-        <div class="section">
-            <h4>Fall Risk Assessment:</h4>
-            <p>{{ prescription.fall_risk }}</p>
-        </div>
-        {% endif %}
+                <div class="section">
+                    <h4>Medications:</h4>
+                    <p>{{ prescription.medications }}</p>
+                </div>
 
-        {% if prescription.immunization %}
-        <div class="section">
-            <h4>Immunization Status:</h4>
-            <p>{{ prescription.immunization }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.prognosis %}
+                <div class="section">
+                    <h4>Prognosis:</h4>
+                    <p>{{ prescription.prognosis }}</p>
+                </div>
+                {% endif %}
 
-        <!-- Treatment Plan -->
-        {% if prescription.medications %}
-        <div class="section">
-            <h4>Prescribed Medications:</h4>
-            <p>{{ prescription.medications }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.nutritional_advice %}
+                <div class="section">
+                    <h4>Nutritional Advice:</h4>
+                    <p>{{ prescription.nutritional_advice }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.prescribed_eyewear %}
-        <div class="section">
-            <h4>Prescribed Eyewear:</h4>
-            <p>{{ prescription.prescribed_eyewear }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.plan_of_care %}
+                <div class="section">
+                    <h4>Plan of Care:</h4>
+                    <p>{{ prescription.plan_of_care }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.prognosis %}
-        <div class="section">
-            <h4>Prognosis:</h4>
-            <p>{{ prescription.prognosis }}</p>
-        </div>
-        {% endif %}
+                <div class="section">
+                    <h4>Instructions:</h4>
+                    <p>{{ prescription.instructions }}</p>
+                </div>
 
-        {% if prescription.nutritional_advice %}
-        <div class="section">
-            <h4>Nutritional Advice:</h4>
-            <p>{{ prescription.nutritional_advice }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.follow_up %}
+                <div class="section">
+                    <h4>Follow-up:</h4>
+                    <p>{{ prescription.follow_up }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.plan_of_care %}
-        <div class="section">
-            <h4>Plan of Care:</h4>
-            <p>{{ prescription.plan_of_care }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.referral_reason %}
+                <div class="section">
+                    <h4>Referral Reason:</h4>
+                    <p>{{ prescription.referral_reason }}</p>
+                </div>
+                {% endif %}
 
-        <!-- Instructions & Follow-up -->
-        {% if prescription.instructions %}
-        <div class="section">
-            <h4>Instructions:</h4>
-            <p>{{ prescription.instructions }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.referred_to_cc %}
+                <div class="section">
+                    <h4>Referred to:</h4>
+                    <p>{{ prescription.referred_to_cc }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.follow_up %}
-        <div class="section">
-            <h4>Follow-up:</h4>
-            <p>{{ prescription.follow_up }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.comments %}
+                <div class="section">
+                    <h4>Comments:</h4>
+                    <p>{{ prescription.comments }}</p>
+                </div>
+                {% endif %}
 
-        {% if prescription.referred_to_cc %}
-        <div class="section">
-            <h4>Referred to CC:</h4>
-            <p>{{ prescription.referred_to_cc }}</p>
-        </div>
-        {% endif %}
+                {% if prescription.remarks_for_counselor %}
+                <div class="section">
+                    <h4>Remarks for Counselor:</h4>
+                    <p>{{ prescription.remarks_for_counselor }}</p>
+                </div>
+                {% endif %}
+            </div>
 
-        {% if prescription.referral_reason %}
-        <div class="section">
-            <h4>Referral Reason:</h4>
-            <p>{{ prescription.referral_reason }}</p>
-        </div>
-        {% endif %}
-
-        <!-- Additional Notes -->
-        {% if prescription.comments %}
-        <div class="section">
-            <h4>Comments:</h4>
-            <p>{{ prescription.comments }}</p>
-        </div>
-        {% endif %}
-
-        {% if prescription.remarks_for_counselor %}
-        <div class="section">
-            <h4>Remarks for Counselor:</h4>
-            <p>{{ prescription.remarks_for_counselor }}</p>
-        </div>
-        {% endif %}
-    </div>
+    
 
     <div class="footer">
-        <p class="signature">Dr. Richa</p>
+        <p class="signature">{{ current_user.full_name }}</p>
         <p>MBBS, MS, FPOS<br>
         Dr. Richa's Eye Clinic</p>
     </div>
