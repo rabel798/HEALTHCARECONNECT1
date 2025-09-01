@@ -1123,8 +1123,8 @@ footer a:hover {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 15px;
-  padding: 12px 0;
-  margin: 2rem 0 1rem 0;
+  padding: 14px 0;
+  margin: 3rem 0 1rem 0;
   overflow: hidden;
   position: relative;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -1143,7 +1143,7 @@ footer a:hover {
 .emergency-text {
   color: rgba(255, 255, 255, 0.95);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 1rem;
   white-space: nowrap;
   letter-spacing: 0.3px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1182,22 +1182,22 @@ footer a:hover {
 /* Responsive emergency ticker */
 @media (max-width: 768px) {
   .emergency-text {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .emergency-ticker {
-    margin: 1.5rem 0 0.75rem 0;
+    margin: 2.5rem 0 0.75rem 0;
     border-radius: 12px;
   }
 }
 
 @media (max-width: 576px) {
   .emergency-text {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
   .emergency-ticker {
-    margin: 1rem 0 0.5rem 0;
+    margin: 2rem 0 0.5rem 0;
     border-radius: 10px;
   }
 }
