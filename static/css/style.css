@@ -89,7 +89,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: flex-start;
   transition: var(--transition);
   margin-right: 20px;
-  margin-left: -60px;
+  margin-left: 10px;
 }
 
 #interactive-logo-container:hover {
