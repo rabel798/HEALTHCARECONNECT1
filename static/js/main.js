@@ -119,12 +119,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const elements = document.querySelectorAll(animationSelectors);
         elements.forEach(element => observer.observe(element));
 
-        // Ensure doctor image container is observed
+        // Ensure doctor image container is observed for fade-in animation
         const doctorImageContainer = document.querySelector('.doctor-image');
         if (doctorImageContainer) {
-            const fadeInContainer = doctorImageContainer.closest('.fade-in');
-            if (fadeInContainer) {
-                observer.observe(fadeInContainer);
+            // Add fade-in class if it doesn't exist
+            if (!doctorImageContainer.classList.contains('fade-in')) {
+                doctorImageContainer.classList.add('fade-in');
+                observer.observe(doctorImageContainer);
             }
         }
     }
