@@ -1152,19 +1152,6 @@ footer a:hover {
   gap: 2rem;
 }
 
-.phone-highlight {
-  color: #ffff00 !important;
-  font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  margin-left: 0.3em;
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 2px 4px;
-  border-radius: 3px;
-}
-
-.emergency-symbol {
-  margin-right: 0.3em;
-}
 
 
 @keyframes scroll-right {
