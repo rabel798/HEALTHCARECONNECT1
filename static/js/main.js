@@ -1,123 +1,46 @@
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    // Dark mode functionality
-    function initDarkMode() {
-        // Create dark mode toggle button
-        const darkModeToggle = document.createElement('button');
-        darkModeToggle.classList.add('dark-mode-toggle');
-        darkModeToggle.setAttribute('aria-label', 'Toggle dark mode');
-        darkModeToggle.innerHTML = '<i class="fas fa-moon"></i><i class="fas fa-sun"></i>';
-        document.body.appendChild(darkModeToggle);
-
-        // Check for saved theme preference
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        }
-
-        // Toggle dark mode on click
-        darkModeToggle.addEventListener('click', function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const themeColorMeta = document.getElementById('theme-color-meta');
-
-            if (currentTheme === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                if (themeColorMeta) themeColorMeta.setAttribute('content', '#007bff');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                if (themeColorMeta) themeColorMeta.setAttribute('content', '#121212');
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         });
-    }
+    });
 
-    // Initialize dark mode
-    initDarkMode();
-
-    // Hamburger menu animation
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    const navbarCollapse = document.querySelector('.navbar-collapse');
-
-    if (navbarToggler && navbarCollapse) {
-        // Set initial state - collapsed by default
-        navbarToggler.classList.add('collapsed');
-
-        // Handle collapse events to keep animation in sync
-        navbarCollapse.addEventListener('show.bs.collapse', function() {
-            navbarToggler.classList.remove('collapsed');
-        });
-
-        navbarCollapse.addEventListener('hide.bs.collapse', function() {
-            navbarToggler.classList.add('collapsed');
-        });
-    }
-
-    // Navbar hide on scroll - Throttled for performance
-    const navbar = document.querySelector('.navbar');
-    let lastScrollTop = 0;
-    let ticking = false;
-
-    function updateNavbar() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            navbar.classList.add('navbar-hidden');
-        } else {
-            navbar.classList.remove('navbar-hidden');
-        }
-
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        ticking = false;
-    }
-
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            requestAnimationFrame(updateNavbar);
-            ticking = true;
-        }
-    }, { passive: true });
-
-    // Enhanced scroll animations system - Optimized
+    // Enhanced scroll animations with performance optimizations
     function initScrollAnimations() {
         const observerOptions = {
-            threshold: 0.05,
-            rootMargin: '0px 0px 50px 0px'
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
 
-        // Cache stagger elements once
-        const staggerElements = Array.from(document.querySelectorAll('.slide-up-stagger'));
-
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Use requestAnimationFrame for better performance
-                    requestAnimationFrame(() => {
-                        if (entry.target.classList.contains('slide-up-stagger')) {
-                            const elementIndex = staggerElements.indexOf(entry.target);
-                            if (elementIndex !== -1) {
-                                setTimeout(() => {
-                                    entry.target.classList.add('visible');
-                                }, elementIndex * 25); // Reduced from 50ms
-                            }
-                        } else {
-                            entry.target.classList.add('visible');
-                        }
-                    });
+                    entry.target.classList.add('visible');
+                    // Stop observing once animation is triggered for performance
                     observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // Observe all animation elements efficiently
-        const animationSelectors = '.fade-in, .slide-up, .slide-up-delayed, .slide-up-stagger, .scale-in';
-        const elements = document.querySelectorAll(animationSelectors);
-        elements.forEach(element => observer.observe(element));
+        // Observe all animation elements
+        const animationElements = document.querySelectorAll('.fade-in, .slide-up, .slide-up-delayed, .scale-in');
+        animationElements.forEach(el => observer.observe(el));
+
+        // Stagger animation for grouped elements
+        const staggerElements = document.querySelectorAll('.slide-up-stagger');
+        staggerElements.forEach((element, index) => {
+            element.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(element);
+        });
 
         // Ensure doctor image container is observed for fade-in animation
         const doctorImageContainer = document.querySelector('.doctor-image');
@@ -146,7 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Set the value in the hidden input
                 const methodValue = this.dataset.method;
-                document.getElementById('payment_method').value = methodValue;
+                const paymentMethodInput = document.getElementById('payment_method');
+                if (paymentMethodInput) {
+                    paymentMethodInput.value = methodValue;
+                }
             });
         });
     }
@@ -154,203 +80,242 @@ document.addEventListener('DOMContentLoaded', function() {
     // Appointment date picker functionality
     const appointmentDateInput = document.getElementById('appointment_date');
     const calendarTrigger = document.getElementById('calendar-trigger');
-
+    
     if (appointmentDateInput && calendarTrigger) {
-        // Initialize flatpickr
-        const datePicker = flatpickr(appointmentDateInput, {
-            dateFormat: "Y-m-d",
-            minDate: "today",
-            disableMobile: true,
-            onChange: function(selectedDates, dateStr) {
-                fetchAvailableTimeSlots(dateStr);
-            }
+        calendarTrigger.addEventListener('click', function() {
+            appointmentDateInput.focus();
+            appointmentDateInput.click();
         });
 
-        // Open calendar on icon click
-        calendarTrigger.addEventListener('click', function() {
-            datePicker.open();
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        appointmentDateInput.setAttribute('min', today);
+
+        // Handle date change for time slot loading
+        appointmentDateInput.addEventListener('change', function() {
+            loadTimeSlots(this.value);
         });
     }
 
     // Time slot selection
-    const timeSlotsContainer = document.getElementById('time-slots-container');
-    if (timeSlotsContainer) {
-        timeSlotsContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('time-slot') && !e.target.classList.contains('disabled')) {
-                // Remove selected class from all time slots
-                document.querySelectorAll('.time-slot').forEach(slot => {
-                    slot.classList.remove('selected');
-                });
+    function loadTimeSlots(selectedDate) {
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        if (!timeSlotsContainer) return;
 
-                // Add selected class to clicked time slot
-                e.target.classList.add('selected');
+        // Show loading
+        timeSlotsContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading available times...</div>';
 
-                // Set the value in the hidden input
-                const timeValue = e.target.dataset.time;
-                document.getElementById('appointment_time').value = timeValue;
-            }
-        });
+        // Simulate API call (replace with actual endpoint)
+        setTimeout(() => {
+            const timeSlots = generateTimeSlots(selectedDate);
+            renderTimeSlots(timeSlots);
+        }, 500);
     }
 
-    // Interactive star rating
-    const starContainer = document.querySelector('.star-rating');
-    const ratingInput = document.querySelector('.rating-input');
-
-    if (starContainer && ratingInput) {
-        const stars = starContainer.querySelectorAll('.star-btn');
-        const ratingFeedback = document.querySelector('.rating-feedback span');
-
-        const ratingTexts = {
-            1: 'Poor',
-            2: 'Fair',
-            3: 'Good',
-            4: 'Very Good',
-            5: 'Excellent'
-        };
-
-        // Initialize stars on page load
-        const initialRating = ratingInput.value || 0;
-        updateStars(initialRating, false);
-
-        function updateStars(rating, isHover) {
-            stars.forEach((star, index) => {
-                const icon = star.querySelector('i');
-                if (index < rating) {
-                    icon.className = 'fas fa-star text-warning';
-                } else {
-                    icon.className = 'far fa-star text-warning';
-                }
-            });
-
-            if (ratingFeedback && rating > 0) {
-                ratingFeedback.textContent = ratingTexts[rating] || 'Click to rate';
-            }
+    function generateTimeSlots(date) {
+        const selectedDate = new Date(date);
+        const dayOfWeek = selectedDate.getDay();
+        
+        // Sunday (0) has different hours: 10:00 AM - 1:00 PM
+        // Monday-Saturday (1-6): 5:00 PM - 8:00 PM
+        
+        let slots = [];
+        if (dayOfWeek === 0) {
+            // Sunday slots
+            slots = ['10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'];
+        } else {
+            // Weekday slots
+            slots = ['5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM'];
         }
 
-        // Hover effect
-        stars.forEach(star => {
-            star.addEventListener('mouseover', function() {
-                const rating = this.dataset.rating;
-                updateStars(rating, true);
-            });
-        });
+        // Mark some slots as unavailable (example logic)
+        return slots.map(slot => ({
+            time: slot,
+            available: Math.random() > 0.3 // Random availability for demo
+        }));
+    }
 
-        // Mouse leave - reset to selected rating
-        starContainer.addEventListener('mouseleave', function() {
-            const rating = ratingInput.value || 0;
-            updateStars(rating, false);
-        });
+    function renderTimeSlots(slots) {
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        if (!timeSlotsContainer) return;
 
-        // Click to set rating
-        stars.forEach(star => {
-            star.addEventListener('click', function() {
-                const rating = this.dataset.rating;
-                ratingInput.value = rating;
-                updateStars(rating, false);
+        const slotsHtml = slots.map(slot => `
+            <button type="button" class="time-slot ${!slot.available ? 'disabled' : ''}" 
+                    data-time="${slot.time}" ${!slot.available ? 'disabled' : ''}>
+                ${slot.time}
+            </button>
+        `).join('');
+
+        timeSlotsContainer.innerHTML = `
+            <div class="time-slots">
+                ${slotsHtml}
+            </div>
+        `;
+
+        // Add click handlers to time slots
+        document.querySelectorAll('.time-slot:not(.disabled)').forEach(slot => {
+            slot.addEventListener('click', function() {
+                // Remove selected class from all slots
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                
+                // Add selected class to clicked slot
+                this.classList.add('selected');
+                
+                // Set the value in the hidden input
+                const timeInput = document.getElementById('appointment_time');
+                if (timeInput) {
+                    timeInput.value = this.dataset.time;
+                }
             });
         });
     }
 
-    // Handle form submissions with validation
+    // Star rating functionality
+    const starButtons = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('rating');
+    
+    if (starButtons.length > 0 && ratingInput) {
+        starButtons.forEach((star, index) => {
+            star.addEventListener('click', function() {
+                const rating = index + 1;
+                ratingInput.value = rating;
+                
+                // Update star display
+                starButtons.forEach((s, i) => {
+                    const starIcon = s.querySelector('i');
+                    if (i < rating) {
+                        starIcon.className = 'fas fa-star text-warning';
+                    } else {
+                        starIcon.className = 'far fa-star text-muted';
+                    }
+                });
+                
+                // Remove any existing validation error
+                const errorElement = document.getElementById('rating-error');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            });
+            
+            // Hover effect
+            star.addEventListener('mouseenter', function() {
+                const hoverRating = index + 1;
+                starButtons.forEach((s, i) => {
+                    const starIcon = s.querySelector('i');
+                    if (i < hoverRating) {
+                        starIcon.className = 'fas fa-star text-warning';
+                    } else {
+                        starIcon.className = 'far fa-star text-muted';
+                    }
+                });
+            });
+        });
+        
+        // Reset to actual rating on mouse leave
+        const starContainer = document.querySelector('.star-rating');
+        if (starContainer) {
+            starContainer.addEventListener('mouseleave', function() {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                starButtons.forEach((s, i) => {
+                    const starIcon = s.querySelector('i');
+                    if (i < currentRating) {
+                        starIcon.className = 'fas fa-star text-warning';
+                    } else {
+                        starIcon.className = 'far fa-star text-muted';
+                    }
+                });
+            });
+        }
+    }
+
+    // Form validation
     const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            let formValid = form.checkValidity();
-
-            // Check if this is a review form with star rating
-            const ratingInput = form.querySelector('.rating-input');
-            const ratingError = document.getElementById('rating-error');
-
-            if (ratingInput && (!ratingInput.value || ratingInput.value === "0")) {
-                // Special validation for star rating
-                formValid = false;
-                if (ratingError) {
-                    ratingError.style.display = 'block !important';
-                    ratingError.style.removeProperty('display');
-                }
-
-                // Highlight the star rating area
-                const starRating = form.querySelector('.star-rating');
-                if (starRating) {
-                    starRating.classList.add('was-validated');
-
-                    // Add a pulse animation to draw attention
-                    starRating.style.animation = 'none';
-                    void starRating.offsetWidth; // Trigger reflow
-                    starRating.style.animation = 'attention-pulse 0.8s ease';
-                }
-            }
-
-            if (!formValid) {
+    forms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
-            } else {
-                // Show loader on valid form submission
-                const loader = document.querySelector('.loader');
-                if (loader) {
-                    loader.style.display = 'block';
+                
+                // Check star rating specifically
+                const ratingInput = form.querySelector('#rating');
+                if (ratingInput && !ratingInput.value) {
+                    const errorElement = document.getElementById('rating-error');
+                    if (errorElement) {
+                        errorElement.style.display = 'block';
+                        errorElement.textContent = 'Please select a rating';
+                    }
                 }
             }
-
             form.classList.add('was-validated');
-        }, false);
+        });
     });
-});
 
-// Function to fetch available time slots
-function fetchAvailableTimeSlots(date) {
-    const timeSlotsContainer = document.getElementById('time-slots-container');
-    const loader = document.querySelector('.time-slots-loader');
+    // Dark mode toggle
+    const darkModeToggle = document.querySelector('.dark-mode-toggle');
+    if (darkModeToggle) {
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (timeSlotsContainer && loader) {
-        // Show loader
-        loader.style.display = 'block';
-        timeSlotsContainer.innerHTML = '';
-
-        // Fetch available slots from API
-        fetch(`/api/available-slots?date=${date}`)
-            .then(response => response.json())
-            .then(data => {
-                // Hide loader
-                loader.style.display = 'none';
-
-                // Clear any existing time slots
-                timeSlotsContainer.innerHTML = '';
-
-                // Check if there are available slots
-                if (data.length === 0) {
-                    timeSlotsContainer.innerHTML = '<p class="text-danger">No available slots for this date. Please select another date.</p>';
-                    return;
-                }
-
-                // Create a new div for the time slots
-                const timeSlots = document.createElement('div');
-                timeSlots.className = 'time-slots';
-
-                // Add each available time slot
-                data.forEach(slot => {
-                    const timeSlot = document.createElement('div');
-                    timeSlot.className = 'time-slot';
-                    timeSlot.dataset.time = slot;
-                    timeSlot.textContent = formatTimeSlot(slot);
-                    timeSlots.appendChild(timeSlot);
-                });
-
-                timeSlotsContainer.appendChild(timeSlots);
-            })
-            .catch(error => {
-                // Hide loader and show error message
-                loader.style.display = 'none';
-                timeSlotsContainer.innerHTML = `<p class="text-danger">Error loading time slots: ${error.message}</p>`;
-            });
+        darkModeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
     }
-}
 
-// Helper function to format time slot from 24-hour to 12-hour format
-function formatTimeSlot(timeString) {
-    const [hours, minutes] = timeString.split(':');
-    const hour = parseInt(hours, 10);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12;
-    return `${hour12}:${minutes} ${ampm}`;
-}
+    // Navbar hide/show on scroll
+    let lastScrollTop = 0;
+    const navbar = document.querySelector('.navbar');
+    
+    if (navbar) {
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down & past 100px
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scrolling up
+                navbar.classList.remove('navbar-hidden');
+            }
+            
+            lastScrollTop = scrollTop;
+        }, { passive: true });
+    }
+
+    // Lazy loading for images
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+
+    // Emergency ticker pause on mobile touch
+    const emergencyTicker = document.querySelector('.emergency-ticker-content');
+    if (emergencyTicker) {
+        let touchStartX = 0;
+        
+        emergencyTicker.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            this.style.animationPlayState = 'paused';
+        }, { passive: true });
+        
+        emergencyTicker.addEventListener('touchend', function() {
+            this.style.animationPlayState = 'running';
+        }, { passive: true });
+    }
+});
