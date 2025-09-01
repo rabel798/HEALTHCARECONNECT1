@@ -466,11 +466,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .qr-corner-image {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   display: block;
   object-fit: contain;
   margin: 0 auto;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
 }
 
 .qr-corner-image:hover {
@@ -503,8 +506,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .qr-corner-image {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
   }
 
   .qr-corner-text {
@@ -514,8 +517,8 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 576px) {
   .qr-corner-image {
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
   }
 
   .qr-corner-text {
