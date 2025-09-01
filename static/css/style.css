@@ -1152,6 +1152,12 @@ footer a:hover {
   gap: 2rem;
 }
 
+.emergency-text .phone-number {
+  color: #ffd700;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 
 
 @keyframes scroll-right {
