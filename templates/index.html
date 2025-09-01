@@ -1,22 +1,32 @@
-{% extends 'layout.html' %}
-
-{% block title %}Dr. Richa's Eye Care Centre - A Hub for your family and kid's eyes{% endblock %}
-
-{% block content %}
+{% extends 'layout.html' %} {% block title %}Dr. Richa's Eye Care Centre - A Hub
+for your family and kid's eyes{% endblock %} {% block content %}
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 fade-in">
                 <h1>Your Vision, Our Priority</h1>
-                <p>Welcome to Dr. Richa's Eye Clinic, where we provide comprehensive eye care using the latest technology and personalized treatment plans for all ages.</p>
-                <a href="{{ url_for('appointment') }}" class="btn btn-light btn-lg">Book an Appointment</a>
-                
+                <p>
+                    Welcome to Dr. Richa's Eye Clinic, where we provide
+                    comprehensive eye care using the latest technology and
+                    personalized treatment plans for all ages.
+                </p>
+                <a
+                    href="{{ url_for('appointment') }}"
+                    class="btn btn-light btn-lg"
+                    >Book an Appointment</a
+                >
+
                 <!-- Emergency Contact Scrolling Text -->
                 <div class="emergency-ticker">
                     <div class="emergency-ticker-content">
                         <span class="emergency-text">
-                            🚨 FOR URGENT EYE CONCERNS OR MEDICAL EMERGENCIES, PLEASE CONTACT DR. RICHA AT <span class="phone-highlight">8792595004</span> 🚨 FOR URGENT EYE CONCERNS OR MEDICAL EMERGENCIES, PLEASE CONTACT DR. RICHA AT <span class="phone-highlight">8792595004</span> 🚨
+                            🚨 FOR URGENT EYE CONCERNS OR MEDICAL EMERGENCIES,
+                            PLEASE CONTACT DR. RICHA AT
+                            <span class="phone-highlight">8792595004</span> 🚨
+                            FOR URGENT EYE CONCERNS OR MEDICAL EMERGENCIES,
+                            PLEASE CONTACT DR. RICHA AT
+                            <span class="phone-highlight">8792595004</span>🚨
                         </span>
                     </div>
                 </div>
@@ -31,8 +41,15 @@
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0 fade-in">
                 <h2 class="mb-4 slide-up">About Our Clinic</h2>
-                <p class="mb-3 fade-in">Dr. Richa's Eye Clinic is a modern facility providing exceptional eye care services. We use advanced technology to address all your vision needs.</p>
-                <p class="mb-4 fade-in">With a skilled team led by Dr. Richa, we provide personalized care and treatment plans for your eye health.</p>
+                <p class="mb-3 fade-in">
+                    Dr. Richa's Eye Clinic is a modern facility providing
+                    exceptional eye care services. We use advanced technology to
+                    address all your vision needs.
+                </p>
+                <p class="mb-4 fade-in">
+                    With a skilled team led by Dr. Richa, we provide
+                    personalized care and treatment plans for your eye health.
+                </p>
 
                 <div class="row mt-4">
                     <div class="col-4 text-center fade-in">
@@ -40,7 +57,9 @@
                         <h6>Expert Care</h6>
                     </div>
                     <div class="col-4 text-center fade-in">
-                        <i class="fas fa-stethoscope fa-2x text-primary mb-2"></i>
+                        <i
+                            class="fas fa-stethoscope fa-2x text-primary mb-2"
+                        ></i>
                         <h6>Quality Service</h6>
                     </div>
                     <div class="col-4 text-center fade-in">
@@ -51,7 +70,11 @@
             </div>
             <div class="col-lg-6 slide-up-delayed">
                 <div class="rounded overflow-hidden shadow">
-                    <img src="{{ url_for('static', filename='img/reception.jpg') }}" alt="Dr. Richa's Eye Clinic Reception Area" class="img-fluid w-100">
+                    <img
+                        src="{{ url_for('static', filename='img/reception.jpg') }}"
+                        alt="Dr. Richa's Eye Clinic Reception Area"
+                        class="img-fluid w-100"
+                    />
                 </div>
             </div>
         </div>
@@ -63,42 +86,84 @@
     <div class="container">
         <div class="text-center mb-5 slide-up">
             <h2 class="mb-3">Our Services</h2>
-            <p class="lead">Comprehensive eye care services for all your vision needs</p>
+            <p class="lead">
+                Comprehensive eye care services for all your vision needs
+            </p>
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 mb-5 slide-up-stagger">
                 <div class="service-card">
-                    <img src="{{ url_for('static', filename='img/machine.jpg') }}" alt="Advanced Eye Examination Equipment at Dr. Richa's Clinic" class="card-img-top">
+                    <img
+                        src="{{ url_for('static', filename='img/machine.jpg') }}"
+                        alt="Advanced Eye Examination Equipment at Dr. Richa's Clinic"
+                        class="card-img-top"
+                    />
                     <div class="card-body">
-                        <h4 class="card-title">Comprehensive Eye Examination</h4>
-                        <p class="card-text">Complete evaluation of your vision and eye health using state-of-the-art diagnostic equipment and thorough clinical assessment.</p>
-                        <a href="{{ url_for('services') }}" class="btn btn-outline-primary">Learn More</a>
+                        <h4 class="card-title">
+                            Comprehensive Eye Examination
+                        </h4>
+                        <p class="card-text">
+                            Complete evaluation of your vision and eye health
+                            using state-of-the-art diagnostic equipment and
+                            thorough clinical assessment.
+                        </p>
+                        <a
+                            href="{{ url_for('services') }}"
+                            class="btn btn-outline-primary"
+                            >Learn More</a
+                        >
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 mb-5 slide-up-stagger">
                 <div class="service-card">
-                    <img src="{{ url_for('static', filename='img/glass_section.jpg') }}" alt="Eyewear and Optical Services at Dr. Richa's Clinic" class="card-img-top">
+                    <img
+                        src="{{ url_for('static', filename='img/glass_section.jpg') }}"
+                        alt="Eyewear and Optical Services at Dr. Richa's Clinic"
+                        class="card-img-top"
+                    />
                     <div class="card-body">
                         <h4 class="card-title">Prescription Eyewear</h4>
-                        <p class="card-text">Premium collection of frames and lenses carefully selected to match your style preferences and precise vision correction needs.</p>
-                        <a href="{{ url_for('services') }}" class="btn btn-outline-primary">Learn More</a>
+                        <p class="card-text">
+                            Premium collection of frames and lenses carefully
+                            selected to match your style preferences and precise
+                            vision correction needs.
+                        </p>
+                        <a
+                            href="{{ url_for('services') }}"
+                            class="btn btn-outline-primary"
+                            >Learn More</a
+                        >
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 mb-5 slide-up-stagger">
                 <div class="service-card">
-                    <img src="{{ url_for('static', filename='img/setup.jpg') }}" alt="Modern Clinical Setup at Dr. Richa's Eye Clinic" class="card-img-top">
+                    <img
+                        src="{{ url_for('static', filename='img/setup.jpg') }}"
+                        alt="Modern Clinical Setup at Dr. Richa's Eye Clinic"
+                        class="card-img-top"
+                    />
                     <div class="card-body">
                         <h4 class="card-title">Clinical Consultations</h4>
-                        <p class="card-text">Expert eye care consultations in our modern, fully-equipped facility with personalized treatment plans and comprehensive care.</p>
-                        <a href="{{ url_for('services') }}" class="btn btn-outline-primary">Learn More</a>
+                        <p class="card-text">
+                            Expert eye care consultations in our modern,
+                            fully-equipped facility with personalized treatment
+                            plans and comprehensive care.
+                        </p>
+                        <a
+                            href="{{ url_for('services') }}"
+                            class="btn btn-outline-primary"
+                            >Learn More</a
+                        >
                     </div>
                 </div>
             </div>
         </div>
         <div class="text-center mt-3 scale-in">
-            <a href="{{ url_for('services') }}" class="btn btn-primary">View All Services</a>
+            <a href="{{ url_for('services') }}" class="btn btn-primary"
+                >View All Services</a
+            >
         </div>
     </div>
 </section>
@@ -109,24 +174,76 @@
         <div class="row align-items-center">
             <div class="col-lg-5 mb-4 mb-lg-0 fade-in">
                 <div class="doctor-image">
-                    <img src="{{ url_for('static', filename='img/dr_richa.jpg') }}" alt="Dr. Richa Sharma - Ophthalmologist" class="img-fluid">
+                    <img
+                        src="{{ url_for('static', filename='img/dr_richa.jpg') }}"
+                        alt="Dr. Richa Sharma - Ophthalmologist"
+                        class="img-fluid"
+                    />
                 </div>
             </div>
             <div class="col-lg-7 slide-up">
                 <h2 class="mb-4">Meet Dr. Richa Sharma</h2>
                 <p class="lead mb-4">Vision that shines, care that matters</p>
-                <p>Dr. Richa Sharma is a practicing Ophthalmologist with over 15 years of experience. After finishing her Master of Surgery from prestigious Aligarh Muslim University, Dr. Richa finished her Fellowship in pediatric ophthalmology and squint from Prestigious Aravind Eye Hospital, Coimbatore.</p>
-                <p>Later, she finished her Fellowship in advanced pediatric ophthalmology from Boston Children's Hospital, Harvard Medical School. Dr. Richa has many international and national research papers in her name.</p>
-                <p>Her gentle approach and commitment to excellence ensure that each patient receives personalized attention and the highest standard of care. Dr. Richa's clinic serves as a hub for your family and kid's eyes, offering comprehensive services for patients of all ages.</p>
+                <p>
+                    Dr. Richa Sharma is a practicing Ophthalmologist with over
+                    15 years of experience. After finishing her Master of
+                    Surgery from prestigious Aligarh Muslim University, Dr.
+                    Richa finished her Fellowship in pediatric ophthalmology and
+                    squint from Prestigious Aravind Eye Hospital, Coimbatore.
+                </p>
+                <p>
+                    Later, she finished her Fellowship in advanced pediatric
+                    ophthalmology from Boston Children's Hospital, Harvard
+                    Medical School. Dr. Richa has many international and
+                    national research papers in her name.
+                </p>
+                <p>
+                    Her gentle approach and commitment to excellence ensure that
+                    each patient receives personalized attention and the highest
+                    standard of care. Dr. Richa's clinic serves as a hub for
+                    your family and kid's eyes, offering comprehensive services
+                    for patients of all ages.
+                </p>
                 <div class="mt-4 slide-up-delayed">
                     <h5>Professional Excellence:</h5>
                     <ul class="list-unstyled">
-                        <li class="slide-up-stagger"><i class="fas fa-calendar-alt text-primary me-2"></i> Over 15 years of experience in Ophthalmology</li>
-                        <li class="slide-up-stagger"><i class="fas fa-graduation-cap text-success me-2"></i> Master of Surgery from Aligarh Muslim University</li>
-                        <li class="fw-bold highlight-credential slide-up-stagger"><i class="fas fa-award text-warning me-2"></i> Fellowship in Pediatric Ophthalmology & Squint - Aravind Eye Hospital, Coimbatore</li>
-                        <li class="fw-bold highlight-credential slide-up-stagger"><i class="fas fa-star text-warning me-2"></i> Fellowship in Advanced Pediatric Ophthalmology - Boston Children's Hospital, Harvard Medical School</li>
-                        <li class="slide-up-stagger"><i class="fas fa-file-alt text-info me-2"></i> Multiple international and national research publications</li>
-                        <li class="fw-bold highlight-credential slide-up-stagger"><i class="fas fa-user-md text-primary me-2"></i> Specializes in Adult and Pediatric Eye Care</li>
+                        <li class="slide-up-stagger">
+                            <i
+                                class="fas fa-calendar-alt text-primary me-2"
+                            ></i>
+                            Over 15 years of experience in Ophthalmology
+                        </li>
+                        <li class="slide-up-stagger">
+                            <i
+                                class="fas fa-graduation-cap text-success me-2"
+                            ></i>
+                            Master of Surgery from Aligarh Muslim University
+                        </li>
+                        <li
+                            class="fw-bold highlight-credential slide-up-stagger"
+                        >
+                            <i class="fas fa-award text-warning me-2"></i>
+                            Fellowship in Pediatric Ophthalmology & Squint -
+                            Aravind Eye Hospital, Coimbatore
+                        </li>
+                        <li
+                            class="fw-bold highlight-credential slide-up-stagger"
+                        >
+                            <i class="fas fa-star text-warning me-2"></i>
+                            Fellowship in Advanced Pediatric Ophthalmology -
+                            Boston Children's Hospital, Harvard Medical School
+                        </li>
+                        <li class="slide-up-stagger">
+                            <i class="fas fa-file-alt text-info me-2"></i>
+                            Multiple international and national research
+                            publications
+                        </li>
+                        <li
+                            class="fw-bold highlight-credential slide-up-stagger"
+                        >
+                            <i class="fas fa-user-md text-primary me-2"></i>
+                            Specializes in Adult and Pediatric Eye Care
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -142,31 +259,30 @@
             <p class="lead">Read testimonials from satisfied patients</p>
         </div>
         <div class="row">
-            {% if reviews %}
-                {% for review in reviews %}
-                <div class="col-md-4 mb-4 fade-in">
-                    <div class="review-card">
-                        <div class="stars">
-                            {% for i in range(review.rating) %}
-                                <i class="fas fa-star text-warning"></i>
-                            {% endfor %}
-                            {% for i in range(5 - review.rating) %}
-                                <i class="far fa-star text-warning"></i>
-                            {% endfor %}
-                        </div>
-                        <p class="review-text mb-3">{{ review.review_text }}</p>
-                        <p class="patient-name">- {{ review.patient_name }}</p>
+            {% if reviews %} {% for review in reviews %}
+            <div class="col-md-4 mb-4 fade-in">
+                <div class="review-card">
+                    <div class="stars">
+                        {% for i in range(review.rating) %}
+                        <i class="fas fa-star text-warning"></i>
+                        {% endfor %} {% for i in range(5 - review.rating) %}
+                        <i class="far fa-star text-warning"></i>
+                        {% endfor %}
                     </div>
+                    <p class="review-text mb-3">{{ review.review_text }}</p>
+                    <p class="patient-name">- {{ review.patient_name }}</p>
                 </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12 text-center">
-                    <p>No reviews yet. Be the first to share your experience!</p>
-                </div>
+            </div>
+            {% endfor %} {% else %}
+            <div class="col-12 text-center">
+                <p>No reviews yet. Be the first to share your experience!</p>
+            </div>
             {% endif %}
         </div>
         <div class="text-center mt-3 fade-in">
-            <a href="{{ url_for('reviews') }}" class="btn btn-outline-primary">Read More Reviews</a>
+            <a href="{{ url_for('reviews') }}" class="btn btn-outline-primary"
+                >Read More Reviews</a
+            >
         </div>
     </div>
 </section>
@@ -177,10 +293,17 @@
         <div class="row align-items-center">
             <div class="col-lg-8 fade-in">
                 <h2 class="mb-3">Ready to Schedule Your Eye Exam?</h2>
-                <p class="lead mb-0">Book an appointment today and take the first step towards better vision.</p>
+                <p class="lead mb-0">
+                    Book an appointment today and take the first step towards
+                    better vision.
+                </p>
             </div>
             <div class="col-lg-4 text-lg-end mt-4 mt-lg-0 fade-in">
-                <a href="{{ url_for('appointment') }}" class="btn btn-light btn-lg">Book Appointment</a>
+                <a
+                    href="{{ url_for('appointment') }}"
+                    class="btn btn-light btn-lg"
+                    >Book Appointment</a
+                >
             </div>
         </div>
     </div>
@@ -196,26 +319,46 @@
         <div class="row gallery">
             <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="{{ url_for('static', filename='img/reception.jpg') }}" alt="Dr. Richa's Eye Clinic Reception Area">
-                    <div class="gallery-caption">Welcome to Dr. Richa's Eye Clinic</div>
+                    <img
+                        src="{{ url_for('static', filename='img/reception.jpg') }}"
+                        alt="Dr. Richa's Eye Clinic Reception Area"
+                    />
+                    <div class="gallery-caption">
+                        Welcome to Dr. Richa's Eye Clinic
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="{{ url_for('static', filename='img/machine.jpg') }}" alt="Advanced Eye Examination Equipment">
-                    <div class="gallery-caption">State-of-the-Art Diagnostic Equipment</div>
+                    <img
+                        src="{{ url_for('static', filename='img/machine.jpg') }}"
+                        alt="Advanced Eye Examination Equipment"
+                    />
+                    <div class="gallery-caption">
+                        State-of-the-Art Diagnostic Equipment
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="{{ url_for('static', filename='img/glass_section.jpg') }}" alt="Eyewear and Optical Services">
-                    <div class="gallery-caption">Premium Eyewear Collection</div>
+                    <img
+                        src="{{ url_for('static', filename='img/glass_section.jpg') }}"
+                        alt="Eyewear and Optical Services"
+                    />
+                    <div class="gallery-caption">
+                        Premium Eyewear Collection
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 slide-up-stagger">
                 <div class="gallery-item">
-                    <img src="{{ url_for('static', filename='img/setup.jpg') }}" alt="Clinical Setup and Consultation Area">
-                    <div class="gallery-caption">Professional Clinical Environment</div>
+                    <img
+                        src="{{ url_for('static', filename='img/setup.jpg') }}"
+                        alt="Clinical Setup and Consultation Area"
+                    />
+                    <div class="gallery-caption">
+                        Professional Clinical Environment
+                    </div>
                 </div>
             </div>
         </div>
