@@ -93,9 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Cache stagger elements once
         const staggerElements = Array.from(document.querySelectorAll('.slide-up-stagger'));
 
-        // Get stagger elements array
-        const staggerElements = Array.from(document.querySelectorAll('.slide-up-stagger'));
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
