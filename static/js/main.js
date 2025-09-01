@@ -118,12 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const animationSelectors = '.fade-in, .slide-up, .slide-up-delayed, .slide-up-stagger, .scale-in';
         const elements = document.querySelectorAll(animationSelectors);
         elements.forEach(element => observer.observe(element));
-        
-        // Ensure doctor image container is observed
-        const doctorImageContainer = document.querySelector('.doctor-image').closest('.fade-in');
-        if (doctorImageContainer && !elements.includes(doctorImageContainer)) {
-            observer.observe(doctorImageContainer);
-        }
     }
 
     // Initialize scroll animations
