@@ -79,27 +79,51 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.5rem;
 }
 
-/* Clinic Logo Styles */
-#clinic-logo img {
+/* Interactive Logo Styles */
+#interactive-logo-container {
+  width: 350px;
+  height: 50px !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   transition: var(--transition);
-  border-radius: 4px;
+  margin-right: 20px;
+  margin-left: -60px;
 }
 
-#clinic-logo:hover img {
+#interactive-logo-container:hover {
   transform: translateY(-2px);
-  opacity: 0.9;
+}
+
+#interactive-logo-container svg {
+  width: 100%;
+  height: auto;
+  max-height: 50px;
 }
 
 /* Mobile responsive logo */
 @media (max-width: 991px) {
-  #clinic-logo img {
+  #interactive-logo-container {
+    width: 280px;
     height: 42px !important;
+    margin-right: 10px;
+  }
+
+  #interactive-logo-container svg {
+    max-height: 42px;
   }
 }
 
 @media (max-width: 576px) {
-  #clinic-logo img {
+  #interactive-logo-container {
+    width: 220px;
     height: 35px !important;
+    margin-right: 8px;
+  }
+
+  #interactive-logo-container svg {
+    max-height: 35px;
   }
 }
 
