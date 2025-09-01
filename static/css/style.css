@@ -471,13 +471,6 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   object-fit: contain;
   margin: 0 auto;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
-}
-
-.qr-corner-image:hover {
-  opacity: 0.8;
 }
 
 .qr-corner-text {
