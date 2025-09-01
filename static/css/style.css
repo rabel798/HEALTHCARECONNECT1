@@ -428,7 +428,8 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--white);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  padding: 2rem 2rem 2rem 2rem;
+  padding-right: 160px;
 }
 
 .clinic-address i {
@@ -457,17 +458,19 @@ h1, h2, h3, h4, h5, h6 {
 /* QR Code Corner Styling */
 .qr-corner-section {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 20px;
+  right: 20px;
   text-align: center;
   z-index: 10;
+  width: 120px;
 }
 
 .qr-corner-image {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   display: block;
   object-fit: contain;
+  margin: 0 auto;
 }
 
 .qr-corner-image:hover {
@@ -487,14 +490,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive QR corner */
 @media (max-width: 768px) {
+  .clinic-address {
+    padding-right: 2rem;
+  }
+  
   .qr-corner-section {
-    top: 10px;
-    right: 10px;
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 2rem;
+    width: 100%;
   }
 
   .qr-corner-image {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
   }
 
   .qr-corner-text {
@@ -504,8 +514,8 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 576px) {
   .qr-corner-image {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
   }
 
   .qr-corner-text {
