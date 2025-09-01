@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!logoContainer) return;
     
     // Load the SVG file
-    fetch('/static/img/logo-interactive.svg')
+    fetch('/static/assets/logo-interactive.svg')
         .then(response => response.text())
         .then(svgData => {
             // Insert the SVG content
