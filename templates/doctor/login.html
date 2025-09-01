@@ -1,3 +1,4 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Doctor Login - Dr. Richa's Eye Clinic{% endblock %}
@@ -9,7 +10,7 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card shadow-lg border-0 rounded-lg">
                     <div class="card-header bg-primary text-white text-center py-4">
-                        <img src="{{ url_for('static', filename='assets/logo.svg') }}" alt="Dr. Richa's Clinic" style="height: 70px; width: auto; margin-bottom: 10px; background: white; border-radius: 8px; padding: 5px;">
+                        <div id="interactive-logo-container" style="height: 70px; width: 100%; margin-bottom: 10px;"></div>
                         <h3 class="mb-0">Doctor Login Portal</h3>
                     </div>
                     <div class="card-body p-5">
@@ -17,10 +18,10 @@
                             <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
                             <p class="text-muted">Access your patient records and clinic management</p>
                         </div>
-
+                        
                         <form method="POST" action="{{ url_for('doctor_login') }}">
                             {{ form.hidden_tag() }}
-
+                            
                             <div class="form-floating mb-3">
                                 {{ form.username(class="form-control", placeholder="Username", id="floating-username") }}
                                 {{ form.username.label(for="floating-username") }}
@@ -32,7 +33,7 @@
                                     </div>
                                 {% endif %}
                             </div>
-
+                            
                             <div class="form-floating mb-4">
                                 {{ form.password(class="form-control", placeholder="Password", id="floating-password") }}
                                 {{ form.password.label(for="floating-password") }}
@@ -44,12 +45,12 @@
                                     </div>
                                 {% endif %}
                             </div>
-
+                            
                             <div class="d-grid">
                                 {{ form.submit(class="btn btn-primary btn-lg") }}
                             </div>
                         </form>
-
+                        
                         <div class="text-center mt-4">
                             <a href="{{ url_for('auth_selection') }}" class="text-decoration-none">
                                 <i class="fas fa-arrow-left me-1"></i> Back to selection
