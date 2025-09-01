@@ -1152,12 +1152,7 @@ footer a:hover {
   gap: 2rem;
 }
 
-.emergency-text::before {
-  content: "🚨";
-  font-size: 1.1rem;
-  margin-right: 0.5rem;
-  animation: pulse 2s infinite;
-}
+
 
 @keyframes scroll-right {
   0% {
