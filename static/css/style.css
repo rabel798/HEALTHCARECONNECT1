@@ -429,7 +429,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 2rem 2rem 2rem 2rem;
-  padding-right: 180px;
+  padding-right: 220px;
 }
 
 .clinic-address i {
@@ -462,12 +462,12 @@ h1, h2, h3, h4, h5, h6 {
   right: 20px;
   text-align: center;
   z-index: 10;
-  width: 140px;
+  width: 180px;
 }
 
 .qr-corner-image {
-  width: 140px;
-  height: 140px;
+  width: 180px;
+  height: 180px;
   display: block;
   object-fit: contain;
   margin: 0 auto;
@@ -506,8 +506,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .qr-corner-image {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
   }
 
   .qr-corner-text {
@@ -517,8 +517,8 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 576px) {
   .qr-corner-image {
-    width: 110px;
-    height: 110px;
+    width: 130px;
+    height: 130px;
   }
 
   .qr-corner-text {
