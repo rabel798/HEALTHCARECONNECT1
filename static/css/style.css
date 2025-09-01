@@ -1133,7 +1133,7 @@ footer a:hover {
 .emergency-ticker-content {
   display: flex;
   width: 200%;
-  animation: scroll-right 30s linear infinite;
+  animation: scroll-right 20s linear infinite;
 }
 
 .emergency-ticker:hover .emergency-ticker-content {
@@ -1149,40 +1149,41 @@ footer a:hover {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 2rem;
   width: 50%;
-  justify-content: center;
-  padding: 0 2rem;
+  justify-content: space-evenly;
+  padding: 0 1rem;
 }
 
 .emergency-text .phone-number {
   color: #ffff99;
   font-weight: 700;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  padding: 0 1rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
 }
 
 @keyframes scroll-right {
   0% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
   100% {
-    transform: translateX(100%);
+    transform: translateX(0%);
   }
 }
 
 /* Mobile specific emergency ticker adjustments */
 @media (max-width: 768px) {
   .emergency-ticker-content {
-    animation: scroll-right-mobile 35s linear infinite;
+    animation: scroll-right 25s linear infinite;
   }
   
   .emergency-text {
-    gap: 2rem;
-    padding: 0 1.5rem;
-    justify-content: space-around;
+    gap: 1.5rem;
+    padding: 0 1rem;
+    justify-content: space-evenly;
   }
   
   .emergency-text .phone-number {
@@ -1194,12 +1195,12 @@ footer a:hover {
 
 @media (max-width: 576px) {
   .emergency-ticker-content {
-    animation: scroll-right-mobile 40s linear infinite;
+    animation: scroll-right 30s linear infinite;
   }
   
   .emergency-text {
-    gap: 1.5rem;
-    padding: 0 1rem;
+    gap: 1rem;
+    padding: 0 0.5rem;
     font-size: 0.9rem;
   }
   
@@ -1207,18 +1208,6 @@ footer a:hover {
     padding: 0.2rem 0.6rem;
     font-size: 0.95rem;
     white-space: nowrap;
-  }
-}
-
-@keyframes scroll-right-mobile {
-  0% {
-    transform: translateX(-100%);
-  }
-  50% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(100%);
   }
 }
 
