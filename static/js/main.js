@@ -120,9 +120,12 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.forEach(element => observer.observe(element));
 
         // Ensure doctor image container is observed
-        const doctorImageContainer = document.querySelector('.doctor-image').closest('.fade-in');
-        if (doctorImageContainer && !Array.from(elements).includes(doctorImageContainer)) {
-            observer.observe(doctorImageContainer);
+        const doctorImageContainer = document.querySelector('.doctor-image');
+        if (doctorImageContainer) {
+            const fadeInContainer = doctorImageContainer.closest('.fade-in');
+            if (fadeInContainer) {
+                observer.observe(fadeInContainer);
+            }
         }
     }
 
