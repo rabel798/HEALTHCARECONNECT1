@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         animationElements.forEach(el => observer.observe(el));
 
         // Stagger animation for grouped elements
-        const staggerElements = document.querySelectorAll('.slide-up-stagger');
-        staggerElements.forEach((element, index) => {
+        document.querySelectorAll('.slide-up-stagger').forEach((element, index) => {
             element.style.transitionDelay = `${index * 0.1}s`;
             observer.observe(element);
         });
