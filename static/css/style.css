@@ -856,27 +856,50 @@ footer a:hover {
     display: flex;
     gap: 4px;
     justify-content: center;
-    background: none !important;
+    background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.star-rating::before,
+.star-rating::after {
+    display: none !important;
 }
 
 .star-btn {
     padding: 0 2px;
-    background: none !important;
+    background: transparent !important;
     border: none !important;
     cursor: pointer;
     transition: transform 0.1s ease;
     position: relative;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.star-btn::before,
+.star-btn::after {
+    display: none !important;
 }
 
 .star-btn:hover {
     transform: scale(1.2);
+    background: transparent !important;
+}
+
+.star-btn:focus {
+    background: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .star-btn i {
     color: #dee2e6;
     transition: color 0.2s ease;
+    background: transparent !important;
 }
 
 .star-btn:hover i {
@@ -906,6 +929,12 @@ footer a:hover {
     margin-top: 0.5rem;
     font-size: 0.875rem;
     transition: opacity 0.3s ease;
+}
+
+/* Remove any default form control styling from star rating area */
+.star-rating input,
+.star-rating .form-control {
+    display: none !important;
 }
 
 
