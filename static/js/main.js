@@ -206,12 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 
-                // Remove any existing validation error immediately when star is clicked
-                const errorElement = document.getElementById('rating-error');
-                if (errorElement) {
-                    errorElement.style.display = 'none';
-                }
-                
                 // Mark the input as valid and remove any form validation styling
                 ratingInput.setCustomValidity('');
                 const form = ratingInput.closest('form');
@@ -265,30 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {
-            // Check star rating specifically before other validations
-            const ratingInput = form.querySelector('input[name="rating"]') || form.querySelector('#rating');
-            const errorElement = document.getElementById('rating-error');
-            
-            // Check if rating is selected
-            if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
-                event.preventDefault();
-                event.stopPropagation();
-                
-                if (errorElement) {
-                    errorElement.style.display = 'block';
-                    errorElement.textContent = 'Please select a rating before submitting';
-                }
-                
-                ratingInput.setCustomValidity('Please select a rating before submitting');
-                form.classList.add('was-validated');
-                return false;
-            } else if (ratingInput) {
-                ratingInput.setCustomValidity('');
-                if (errorElement) {
-                    errorElement.style.display = 'none';
-                }
-            }
-            
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
