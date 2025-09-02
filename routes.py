@@ -295,310 +295,12 @@ def available_slots():
         return jsonify({"error": str(e)}), 400
 
 
-# Patient Authentication Routes
+# Patient Authentication Routes - All Removed
 @app.route('/patient/register', methods=['GET', 'POST'])
 def patient_register():
     """Patient registration route - disabled"""
     flash('Patient registration is no longer available. Please book appointments directly.', 'info')
     return redirect(url_for('appointment'))
-
-    form = PatientRegistrationForm()
-    if form.validate_on_submit():
-        try:
-            # Check if email or mobile already exists (only check email if provided)
-            query_filters = [Patient.mobile_number == form.mobile_number.data]
-            if form.email.data:
-                query_filters.append(Patient.email == form.email.data)
-
-            existing_patient = Patient.query.filter(db.or_(*query_filters)).first()
-
-            if existing_patient:
-                if existing_patient.mobile_number == form.mobile_number.data:
-                    flash('A patient with this mobile number already exists.', 'danger')
-                else:
-                    flash('A patient with this email already exists.', 'danger')
-                return render_template('patient/register.html', form=form)
-
-            # If email is provided, use OTP verification
-            if form.email.data:
-                # Generate 6-digit OTP
-                otp_code = ''.join(random.choices(string.digits, k=6))
-                expires_at = datetime.utcnow() + timedelta(minutes=30)
-
-                # Store OTP in database
-                new_otp = OTP(
-                    email=form.email.data,
-                    otp_code=otp_code,
-                    expires_at=expires_at
-                )
-                db.session.add(new_otp)
-                db.session.commit()
-
-                # Store registration data in session
-                session['registration_data'] = {
-                    'full_name': form.full_name.data,
-                    'mobile_number': form.mobile_number.data,
-                    'email': form.email.data,
-                    'age': form.age.data,
-                    'sex': form.sex.data,
-                    'password': form.password.data
-                }
-
-                # Send OTP via email
-                subject = "Your OTP for Dr. Richa's Eye Clinic Registration"
-                message = f"""
-Dear {form.full_name.data},
-
-Your OTP for registration is: {otp_code}
-
-This OTP will expire in 30 minutes.
-
-Best regards,
-Dr. Richa's Eye Clinic
-                """
-                try:
-                    send_email_notification(form.email.data, subject, message)
-                    flash('OTP has been sent to your email address', 'success')
-                except Exception as email_error:
-                    print(f"Email error: {str(email_error)}")
-                    flash('Registration completed! Please proceed to login.', 'info')
-
-                return redirect(url_for('verify_otp', email=form.email.data))
-
-            else:
-                # Direct registration without email verification
-                new_patient = Patient(
-                    full_name=form.full_name.data,
-                    mobile_number=form.mobile_number.data,
-                    email='',
-                    age=form.age.data,
-                    sex=form.sex.data,
-                    is_registered=True
-                )
-                if form.password.data:
-                    new_patient.set_password(form.password.data)
-
-                db.session.add(new_patient)
-                db.session.commit()
-
-                login_user(new_patient)
-                flash('Registration successful! Welcome to Dr. Richa\'s Eye Clinic.', 'success')
-                return redirect(url_for('patient_dashboard'))
-
-        except Exception as e:
-            db.session.rollback()
-            print(f"Registration error: {str(e)}")
-            flash(f'Registration failed: {str(e)}', 'danger')
-
-    return render_template('patient/register.html', form=form)
-
-
-@app.route('/patient/verify-otp/<email>', methods=['GET', 'POST'])
-def verify_otp(email):
-    """OTP verification route"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
-
-    # Check if we have registration data
-    if 'registration_data' not in session:
-        flash('Registration session expired. Please register again.', 'warning')
-        return redirect(url_for('patient_register'))
-
-    form = OTPVerificationForm()
-    form.email.data = email
-
-    if form.validate_on_submit():
-        # Find the most recent OTP for this email
-        otp_record = OTP.query.filter_by(
-            email=email,
-            is_verified=False
-        ).order_by(desc(OTP.created_at)).first()
-
-        if not otp_record:
-            flash('OTP record not found or already verified. Please request a new OTP.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        if otp_record.is_expired():
-            flash('OTP has expired. Please request a new OTP.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        if otp_record.otp_code != form.otp.data:
-            flash('Invalid OTP. Please try again.', 'danger')
-            return redirect(url_for('verify_otp', email=email))
-
-        # OTP verified, create patient account
-        registration_data = session['registration_data']
-        new_patient = Patient(
-            full_name=registration_data['full_name'],
-            mobile_number=registration_data['mobile_number'],
-            email=registration_data['email'],
-            age=registration_data['age'],
-            sex=registration_data['sex'],
-            is_registered=True
-        )
-        new_patient.set_password(registration_data['password'])
-
-        # Mark OTP as verified
-        otp_record.is_verified = True
-
-        db.session.add(new_patient)
-
-        try:
-            db.session.commit()
-
-            # Clear session data
-            session.pop('registration_data', None)
-
-            # Log in the user
-            login_user(new_patient)
-
-            flash('Registration successful!', 'success')
-            return redirect(url_for('patient_dashboard'))
-
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error creating account: {str(e)}', 'danger')
-
-    return render_template('patient/verify_otp.html', form=form, email=email)
-
-
-@app.route('/patient/gmail-login', methods=['GET', 'POST'])
-def patient_gmail_login():
-    """Patient Gmail OTP login route - disabled"""
-    flash('Patient login is no longer available. Please book appointments directly.', 'info')
-    return redirect(url_for('appointment'))
-
-    # Create a simple form to collect email for OTP
-    class GmailLoginForm(FlaskForm):
-        email = StringField('Email Address', validators=[DataRequired(), Email()])
-        submit = SubmitField('Send OTP')
-
-    form = GmailLoginForm()
-
-    if form.validate_on_submit():
-        email = form.email.data
-
-        # Check if patient exists with this email
-        patient = Patient.query.filter_by(email=email).first()
-
-        if not patient:
-            # Create a non-registered patient record with email only
-            patient = Patient(
-                full_name="Gmail User",  # Will be updated after login
-                mobile_number="0000000000",  # Will be updated after login
-                email=email,
-                age=1,  # Will be updated after login
-                is_registered=False
-            )
-            db.session.add(patient)
-            db.session.flush()
-
-        # Generate 6-digit OTP
-        otp_code = ''.join(random.choices(string.digits, k=6))
-
-        # Set expiry time (30 minutes)
-        expires_at = datetime.utcnow() + timedelta(minutes=30)
-
-        # Store OTP in database
-        new_otp = OTP(
-            email=email,
-            otp_code=otp_code,
-            expires_at=expires_at
-        )
-        db.session.add(new_otp)
-
-        try:
-            db.session.commit()
-
-            # Send OTP via email
-            subject = "Your OTP for Dr. Richa's Eye Clinic Login"
-            message = f"""
-            Dear {patient.full_name if patient else "User"},
-
-            Your OTP for login is: {otp_code}
-
-            This OTP will expire in 30 minutes.
-
-            Best regards,
-            Dr. Richa's Eye Clinic
-            """
-            if send_email_notification(email, subject, message):
-                flash('OTP has been sent to your email address', 'success')
-            else:
-                flash('Error sending OTP. Please try again.', 'danger')
-
-            # Redirect to OTP verification page
-            return redirect(url_for('verify_login_otp', email=email))
-
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error: {str(e)}', 'danger')
-
-    return render_template('patient/gmail_login.html', form=form)
-
-
-@app.route('/patient/verify-login-otp/<email>', methods=['GET', 'POST'])
-def verify_login_otp(email):
-    """Verify OTP for Gmail login"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
-
-    form = OTPVerificationForm()
-    form.email.data = email
-
-    if form.validate_on_submit():
-        # Find the most recent OTP for this email
-        otp_record = OTP.query.filter_by(
-            email=email,
-            is_verified=False
-        ).order_by(desc(OTP.created_at)).first()
-
-        if not otp_record:
-            flash('OTP record not found or already verified. Please request a new OTP.', 'danger')
-            return redirect(url_for('patient_gmail_login'))
-
-        if otp_record.is_expired():
-            flash('OTP has expired. Please request a new OTP.', 'danger')
-            return redirect(url_for('patient_gmail_login'))
-
-        # Check if OTP matches
-        if otp_record.otp_code != form.otp.data:
-            flash('Invalid OTP. Please try again.', 'danger')
-            return redirect(url_for('verify_login_otp', email=email))
-
-        # Mark OTP as verified
-        otp_record.is_verified = True
-
-        # Find the patient with this email
-        patient = Patient.query.filter_by(email=email).first()
-
-        if not patient:
-            flash('Patient record not found.', 'danger')
-            return redirect(url_for('patient_gmail_login'))
-
-        # Login the patient with remember=True for session persistence
-        login_user(patient, remember=True)
-
-        try:
-            db.session.commit()
-
-            # If this is the patient's first login with Gmail,
-            # they might need to complete their profile
-            if not patient.is_registered:
-                flash('Please complete your profile information.', 'info')
-                # Here we would ideally redirect to a profile completion page
-                # For now, we'll just go to the dashboard
-
-            return redirect(url_for('patient_dashboard'))
-
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error verifying OTP: {str(e)}', 'danger')
-
-    return render_template('patient/verify_login_otp.html', form=form, email=email)
-
 
 @app.route('/patient/login', methods=['GET', 'POST'])
 def patient_login():
@@ -606,40 +308,17 @@ def patient_login():
     flash('Patient login is no longer available. Please book appointments directly.', 'info')
     return redirect(url_for('appointment'))
 
-    form = PatientLoginForm()
-    if form.validate_on_submit():
-        try:
-            patient = Patient.query.filter_by(email=form.email.data).first()
-
-            # Check if patient exists and password is correct
-            if patient and patient.is_registered and patient.check_password(form.password.data):
-                login_user(patient)
-                flash('Login successful!', 'success')
-                return redirect(url_for('patient_dashboard'))
-            else:
-                flash('Invalid email or password', 'danger')
-        except Exception as e:
-            print(f"Login error: {str(e)}")
-            flash('An error occurred during login. Please try again.', 'danger')
-
-    return render_template('patient/login.html', form=form)
-
-
 @app.route('/patient/logout')
-@login_required
 def patient_logout():
-    """Patient logout route"""
-    logout_user()
-    flash('You have been logged out', 'info')
+    """Patient logout route - disabled"""
+    flash('Patient access is no longer available. Please contact the clinic directly.', 'info')
     return redirect(url_for('index'))
-
 
 @app.route('/patient/dashboard')
 def patient_dashboard():
     """Patient dashboard route - disabled"""
     flash('Patient dashboard is no longer available. Please contact the clinic directly.', 'info')
     return redirect(url_for('index'))
-
 
 @app.route('/patient/appointments')
 def patient_appointments():
@@ -705,112 +384,24 @@ def patient_cancel_appointment(appointment_id):
     return redirect(url_for('patient_appointments'))
 
 
+# All patient profile and medical record routes removed
 @app.route('/patient/complete-profile', methods=['GET', 'POST'])
-@login_required
 def patient_complete_profile():
-    """Patient profile completion route"""
-    if not isinstance(current_user, Patient):
-        flash('Access denied.', 'danger')
-        return redirect(url_for('index'))
-
-    form = ProfileCompletionForm()
-
-    # Pre-populate form with existing data
-    if request.method == 'GET':
-        if current_user.mobile_number != '0000000000':
-            form.mobile_number.data = current_user.mobile_number
-        if current_user.age != 1:
-            form.age.data = current_user.age
-        if current_user.sex:
-            form.sex.data = current_user.sex
-
-    if form.validate_on_submit():
-        try:
-            # Update patient profile
-            current_user.mobile_number = form.mobile_number.data
-            current_user.age = form.age.data
-            current_user.sex = form.sex.data
-
-            db.session.commit()
-            flash('Profile completed successfully!', 'success')
-            return redirect(url_for('patient_dashboard'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error updating profile: {str(e)}', 'danger')
-
-    return render_template('patient/complete_profile.html', form=form)
-
+    """Patient profile completion route - disabled"""
+    flash('Patient access is no longer available. Please contact the clinic directly.', 'info')
+    return redirect(url_for('index'))
 
 @app.route('/patient/edit-profile', methods=['GET', 'POST'])
-@login_required
 def patient_edit_profile():
-    """Patient profile editing route"""
-    if not isinstance(current_user, Patient):
-        flash('Access denied.', 'danger')
-        return redirect(url_for('index'))
-
-    form = PatientEditForm()
-
-    # Pre-populate form with existing data
-    if request.method == 'GET':
-        form.full_name.data = current_user.full_name
-        form.mobile_number.data = current_user.mobile_number
-        form.email.data = current_user.email
-        form.age.data = current_user.age
-        form.sex.data = current_user.sex
-
-    if form.validate_on_submit():
-        try:
-            # Check if mobile number is being changed and if it already exists
-            if form.mobile_number.data != current_user.mobile_number:
-                existing_patient = Patient.query.filter(
-                    Patient.mobile_number == form.mobile_number.data,
-                    Patient.id != current_user.id
-                ).first()
-                if existing_patient:
-                    flash('A patient with this mobile number already exists.', 'danger')
-                    return render_template('patient/edit_profile.html', form=form)
-
-            # Check if email is being changed and if it already exists
-            if form.email.data and form.email.data != current_user.email:
-                existing_patient = Patient.query.filter(
-                    Patient.email == form.email.data,
-                    Patient.id != current_user.id
-                ).first()
-                if existing_patient:
-                    flash('A patient with this email already exists.', 'danger')
-                    return render_template('patient/edit_profile.html', form=form)
-
-            # Update patient profile
-            current_user.full_name = form.full_name.data
-            current_user.mobile_number = form.mobile_number.data
-            current_user.email = form.email.data
-            current_user.age = form.age.data
-            current_user.sex = form.sex.data
-
-            db.session.commit()
-            flash('Profile updated successfully!', 'success')
-            return redirect(url_for('patient_dashboard'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error updating profile: {str(e)}', 'danger')
-
-    return render_template('patient/edit_profile.html', form=form)
+    """Patient profile editing route - disabled"""
+    flash('Patient access is no longer available. Please contact the clinic directly.', 'info')
+    return redirect(url_for('index'))
 
 @app.route('/patient/medical-records')
-@login_required
 def patient_medical_records():
-    """Patient medical records route"""
-    # Get patient's appointments with medical records
-    appointments = (
-        db.session.query(Appointment)
-        .join(MedicalRecord, Appointment.id == MedicalRecord.appointment_id)
-        .filter(Appointment.patient_id == current_user.id)
-        .order_by(desc(Appointment.appointment_date))
-        .all()
-    )
-
-    return render_template('patient/medical_records.html', appointments=appointments)
+    """Patient medical records route - disabled"""
+    flash('Patient access is no longer available. Please contact the clinic directly.', 'info')
+    return redirect(url_for('index'))
 
 
 # Authentication Selection Route
@@ -1895,44 +1486,10 @@ def print_combined_prescription(patient_id):
                          optometrist_prescription=optometrist_prescription)
 
 @app.route('/patient/print-combined-prescription/<int:patient_id>')
-@login_required
 def patient_print_combined_prescription(patient_id):
-    """Patient route to print combined doctor and optometrist prescriptions"""
-    # Check if user is authenticated and is a Patient
-    if not current_user.is_authenticated:
-        flash('Please log in to access your prescriptions.', 'warning')
-        return redirect(url_for('patient_login'))
-
-    if not isinstance(current_user, Patient):
-        flash('Access denied. Patient privileges required.', 'danger')
-        return redirect(url_for('patient_login'))
-
-    # Ensure patient can only access their own prescriptions
-    if current_user.id != patient_id:
-        flash('Access denied. You can only view your own prescriptions.', 'danger')
-        return redirect(url_for('patient_dashboard'))
-
-    # Get patient
-    patient = Patient.query.get_or_404(patient_id)
-
-    # Get latest doctor prescription
-    doctor_prescription = DoctorPrescription.query.filter_by(
-        patient_id=patient_id
-    ).order_by(DoctorPrescription.created_at.desc()).first()
-
-    # Get latest optometrist prescription
-    optometrist_prescription = OptometristPrescription.query.filter_by(
-        patient_id=patient_id
-    ).order_by(OptometristPrescription.created_at.desc()).first()
-
-    if not doctor_prescription and not optometrist_prescription:
-        flash('No prescriptions found.', 'warning')
-        return redirect(url_for('patient_medical_records'))
-
-    return render_template('print_combined_prescription.html',
-                         patient=patient,
-                         doctor_prescription=doctor_prescription,
-                         optometrist_prescription=optometrist_prescription)
+    """Patient route to print combined prescriptions - disabled"""
+    flash('Patient access is no longer available. Please contact the clinic directly.', 'info')
+    return redirect(url_for('index'))
 
 @app.route('/delete-prescription/<string:type>/<int:prescription_id>', methods=['POST'])
 @login_required
@@ -1982,48 +1539,12 @@ def delete_prescription(type, prescription_id):
         flash(f'Error deleting prescription: {str(e)}', 'danger')
         return redirect(request.referrer or url_for('admin_dashboard'))
 
+# All OAuth and OTP routes removed - functionality disabled
 @app.route('/patient/google-register')
 def patient_google_register():
     """Patient Google OAuth registration route - disabled"""
     flash('Patient registration is no longer available. Please book appointments directly.', 'info')
     return redirect(url_for('appointment'))
-
-    # Check if Google OAuth is configured
-    google_client_id = app.config.get('GOOGLE_CLIENT_ID')
-    if not google_client_id:
-        flash('Google OAuth is not configured. Please contact administrator.', 'danger')
-        return redirect(url_for('patient_register'))
-
-    # Generate state for CSRF protection
-    state = os.urandom(16).hex()
-    session['oauth_state'] = state
-    session['oauth_action'] = 'register'
-
-    # Generate redirect URI - use the current host
-    if request.host.endswith('.replit.app') or request.host.endswith('.repl.co'):
-        google_redirect_uri = f"https://{request.host}/patient/google-callback"
-    else:
-        google_redirect_uri = url_for('patient_google_callback', _external=True)
-        if google_redirect_uri.startswith('http://'):
-            google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
-
-    # OAuth parameters
-    params = {
-        'client_id': google_client_id,
-        'redirect_uri': google_redirect_uri,
-        'response_type': 'code',
-        'scope': 'openid email profile',
-        'state': state,
-        'access_type': 'online',
-        'prompt': 'select_account'
-    }
-
-    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
-    print(f"OAuth URL: {oauth_url}")  # Debug log
-    print(f"Redirect URI: {google_redirect_uri}")  # Debug log
-
-    # Redirect to Google's OAuth consent screen
-    return redirect(oauth_url)
 
 @app.route('/patient/google-login')
 def patient_google_login():
@@ -2031,194 +1552,11 @@ def patient_google_login():
     flash('Patient login is no longer available. Please book appointments directly.', 'info')
     return redirect(url_for('appointment'))
 
-    # Check if Google OAuth is configured
-    google_client_id = app.config.get('GOOGLE_CLIENT_ID')
-    if not google_client_id:
-        flash('Google OAuth is not configured. Please contact administrator.', 'danger')
-        return redirect(url_for('patient_login'))
-
-    # Generate state for CSRF protection
-    state = os.urandom(16).hex()
-    session['oauth_state'] = state
-    session['oauth_action'] = 'login'
-
-    # Generate redirect URI - use the current host
-    if request.host.endswith('.replit.app') or request.host.endswith('.repl.co'):
-        google_redirect_uri = f"https://{request.host}/patient/google-callback"
-    else:
-        google_redirect_uri = url_for('patient_google_callback', _external=True)
-        if google_redirect_uri.startswith('http://'):
-            google_redirect_uri = google_redirect_uri.replace('http://', 'https://')
-
-    # OAuth parameters
-    params = {
-        'client_id': google_client_id,
-        'redirect_uri': google_redirect_uri,
-        'response_type': 'code',
-        'scope': 'openid email profile',
-        'state': state,
-        'access_type': 'online',
-        'prompt': 'select_account'
-    }
-
-    oauth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
-    print(f"OAuth URL: {oauth_url}")  # Debug log
-    print(f"Redirect URI: {google_redirect_uri}")  # Debug log
-
-    # Redirect to Google's OAuth consent screen
-    return redirect(oauth_url)
-
 @app.route('/patient/google-callback')
 def patient_google_callback():
-    """Google OAuth callback route"""
-    print(f"Google callback received with args: {request.args}")  # Debug log
-
-    # Check for OAuth errors first
-    if 'error' in request.args:
-        error = request.args.get('error')
-        error_description = request.args.get('error_description', '')
-        print(f"OAuth error: {error} - {error_description}")  # Debug log
-        if error == 'access_denied':
-            flash('Google authentication was cancelled.', 'info')
-        else:
-            flash(f'Google authentication failed: {error}', 'danger')
-        return redirect(url_for('patient_register'))
-
-    # Get authorization code
-    code = request.args.get('code')
-    if not code:
-        flash('Authentication failed - no authorization code received.', 'danger')
-        return redirect(url_for('patient_register'))
-
-    # State verification
-    received_state = request.args.get('state')
-    stored_state = session.get('oauth_state')
-    if not received_state or received_state != stored_state:
-        print(f"State mismatch: received {received_state}, expected {stored_state}")  # Debug log
-        flash('Security verification failed. Please try again.', 'danger')
-        return redirect(url_for('patient_register'))
-
-    try:
-        oauth_action = session.get('oauth_action', 'register')
-        google_client_id = app.config.get('GOOGLE_CLIENT_ID')
-        google_client_secret = app.config.get('GOOGLE_CLIENT_SECRET')
-
-        if not google_client_id or not google_client_secret:
-            flash('Google OAuth configuration error. Please contact administrator.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        # Generate redirect URI consistently
-        if request.host.endswith('.replit.app') or request.host.endswith('.repl.co'):
-            redirect_uri = f"https://{request.host}/patient/google-callback"
-        else:
-            redirect_uri = url_for('patient_google_callback', _external=True)
-            if redirect_uri.startswith('http://'):
-                redirect_uri = redirect_uri.replace('http://', 'https://')
-
-        print(f"Token exchange redirect URI: {redirect_uri}")  # Debug log
-
-        # Exchange code for access token
-        token_url = "https://oauth2.googleapis.com/token"
-        token_data = {
-            'code': code,
-            'client_id': google_client_id,
-            'client_secret': google_client_secret,
-            'redirect_uri': redirect_uri,
-            'grant_type': 'authorization_code'
-        }
-
-        print(f"Making token request to: {token_url}")  # Debug log
-        token_response = requests.post(token_url, data=token_data, timeout=30)
-        print(f"Token response status: {token_response.status_code}")  # Debug log
-
-        if token_response.status_code != 200:
-            print(f"Token response error: {token_response.text}")  # Debug log
-            flash('Authentication failed during token exchange.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        tokens = token_response.json()
-        access_token = tokens.get('access_token')
-
-        if not access_token:
-            print(f"No access token in response: {tokens}")  # Debug log
-            flash('Authentication failed - no access token received.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        print("Access token received successfully")  # Debug log
-
-        # Get user information
-        userinfo_response = requests.get(
-            "https://www.googleapis.com/oauth2/v3/userinfo",
-            headers={'Authorization': f'Bearer {access_token}'},
-            timeout=30
-        )
-
-        print(f"Userinfo response status: {userinfo_response.status_code}")  # Debug log
-
-        if userinfo_response.status_code != 200:
-            print(f"Userinfo response error: {userinfo_response.text}")  # Debug log
-            flash('Failed to get user information from Google.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        userinfo = userinfo_response.json()
-        email = userinfo.get('email')
-        name = userinfo.get('name', 'Google User')
-
-        print(f"User info received: email={email}, name={name}")  # Debug log
-
-        if not email:
-            flash('Failed to get your email from Google.', 'danger')
-            return redirect(url_for('patient_register'))
-
-        # Find or create patient account
-        patient = Patient.query.filter_by(email=email).first()
-
-        if not patient:
-            if oauth_action == 'login':
-                flash('No account found with this Google email. Please register first.', 'warning')
-                return redirect(url_for('patient_register'))
-
-            # Create new patient account
-            patient = Patient(
-                full_name=name,
-                email=email,
-                mobile_number='0000000000',
-                age=1,
-                sex='',
-                is_registered=True
-            )
-            db.session.add(patient)
-            db.session.commit()
-            print(f"Created new patient: {patient.id}")  # Debug log
-
-        # Log in the user
-        login_user(patient)
-        print(f"Logged in patient: {patient.id}")  # Debug log
-
-        # Clear session data
-        session.pop('oauth_state', None)
-        session.pop('oauth_action', None)
-
-        # Success message
-        if oauth_action == 'register':
-            flash('Successfully registered with Google!', 'success')
-        else:
-            flash('Successfully logged in with Google!', 'success')
-
-        # Redirect to profile completion if needed
-        if patient.mobile_number == '0000000000' or patient.age == 1:
-            return redirect(url_for('patient_complete_profile'))
-
-        return redirect(url_for('patient_dashboard'))
-
-    except requests.exceptions.RequestException as e:
-        print(f"Network error during OAuth: {str(e)}")  # Debug log
-        flash('Network error during authentication. Please try again.', 'danger')
-        return redirect(url_for('patient_register'))
-    except Exception as e:
-        print(f"OAuth callback error: {str(e)}")  # Debug log
-        flash('An error occurred during authentication. Please try again.', 'danger')
-        return redirect(url_for('patient_register'))
+    """Google OAuth callback route - disabled"""
+    flash('Patient authentication is no longer available. Please book appointments directly.', 'info')
+    return redirect(url_for('appointment'))
 
 @app.route('/admin/fix-payment-status')
 @login_required
