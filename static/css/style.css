@@ -10,23 +10,14 @@
   --white: #ffffff;
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
-
-  /* Dark mode variables */
-  --bg-color: #ffffff;
-  --text-color: #343a40;
-  --card-bg: #ffffff;
-  --border-color: #dee2e6;
-  --footer-bg: #343a40;
-  --footer-text: #ffffff;
-  --hero-overlay: rgba(0, 123, 255, 0.85);
 }
 
 /* Global Styles */
 body {
   font-family: 'Roboto', sans-serif;
-  color: var(--text-color, var(--dark-color));
+  color: var(--dark-color);
   line-height: 1.6;
-  background-color: var(--bg-color, var(--white));
+  background-color: var(--white);
   background-image: 
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='1.5' stroke-opacity='0.05'%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3Ccircle cx='60' cy='60' r='15'/%3E%3Ccircle cx='60' cy='60' r='8'/%3E%3Cpath d='M35 60h50M60 35v50'/%3E%3C/g%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%2317a2b8' fill-opacity='0.03'%3E%3Cpath d='M40 10c-8 0-15 6-15 15s7 15 15 15 15-7 15-15-7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3Cpath d='M40 45c-8 0-15 6-15 15s7 15 15 15 15-7 15-15-7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3C/g%3E%3C/svg%3E"),
@@ -48,7 +39,7 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1.5rem 3rem;
-  background-color: var(--card-bg, var(--white));
+  background-color: var(--white);
   transition: background-color 0.3s ease;
   min-height: 80px;
 }
@@ -240,10 +231,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 50%;
 }
 
-/* Dark mode adjustments */
-[data-theme="dark"] .navbar-toggler span {
-  background: var(--text-color);
-}
+
 
 /* Hero Section */
 .hero {
@@ -554,15 +542,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Dark mode adjustments for QR corner */
-[data-theme="dark"] .qr-corner-text {
-  background: rgba(30, 30, 30, 0.9);
-  color: #ccc;
-}
 
-[data-theme="dark"] .clinic-address {
-  background-color: var(--card-bg);
-}
 
 /* Footer */
 footer {
@@ -905,138 +885,7 @@ footer a:hover {
     transition: opacity 0.3s ease;
 }
 
-/* Dark Mode Styles */
-[data-theme="dark"] {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --card-bg: #1e1e1e;
-    --border-color: #333;
-    --hero-overlay: rgba(0, 80, 167, 0.9);
-    --light-color: #222;
-    --dark-color: #f8f9fa;
-    --light-blue: #162c46;
-}
 
-[data-theme="dark"] body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='1.5' stroke-opacity='0.08'%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3Ccircle cx='60' cy='60' r='15'/%3E%3Ccircle cx='60' cy='60' r='8'/%3E%3Cpath d='M35 60h50M60 35v50'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%2317a2b8' fill-opacity='0.06'%3E%3Cpath d='M40 10c-8 0-15 6-15 15s7 15 15 15 15-7 15-15-7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3Cpath d='M40 45c-8 0-15 6-15 15s7 15 15 15 15-7 15-15-7-15-15-15zm0 25c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10z'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%2328a745' stroke-width='2' stroke-opacity='0.07'%3E%3Cpath d='M100 50l20 30h-40z'/%3E%3Ccircle cx='100' cy='120' r='15'/%3E%3Cpath d='M80 150h40M90 160h20'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cg fill='%23ffc107' fill-opacity='0.04'%3E%3Cpath d='M75 30l10 20 20-5-10 20 15 15-20-5-5 20-20-10-15 15 5-20-20-5 10-20-15-15 20 5 5-20 20 10z'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23e83e8c' stroke-width='1' stroke-opacity='0.05'%3E%3Ccircle cx='25' cy='25' r='8'/%3E%3Ccircle cx='75' cy='25' r='8'/%3E%3Ccircle cx='25' cy='75' r='8'/%3E%3Ccircle cx='75' cy='75' r='8'/%3E%3Cpath d='M25 35v30M35 25h30M75 35v30M65 75h-30'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 120px 120px, 80px 80px, 200px 200px, 150px 150px, 100px 100px;
-    background-position: 0 0, 40px 40px, 100px 50px, 200px 100px, 50px 150px;
-    background-repeat: repeat;
-}
-
-[data-theme="dark"] .navbar,
-[data-theme="dark"] .card,
-[data-theme="dark"] .appointment-form,
-[data-theme="dark"] .review-card,
-[data-theme="dark"] .service-card,
-[data-theme="dark"] .payment-method-card,
-[data-theme="dark"] .clinic-address {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .appointment-form {
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='1' stroke-opacity='0.06'%3E%3Ccircle cx='50' cy='50' r='20'/%3E%3Ccircle cx='50' cy='50' r='12'/%3E%3Ccircle cx='50' cy='50' r='6'/%3E%3Cpath d='M30 50h40M50 30v40'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cg fill='%2328a745' fill-opacity='0.04'%3E%3Cpath d='M75 40l15 25h-30z'/%3E%3Ccircle cx='75' cy='90' r='12'/%3E%3Cpath d='M60 110h30M70 120h10'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 100px 100px, 150px 150px;
-    background-position: 0 0, 50px 50px;
-    background-repeat: repeat;
-}
-
-[data-theme="dark"] .service-card {
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='1' stroke-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Ccircle cx='30' cy='30' r='8'/%3E%3Cpath d='M18 30h24M30 18v24'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 60px 60px;
-    background-position: 0 0;
-    background-repeat: repeat;
-}
-
-[data-theme="dark"] .review-card {
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='1' stroke-opacity='0.05'%3E%3Ccircle cx='25' cy='25' r='10'/%3E%3Ccircle cx='25' cy='25' r='6'/%3E%3Cpath d='M15 25h20M25 15v20'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 50px 50px;
-    background-position: 0 0;
-    background-repeat: repeat;
-}
-
-[data-theme="dark"] .clinic-address {
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%23007bff' stroke-width='1' stroke-opacity='0.06'%3E%3Ccircle cx='45' cy='45' r='18'/%3E%3Ccircle cx='45' cy='45' r='10'/%3E%3Cpath d='M27 45h36M45 27v36'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 90px 90px;
-    background-position: 0 0;
-    background-repeat: repeat;
-}
-
-[data-theme="dark"] .nav-link {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .hero {
-    background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('../img/setup.jpg');
-}
-
-[data-theme="dark"] .doctor-profile {
-    background-color: var(--light-blue);
-}
-
-[data-theme="dark"] footer {
-    background-color: #0a0a0a;
-}
-
-/* Dark Mode Toggle */
-.dark-mode-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: var(--transition);
-}
-
-.dark-mode-toggle i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    transition: var(--transition);
-}
-
-.dark-mode-toggle:hover {
-    transform: translateY(-3px);
-}
-
-[data-theme="dark"] .dark-mode-toggle i.fa-moon {
-    display: none;
-}
-
-[data-theme="dark"] .dark-mode-toggle i.fa-sun {
-    display: block;
-    color: #ffc107;
-}
-
-.dark-mode-toggle i.fa-sun {
-    display: none;
-}
-
-.dark-mode-toggle i.fa-moon {
-    display: block;
-}
 
 /* Service Page Cards */
 .services-page-card {
@@ -1096,10 +945,7 @@ footer a:hover {
     transform: translateX(10px);
 }
 
-/* Dark mode adjustments */
-[data-theme="dark"] .services-page-card .card-body {
-    background-color: rgba(30,30,30,0.95);
-}
+
 
 /* Additional Services Cards Styling */
 .services-page-card .card-body i {
@@ -1149,13 +995,7 @@ footer a:hover {
     transform: scale(1.2);
 }
 
-[data-theme="dark"] .highlight-credential {
-    background-color: rgba(0, 123, 255, 0.1);
-}
 
-[data-theme="dark"] .highlight-credential:hover {
-    background-color: rgba(0, 123, 255, 0.2);
-}
 
 /* Add any custom styles here */
 
