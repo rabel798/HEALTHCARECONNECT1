@@ -856,14 +856,18 @@ footer a:hover {
     display: flex;
     gap: 4px;
     justify-content: center;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .star-btn {
     padding: 0 2px;
-    background: none;
-    border: none;
+    background: none !important;
+    border: none !important;
     cursor: pointer;
     transition: transform 0.1s ease;
+    position: relative;
 }
 
 .star-btn:hover {
@@ -896,18 +900,7 @@ footer a:hover {
     pointer-events: none;
 }
 
-.star-btn {
-    position: relative;
-}
-
-
-
 /* Rating validation feedback */
-.star-rating.was-validated {
-    border-radius: 8px;
-    position: relative;
-}
-
 #rating-error {
     color: #dc3545;
     margin-top: 0.5rem;
