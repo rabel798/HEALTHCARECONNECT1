@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -79,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Appointment date picker functionality
     const appointmentDateInput = document.getElementById('appointment_date');
     const calendarTrigger = document.getElementById('calendar-trigger');
-    
+
     if (appointmentDateInput && calendarTrigger) {
         calendarTrigger.addEventListener('click', function() {
             appointmentDateInput.focus();
@@ -114,10 +113,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateTimeSlots(date) {
         const selectedDate = new Date(date);
         const dayOfWeek = selectedDate.getDay();
-        
+
         // Sunday (0) has different hours: 10:00 AM - 1:00 PM
         // Monday-Saturday (1-6): 5:00 PM - 8:00 PM
-        
+
         let slots = [];
         if (dayOfWeek === 0) {
             // Sunday slots
@@ -156,10 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
             slot.addEventListener('click', function() {
                 // Remove selected class from all slots
                 document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                
+
                 // Add selected class to clicked slot
                 this.classList.add('selected');
-                
+
                 // Set the value in the hidden input
                 const timeInput = document.getElementById('appointment_time');
                 if (timeInput) {
@@ -172,31 +171,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Star rating functionality
     const starButtons = document.querySelectorAll('.star-btn');
     const ratingInput = document.getElementById('rating');
-    
+
     if (starButtons.length > 0 && ratingInput) {
         starButtons.forEach((star, index) => {
             star.addEventListener('click', function() {
                 const rating = index + 1;
                 ratingInput.value = rating;
-                
+
                 // Update star display
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < rating) {
                         starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'fas fa-star text-muted';
                     }
                 });
-                
+
                 // Remove any existing validation error
                 const errorElement = document.getElementById('rating-error');
                 if (errorElement) {
                     errorElement.style.display = 'none';
                 }
             });
-            
-            // Hover effect
+
+            // Hover effect - show rating meaning and highlight stars
             star.addEventListener('mouseenter', function() {
                 const hoverRating = index + 1;
                 starButtons.forEach((s, i) => {
@@ -204,12 +203,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (i < hoverRating) {
                         starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'fas fa-star text-muted';
                     }
                 });
             });
         });
-        
+
         // Reset to actual rating on mouse leave
         const starContainer = document.querySelector('.star-rating');
         if (starContainer) {
@@ -220,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (i < currentRating) {
                         starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'fas fa-star text-muted';
                     }
                 });
             });
@@ -234,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
-                
+
                 // Check star rating specifically
                 const ratingInput = form.querySelector('#rating');
                 if (ratingInput && !ratingInput.value) {
@@ -249,16 +248,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    
+
 
     // Navbar hide/show on scroll
     let lastScrollTop = 0;
     const navbar = document.querySelector('.navbar');
-    
+
     if (navbar) {
         window.addEventListener('scroll', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
+
             if (scrollTop > lastScrollTop && scrollTop > 100) {
                 // Scrolling down & past 100px
                 navbar.classList.add('navbar-hidden');
@@ -266,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Scrolling up
                 navbar.classList.remove('navbar-hidden');
             }
-            
+
             lastScrollTop = scrollTop;
         }, { passive: true });
     }
@@ -293,12 +292,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const emergencyTicker = document.querySelector('.emergency-ticker-content');
     if (emergencyTicker) {
         let touchStartX = 0;
-        
+
         emergencyTicker.addEventListener('touchstart', function(e) {
             touchStartX = e.touches[0].clientX;
             this.style.animationPlayState = 'paused';
         }, { passive: true });
-        
+
         emergencyTicker.addEventListener('touchend', function() {
             this.style.animationPlayState = 'running';
         }, { passive: true });
