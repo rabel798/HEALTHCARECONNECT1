@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Star rating functionality
     const starButtons = document.querySelectorAll('.star-btn');
-    const ratingInput = document.getElementById('rating');
+    const ratingInput = document.querySelector('input[name="rating"]') || document.getElementById('rating');
     
     if (starButtons.length > 0 && ratingInput) {
         // Initialize stars as visible but unselected
@@ -182,9 +182,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         starButtons.forEach((star, index) => {
-            star.addEventListener('click', function() {
+            star.addEventListener('click', function(e) {
+                e.preventDefault();
                 const rating = index + 1;
+                
+                // Set the rating value in the hidden input
                 ratingInput.value = rating;
+                
+                // Also set the attribute for form validation
+                ratingInput.setAttribute('value', rating);
+                
+                console.log('Rating set to:', rating); // Debug log
                 
                 // Update star display
                 starButtons.forEach((s, i) => {
@@ -203,6 +211,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorElement) {
                     errorElement.style.display = 'none';
                 }
+                
+                // Mark the input as valid
+                ratingInput.setCustomValidity('');
             });
             
             // Hover effect with better tooltip functionality
@@ -250,19 +261,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
+            // Check star rating specifically before other validations
+            const ratingInput = form.querySelector('input[name="rating"]') || form.querySelector('#rating');
+            const errorElement = document.getElementById('rating-error');
+            
+            if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
                 event.preventDefault();
                 event.stopPropagation();
                 
-                // Check star rating specifically
-                const ratingInput = form.querySelector('#rating');
-                if (ratingInput && !ratingInput.value) {
-                    const errorElement = document.getElementById('rating-error');
-                    if (errorElement) {
-                        errorElement.style.display = 'block';
-                        errorElement.textContent = 'Please select a rating';
-                    }
+                if (errorElement) {
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = 'Please select a rating';
                 }
+                
+                // Set custom validity to show the error
+                ratingInput.setCustomValidity('Please select a rating');
+                form.classList.add('was-validated');
+                return false;
+            } else if (ratingInput) {
+                // Clear any previous custom validity
+                ratingInput.setCustomValidity('');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+            
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
             }
             form.classList.add('was-validated');
         });
