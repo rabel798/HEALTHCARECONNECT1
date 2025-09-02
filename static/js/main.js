@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const ratingInput = form.querySelector('input[name="rating"]') || form.querySelector('#rating');
             const errorElement = document.getElementById('rating-error');
             
-            // Only show rating error if no rating is selected AND form is being submitted
+            // Check if rating is selected
             if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -282,10 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ratingInput.setCustomValidity('Please select a rating before submitting');
                 form.classList.add('was-validated');
                 return false;
-            }
-            
-            // If rating is selected, proceed with normal validation
-            if (ratingInput && ratingInput.value) {
+            } else if (ratingInput) {
                 ratingInput.setCustomValidity('');
                 if (errorElement) {
                     errorElement.style.display = 'none';

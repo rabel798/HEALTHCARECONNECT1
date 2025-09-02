@@ -35,7 +35,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-/* Navbar Styles */
+/*Navbar Styles */
 .navbar {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1.5rem 3rem;
@@ -512,7 +512,7 @@ h1, h2, h3, h4, h5, h6 {
   .clinic-address {
     padding-right: 2rem;
   }
-  
+
   .qr-corner-section {
     position: relative;
     top: auto;
@@ -1154,13 +1154,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 25s linear infinite;
   }
-  
+
   .emergency-text {
     gap: 1.5rem;
     padding: 0 1rem;
     justify-content: space-evenly;
   }
-  
+
   .emergency-text .phone-number {
     padding: 0.25rem 0.75rem;
     font-size: 1rem;
@@ -1172,13 +1172,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 30s linear infinite;
   }
-  
+
   .emergency-text {
     gap: 1rem;
     padding: 0 0.5rem;
     font-size: 0.9rem;
   }
-  
+
   .emergency-text .phone-number {
     padding: 0.2rem 0.6rem;
     font-size: 0.95rem;
