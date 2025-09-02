@@ -231,6 +231,12 @@
     <!-- Interactive Logo JS -->
     <script src="{{ url_for('static', filename='js/logo-interactive.js') }}"></script>
 
+    <!-- Dark Mode Toggle Button -->
+    <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
     <!-- Extra JavaScript -->
     {% block extra_js %}{% endblock %}
 </body>
