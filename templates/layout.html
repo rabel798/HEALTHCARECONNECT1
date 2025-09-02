@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#007bff" id="theme-color-meta">
     <meta name="color-scheme" content="light dark">
 
-    <title>{% block title %}Dr. Richa's Eye Care Centre{% endblock %}</title>
+    <title>{% block title %}Dr. Richa's Eye Clinic{% endblock %}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/logo.svg') }}">
@@ -37,7 +37,7 @@
     {
       "@context": "https://schema.org",
       "@type": "MedicalBusiness",
-      "name": "Dr. Richa's Eye Care Centre",
+      "name": "Dr. Richa's Eye Clinic",
       "image": "{{ url_for('static', filename='assets/logo.svg', _external=True) }}",
       "url": "{{ request.url_root }}",
       "telephone": "+91-1234567890",
@@ -176,7 +176,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
-                    <h5>Dr. Richa's Eye Care Centre</h5>
+                    <h5>Dr. Richa's Eye Clinic</h5>
                     <p class="mb-3">Providing quality eye care services with a focus on patient comfort and advanced treatment options.</p>
                     <div class="social-icons">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -208,7 +208,7 @@
             <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
             <div class="row">
                 <div class="col-md-6">
-                    <p class="mb-md-0">&copy; {{ now.year }} Dr. Richa's Eye Care Centre. All Rights Reserved.</p>
+                    <p class="mb-md-0">&copy; {{ now.year }} Dr. Richa's Eye Clinic. All Rights Reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <p class="mb-0">
