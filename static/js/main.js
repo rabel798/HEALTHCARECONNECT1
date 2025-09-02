@@ -206,14 +206,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 
-                // Remove any existing validation error
+                // Remove any existing validation error immediately when star is clicked
                 const errorElement = document.getElementById('rating-error');
                 if (errorElement) {
                     errorElement.style.display = 'none';
                 }
                 
-                // Mark the input as valid
+                // Mark the input as valid and remove any form validation styling
                 ratingInput.setCustomValidity('');
+                const form = ratingInput.closest('form');
+                if (form) {
+                    form.classList.remove('was-validated');
+                }
             });
             
             // Hover effect with better tooltip functionality
@@ -265,21 +269,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const ratingInput = form.querySelector('input[name="rating"]') || form.querySelector('#rating');
             const errorElement = document.getElementById('rating-error');
             
+            // Only show rating error if no rating is selected AND form is being submitted
             if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
                 event.preventDefault();
                 event.stopPropagation();
                 
                 if (errorElement) {
                     errorElement.style.display = 'block';
-                    errorElement.textContent = 'Please select a rating';
+                    errorElement.textContent = 'Please select a rating before submitting';
                 }
                 
-                // Set custom validity to show the error
-                ratingInput.setCustomValidity('Please select a rating');
+                ratingInput.setCustomValidity('Please select a rating before submitting');
                 form.classList.add('was-validated');
                 return false;
-            } else if (ratingInput) {
-                // Clear any previous custom validity
+            }
+            
+            // If rating is selected, proceed with normal validation
+            if (ratingInput && ratingInput.value) {
                 ratingInput.setCustomValidity('');
                 if (errorElement) {
                     errorElement.style.display = 'none';
