@@ -74,33 +74,21 @@ def appointment():
     """Appointment booking page route"""
     form = AppointmentForm()
 
-    # If the user is logged in, pre-fill the form
-    if current_user.is_authenticated and isinstance(current_user, Patient):
-        if request.method == 'GET':
-            form.full_name.data = current_user.full_name
-            form.mobile_number.data = current_user.mobile_number
-            form.email.data = current_user.email
-            form.age.data = current_user.age
-
     if form.validate_on_submit():
-        if current_user.is_authenticated and isinstance(current_user, Patient):
-            # Use the logged in patient
-            patient = current_user
-        else:
-            # Check if patient exists by mobile number
-            patient = Patient.query.filter_by(mobile_number=form.mobile_number.data).first()
+        # Check if patient exists by mobile number
+        patient = Patient.query.filter_by(mobile_number=form.mobile_number.data).first()
 
-            # If patient doesn't exist, create new patient
-            if not patient:
-                patient = Patient(
-                    full_name=form.full_name.data,
-                    mobile_number=form.mobile_number.data,
-                    email=form.email.data,
-                    age=form.age.data,
-                    sex=form.sex.data
-                )
-                db.session.add(patient)
-                db.session.flush()  # To get the patient ID before commit
+        # If patient doesn't exist, create new patient
+        if not patient:
+            patient = Patient(
+                full_name=form.full_name.data,
+                mobile_number=form.mobile_number.data,
+                email=form.email.data,
+                age=form.age.data,
+                sex=form.sex.data
+            )
+            db.session.add(patient)
+            db.session.flush()  # To get the patient ID before commit
 
         # Create new appointment
         new_appointment = Appointment(
@@ -310,10 +298,9 @@ def available_slots():
 # Patient Authentication Routes
 @app.route('/patient/register', methods=['GET', 'POST'])
 def patient_register():
-    """Patient registration route"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
+    """Patient registration route - disabled"""
+    flash('Patient registration is no longer available. Please book appointments directly.', 'info')
+    return redirect(url_for('appointment'))
 
     form = PatientRegistrationForm()
     if form.validate_on_submit():
@@ -478,10 +465,9 @@ def verify_otp(email):
 
 @app.route('/patient/gmail-login', methods=['GET', 'POST'])
 def patient_gmail_login():
-    """Patient Gmail OTP login route"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
+    """Patient Gmail OTP login route - disabled"""
+    flash('Patient login is no longer available. Please book appointments directly.', 'info')
+    return redirect(url_for('appointment'))
 
     # Create a simple form to collect email for OTP
     class GmailLoginForm(FlaskForm):
@@ -616,10 +602,9 @@ def verify_login_otp(email):
 
 @app.route('/patient/login', methods=['GET', 'POST'])
 def patient_login():
-    """Patient login route"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
+    """Patient login route - disabled"""
+    flash('Patient login is no longer available. Please book appointments directly.', 'info')
+    return redirect(url_for('appointment'))
 
     form = PatientLoginForm()
     if form.validate_on_submit():
@@ -650,24 +635,17 @@ def patient_logout():
 
 
 @app.route('/patient/dashboard')
-@login_required
 def patient_dashboard():
-    """Patient dashboard route"""
-    # Get patient's appointments
-    appointments = Appointment.query.filter_by(patient_id=current_user.id).order_by(desc(Appointment.appointment_date), desc(Appointment.appointment_time)).all()
-
-    return render_template('patient/dashboard.html', appointments=appointments)
+    """Patient dashboard route - disabled"""
+    flash('Patient dashboard is no longer available. Please contact the clinic directly.', 'info')
+    return redirect(url_for('index'))
 
 
 @app.route('/patient/appointments')
-@login_required
 def patient_appointments():
-    """Patient appointments history route"""
-    # Get patient's appointments
-    appointments = Appointment.query.filter_by(patient_id=current_user.id).order_by(desc(Appointment.appointment_date)).all()
-    # Create a minimal form for CSRF
-    form = FlaskForm()
-    return render_template('patient/appointments.html', appointments=appointments, form=form)
+    """Patient appointments history route - disabled"""
+    flash('Patient appointment history is no longer available. Please contact the clinic directly.', 'info')
+    return redirect(url_for('index'))
 
 @app.route('/patient/cancel-appointment/<int:appointment_id>', methods=['POST'])
 @login_required
@@ -2006,10 +1984,9 @@ def delete_prescription(type, prescription_id):
 
 @app.route('/patient/google-register')
 def patient_google_register():
-    """Patient Google OAuth registration route"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
+    """Patient Google OAuth registration route - disabled"""
+    flash('Patient registration is no longer available. Please book appointments directly.', 'info')
+    return redirect(url_for('appointment'))
 
     # Check if Google OAuth is configured
     google_client_id = app.config.get('GOOGLE_CLIENT_ID')
@@ -2050,10 +2027,9 @@ def patient_google_register():
 
 @app.route('/patient/google-login')
 def patient_google_login():
-    """Patient Google OAuth login route"""
-    # If already logged in, redirect to patient dashboard
-    if current_user.is_authenticated:
-        return redirect(url_for('patient_dashboard'))
+    """Patient Google OAuth login route - disabled"""
+    flash('Patient login is no longer available. Please book appointments directly.', 'info')
+    return redirect(url_for('appointment'))
 
     # Check if Google OAuth is configured
     google_client_id = app.config.get('GOOGLE_CLIENT_ID')
