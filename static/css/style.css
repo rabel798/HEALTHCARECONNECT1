@@ -870,6 +870,15 @@ footer a:hover {
     transform: scale(1.2);
 }
 
+.star-btn i {
+    color: #dee2e6;
+    transition: color 0.2s ease;
+}
+
+.star-btn:hover i {
+    color: #ffc107;
+}
+
 
 
 /* Rating validation feedback */

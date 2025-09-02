@@ -174,6 +174,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const ratingInput = document.getElementById('rating');
     
     if (starButtons.length > 0 && ratingInput) {
+        // Initialize stars as visible but unselected
+        starButtons.forEach((star, index) => {
+            const starIcon = star.querySelector('i');
+            starIcon.className = 'far fa-star';
+            starIcon.style.color = '#dee2e6';
+        });
+
         starButtons.forEach((star, index) => {
             star.addEventListener('click', function() {
                 const rating = index + 1;
@@ -183,9 +190,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < rating) {
-                        starIcon.className = 'fas fa-star text-warning';
+                        starIcon.className = 'fas fa-star';
+                        starIcon.style.color = '#ffc107';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'far fa-star';
+                        starIcon.style.color = '#dee2e6';
                     }
                 });
                 
@@ -196,15 +205,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Hover effect
+            // Hover effect with tooltip descriptions
             star.addEventListener('mouseenter', function() {
                 const hoverRating = index + 1;
+                const descriptions = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                
+                // Update tooltip
+                this.title = `${descriptions[index]} (${hoverRating} star${hoverRating > 1 ? 's' : ''})`;
+                
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < hoverRating) {
-                        starIcon.className = 'fas fa-star text-warning';
+                        starIcon.className = 'fas fa-star';
+                        starIcon.style.color = '#ffc107';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'far fa-star';
+                        starIcon.style.color = '#dee2e6';
                     }
                 });
             });
@@ -218,9 +234,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < currentRating) {
-                        starIcon.className = 'fas fa-star text-warning';
+                        starIcon.className = 'fas fa-star';
+                        starIcon.style.color = '#ffc107';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'far fa-star';
+                        starIcon.style.color = '#dee2e6';
                     }
                 });
             });
