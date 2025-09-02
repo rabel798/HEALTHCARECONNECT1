@@ -205,14 +205,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Hover effect with tooltip descriptions
+            // Hover effect with better tooltip functionality
             star.addEventListener('mouseenter', function() {
                 const hoverRating = index + 1;
                 const descriptions = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
                 
-                // Update tooltip
-                this.title = `${descriptions[index]} (${hoverRating} star${hoverRating > 1 ? 's' : ''})`;
+                // Set tooltip attribute
+                this.setAttribute('title', `${descriptions[index]} (${hoverRating} star${hoverRating > 1 ? 's' : ''})`);
                 
+                // Visual feedback on hover
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < hoverRating) {

@@ -87,15 +87,13 @@
                             
                             <div class="mb-4">
                                 <label class="form-label">Your Rating</label>
-                                <div class="card border-0 shadow-sm p-3 mb-2">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <div class="star-rating mb-2" role="group" aria-label="Rate your experience">
-                                            <button type="button" class="star-btn" data-rating="1" title="Poor (1 star)"><i class="far fa-star"></i></button>
-                                            <button type="button" class="star-btn" data-rating="2" title="Fair (2 stars)"><i class="far fa-star"></i></button>
-                                            <button type="button" class="star-btn" data-rating="3" title="Good (3 stars)"><i class="far fa-star"></i></button>
-                                            <button type="button" class="star-btn" data-rating="4" title="Very Good (4 stars)"><i class="far fa-star"></i></button>
-                                            <button type="button" class="star-btn" data-rating="5" title="Excellent (5 stars)"><i class="far fa-star"></i></button>
-                                        </div>
+                                <div class="d-flex justify-content-center my-3">
+                                    <div class="star-rating" role="group" aria-label="Rate your experience">
+                                        <button type="button" class="star-btn" data-rating="1"><i class="far fa-star"></i></button>
+                                        <button type="button" class="star-btn" data-rating="2"><i class="far fa-star"></i></button>
+                                        <button type="button" class="star-btn" data-rating="3"><i class="far fa-star"></i></button>
+                                        <button type="button" class="star-btn" data-rating="4"><i class="far fa-star"></i></button>
+                                        <button type="button" class="star-btn" data-rating="5"><i class="far fa-star"></i></button>
                                     </div>
                                 </div>
                                 {{ form.rating(type="hidden", class="rating-input", required=true) }}
