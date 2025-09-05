@@ -2,7 +2,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
   <defs>
-    <!-- Gradient for the R letter -->
     <linearGradient id="rGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
       <stop offset="25%" style="stop-color:#F7931E;stop-opacity:1" />
@@ -11,7 +10,6 @@
       <stop offset="100%" style="stop-color:#2196F3;stop-opacity:1" />
     </linearGradient>
     
-    <!-- Eye gradient -->
     <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
       <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
       <stop offset="70%" style="stop-color:#4682B4;stop-opacity:1" />
@@ -19,37 +17,33 @@
     </radialGradient>
   </defs>
 
-  <!-- Logo Group -->
-  <g transform="translate(20, 10)">
-    <!-- Letter R with colorful gradient -->
-    <path d="M0 55 L0 5 C0 2, 2 0, 5 0 L30 0 C42 0, 48 6, 48 18 C48 27, 42 33, 35 35 L50 55 C50 55, 42 55, 36 55 L25 38 L18 38 L18 55 C18 55, 10 55, 5 55 C2 55, 0 55, 0 55 Z M18 12 L18 26 L30 26 C36 26, 38 22, 38 19 C38 16, 36 12, 30 12 Z" 
+  <!-- White background for visibility -->
+  <rect width="400" height="80" fill="#ffffff" stroke="#e0e0e0" stroke-width="1" rx="8"/>
+
+  <!-- Letter R with colorful gradient -->
+  <g transform="translate(20, 15)">
+    <path d="M0 50 L0 5 C0 2, 2 0, 5 0 L25 0 C35 0, 40 5, 40 15 C40 22, 35 27, 30 28 L42 50 L32 50 L22 32 L15 32 L15 50 Z M15 12 L15 24 L25 24 C30 24, 32 20, 32 16 C32 12, 30 12, 25 12 Z" 
           fill="url(#rGradient)" stroke="#ffffff" stroke-width="1"/>
     
     <!-- Eye integrated into R -->
-    <ellipse cx="31" cy="19" rx="14" ry="8" fill="#ffffff" stroke="#2196F3" stroke-width="2"/>
-    <circle cx="31" cy="19" r="6" fill="url(#eyeGradient)"/>
-    <circle cx="33" cy="17" r="2.5" fill="#ffffff"/>
-    <circle cx="34" cy="16" r="1.2" fill="#ffffff"/>
+    <ellipse cx="26" cy="18" rx="12" ry="7" fill="#ffffff" stroke="#2196F3" stroke-width="2"/>
+    <circle cx="26" cy="18" r="5" fill="url(#eyeGradient)"/>
+    <circle cx="28" cy="16" r="2" fill="#ffffff"/>
+    <circle cx="29" cy="15" r="1" fill="#ffffff"/>
     
-    <!-- Decorative splash at top -->
-    <g transform="translate(25, -8)">
-      <!-- Main splash burst -->
-      <path d="M5 8 C3 5, 1 3, 0 6 C-1 9, 2 11, 5 10 C8 9, 7 8, 5 8 Z" fill="#FF6B35"/>
-      <path d="M10 5 C9 2, 6 1, 5 4 C4 7, 7 8, 10 7 C13 6, 11 5, 10 5 Z" fill="#F7931E"/>
-      <path d="M15 9 C14 6, 11 5, 10 8 C9 11, 12 12, 15 11 C18 10, 16 9, 15 9 Z" fill="#E91E63"/>
-      <path d="M20 6 C19 3, 16 2, 15 5 C14 8, 17 9, 20 8 C23 7, 21 6, 20 6 Z" fill="#9C27B0"/>
-      <!-- Small drops -->
-      <circle cx="3" cy="2" r="2" fill="#FF9800"/>
-      <circle cx="12" cy="0" r="1.5" fill="#4CAF50"/>
-      <circle cx="18" cy="3" r="1.8" fill="#2196F3"/>
-      <circle cx="0" cy="12" r="1.5" fill="#9C27B0"/>
-      <circle cx="8" cy="13" r="2" fill="#00BCD4"/>
-      <circle cx="22" cy="10" r="1.3" fill="#FF5722"/>
+    <!-- Colorful splash elements -->
+    <g transform="translate(20, -5)">
+      <circle cx="5" cy="5" r="3" fill="#FF6B35"/>
+      <circle cx="12" cy="3" r="2.5" fill="#F7931E"/>
+      <circle cx="18" cy="6" r="2" fill="#E91E63"/>
+      <circle cx="8" cy="10" r="2.5" fill="#9C27B0"/>
+      <circle cx="15" cy="2" r="1.5" fill="#4CAF50"/>
+      <circle cx="22" cy="4" r="2" fill="#2196F3"/>
     </g>
   </g>
 
-  <!-- Text Group -->
-  <text x="85" y="32" font-family="Montserrat, Arial, sans-serif" font-size="20" font-weight="700" fill="#2196F3">Dr. Richa's Eye Clinic</text>
-  <text x="85" y="48" font-family="Montserrat, Arial, sans-serif" font-size="12" font-weight="500" fill="#555555">Vision that shines, Care that matters</text>
-  <text x="85" y="62" font-family="Montserrat, Arial, sans-serif" font-size="12" font-weight="500" fill="#e83e8c">A hub for your family and kid's eyes</text>
+  <!-- Text -->
+  <text x="85" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2196F3">Dr. Richa's Eye Clinic</text>
+  <text x="85" y="46" font-family="Arial, sans-serif" font-size="11" font-weight="500" fill="#555555">Vision that shines, Care that matters</text>
+  <text x="85" y="60" font-family="Arial, sans-serif" font-size="11" font-weight="500" fill="#e83e8c">A hub for your family and kid's eyes</text>
 </svg>

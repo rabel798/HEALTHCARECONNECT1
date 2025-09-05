@@ -82,7 +82,7 @@
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}" id="clinic-logo">
-                <img src="{{ url_for('static', filename='assets/logo.svg') }}" alt="Dr. Richa's Eye Clinic" style="height: 50px; width: auto;">
+                <img src="{{ url_for('static', filename='assets/logo.svg') }}?v={{ range(1000, 9999) | random }}" alt="Dr. Richa's Eye Clinic" style="height: 50px; width: auto; max-width: 300px; display: block;">
             </a>
             <script>
                 // Add click handler for authentication selection
