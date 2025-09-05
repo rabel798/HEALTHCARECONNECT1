@@ -41,18 +41,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 150);
             }
             
-            // Function to animate the splash
-            function animateSplash() {
-                if (splash) {
-                    splash.style.opacity = '1';
-                    splash.style.transform = 'scale(1.2) rotate(10deg)';
-                    splash.style.transition = 'all 0.4s ease-out';
-                    
-                    setTimeout(() => {
-                        splash.style.opacity = '0';
-                        splash.style.transform = 'scale(1) rotate(0deg)';
-                    }, 600);
-                }
+            // Keep splash always visible (no animation)
+            if (splash) {
+                splash.style.opacity = '1';
+                splash.style.transform = 'scale(1) rotate(0deg)';
             }
             
             // Mouse tracking for pupil movement
@@ -89,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Blink when mouse enters the logo
             svgElement.addEventListener('mouseenter', function() {
                 blinkEye();
-                animateSplash();
             });
             
             // Add hover effect to the R letter
@@ -107,14 +98,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Continuous blinking every 5 seconds
             setInterval(blinkEye, 5000);
             
-            // Animate splash every 8 seconds
-            setInterval(animateSplash, 8000);
-            
             // Add click handler
             svgElement.addEventListener('click', function() {
-                // Trigger a blink and splash animation
+                // Trigger a blink
                 blinkEye();
-                animateSplash();
                 
                 // Add a small pulse effect
                 svgElement.style.transform = 'scale(1.05)';
