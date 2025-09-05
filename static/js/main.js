@@ -202,11 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
                 }
 
-                // Remove any existing validation error
-                const errorElement = document.getElementById('rating-error');
-                if (errorElement) {
-                    errorElement.style.display = 'none';
-                }
+                
             });
 
             // Hover effect with rating preview
@@ -263,26 +259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {
-            // Check star rating specifically first
-            const ratingInput = form.querySelector('#rating');
-            const errorElement = document.getElementById('rating-error');
-
-            if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
-                event.preventDefault();
-                event.stopPropagation();
-                if (errorElement) {
-                    errorElement.style.display = 'block';
-                    errorElement.textContent = 'Please select a rating before submitting.';
-                }
-                form.classList.add('was-validated');
-                return false;
-            } else {
-                // Hide error if rating is selected
-                if (errorElement) {
-                    errorElement.style.display = 'none';
-                }
-            }
-
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
