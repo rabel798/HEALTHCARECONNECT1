@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -79,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Appointment date picker functionality
     const appointmentDateInput = document.getElementById('appointment_date');
     const calendarTrigger = document.getElementById('calendar-trigger');
-    
+
     if (appointmentDateInput && calendarTrigger) {
         calendarTrigger.addEventListener('click', function() {
             appointmentDateInput.focus();
@@ -114,10 +113,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateTimeSlots(date) {
         const selectedDate = new Date(date);
         const dayOfWeek = selectedDate.getDay();
-        
+
         // Sunday (0) has different hours: 10:00 AM - 1:00 PM
         // Monday-Saturday (1-6): 5:00 PM - 8:00 PM
-        
+
         let slots = [];
         if (dayOfWeek === 0) {
             // Sunday slots
@@ -139,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!timeSlotsContainer) return;
 
         const slotsHtml = slots.map(slot => `
-            <button type="button" class="time-slot ${!slot.available ? 'disabled' : ''}" 
+            <button type="button" class="time-slot ${!slot.available ? 'disabled' : ''}"
                     data-time="${slot.time}" ${!slot.available ? 'disabled' : ''}>
                 ${slot.time}
             </button>
@@ -156,10 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
             slot.addEventListener('click', function() {
                 // Remove selected class from all slots
                 document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-                
+
                 // Add selected class to clicked slot
                 this.classList.add('selected');
-                
+
                 // Set the value in the hidden input
                 const timeInput = document.getElementById('appointment_time');
                 if (timeInput) {
@@ -172,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Star rating functionality
     const starButtons = document.querySelectorAll('.star-btn');
     const ratingInput = document.getElementById('rating');
-    
+
     if (starButtons.length > 0 && ratingInput) {
         // Make stars visible initially
         starButtons.forEach((star, index) => {
@@ -184,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             star.addEventListener('click', function() {
                 const rating = index + 1;
                 ratingInput.value = rating;
-                
+
                 // Update star display
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
@@ -194,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         starIcon.className = 'far fa-star text-warning';
                     }
                 });
-                
+
                 // Update rating feedback text
                 const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
                 const feedbackElement = document.querySelector('.rating-feedback span');
@@ -202,14 +201,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     feedbackElement.textContent = `${rating} star${rating > 1 ? 's' : ''} - ${ratingTexts[rating - 1]}`;
                     feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
                 }
-                
+
                 // Remove any existing validation error
                 const errorElement = document.getElementById('rating-error');
                 if (errorElement) {
                     errorElement.style.display = 'none';
                 }
             });
-            
+
             // Hover effect with rating preview
             star.addEventListener('mouseenter', function() {
                 const hoverRating = index + 1;
@@ -221,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         starIcon.className = 'far fa-star text-warning';
                     }
                 });
-                
+
                 // Show hover feedback
                 const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
                 const feedbackElement = document.querySelector('.rating-feedback span');
@@ -231,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-        
+
         // Reset to actual rating on mouse leave
         const starContainer = document.querySelector('.star-rating');
         if (starContainer) {
@@ -245,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         starIcon.className = 'far fa-star text-warning';
                     }
                 });
-                
+
                 // Reset feedback text
                 const feedbackElement = document.querySelector('.rating-feedback span');
                 if (feedbackElement && currentRating > 0) {
@@ -267,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check star rating specifically first
             const ratingInput = form.querySelector('#rating');
             const errorElement = document.getElementById('rating-error');
-            
+
             if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -283,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorElement.style.display = 'none';
                 }
             }
-            
+
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -292,16 +291,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    
+
 
     // Navbar hide/show on scroll
     let lastScrollTop = 0;
     const navbar = document.querySelector('.navbar');
-    
+
     if (navbar) {
         window.addEventListener('scroll', function() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
+
             if (scrollTop > lastScrollTop && scrollTop > 100) {
                 // Scrolling down & past 100px
                 navbar.classList.add('navbar-hidden');
@@ -309,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Scrolling up
                 navbar.classList.remove('navbar-hidden');
             }
-            
+
             lastScrollTop = scrollTop;
         }, { passive: true });
     }
@@ -336,12 +335,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const emergencyTicker = document.querySelector('.emergency-ticker-content');
     if (emergencyTicker) {
         let touchStartX = 0;
-        
+
         emergencyTicker.addEventListener('touchstart', function(e) {
             touchStartX = e.touches[0].clientX;
             this.style.animationPlayState = 'paused';
         }, { passive: true });
-        
+
         emergencyTicker.addEventListener('touchend', function() {
             this.style.animationPlayState = 'running';
         }, { passive: true });
@@ -350,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Testimonials animation controls
     const testimonialsWrapper = document.querySelector('.testimonials-wrapper');
     const testimonialRows = document.querySelectorAll('.testimonial-row');
-    
+
     if (testimonialsWrapper && testimonialRows.length > 0) {
         // Pause on hover
         testimonialsWrapper.addEventListener('mouseenter', function() {
@@ -358,21 +357,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.style.animationPlayState = 'paused';
             });
         });
-        
+
         // Resume on mouse leave
         testimonialsWrapper.addEventListener('mouseleave', function() {
             testimonialRows.forEach(row => {
                 row.style.animationPlayState = 'running';
             });
         });
-        
+
         // Pause/resume on touch for mobile
         testimonialsWrapper.addEventListener('touchstart', function(e) {
             testimonialRows.forEach(row => {
                 row.style.animationPlayState = 'paused';
             });
         }, { passive: true });
-        
+
         testimonialsWrapper.addEventListener('touchend', function() {
             setTimeout(() => {
                 testimonialRows.forEach(row => {
@@ -380,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }, 2000); // Resume after 2 seconds
         }, { passive: true });
-        
+
         // Add click interaction to testimonial cards
         const testimonialCards = document.querySelectorAll('.testimonial-card');
         testimonialCards.forEach(card => {
@@ -402,12 +401,49 @@ document.addEventListener('DOMContentLoaded', function() {
         testimonialCardsStatic.forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
-            
+
             setTimeout(() => {
                 card.style.transition = 'all 0.6s ease';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
             }, index * 100);
         });
+    }
+
+    // Initialize testimonials animation
+    if (document.querySelector('.testimonials-track')) {
+        initTestimonialsAnimation();
+    }
+
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.parentNode.removeChild(alert);
+                    }
+                }, 500);
+            }
+        }, 5000);
+    });
+
+    // Initialize navbar scroll effect
+    initNavbarScrollEffect();
+
+    // Initialize animations
+    initAnimations();
+
+    // Initialize appointment form
+    if (document.querySelector('#appointment-form')) {
+        initAppointmentForm();
+    }
+
+    // Initialize review form
+    if (document.querySelector('.review-form-container')) {
+        initReviewForm();
     }
 });
