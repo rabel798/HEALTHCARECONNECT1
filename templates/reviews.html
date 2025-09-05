@@ -42,6 +42,10 @@
             <div class="testimonials-track d-flex" id="testimonials-track">
                 <!-- Row 1 - Moving Right -->
                 <div class="testimonial-row moving-right">
+                    {% set colors = ['text-primary', 'text-success', 'text-info', 'text-warning', 'text-danger', 'text-purple'] %}
+                    {% set professions = ['Verified Patient', 'Patient Review', 'Satisfied Patient', 'Recent Patient', 'Happy Patient'] %}
+                    
+                    <!-- Default testimonials -->
                     <div class="testimonial-card">
                         <div class="testimonial-content">
                             <div class="stars mb-2">
@@ -85,6 +89,34 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Approved reviews from database -->
+                    {% for review in reviews %}
+                        {% set color_index = loop.index0 % colors|length %}
+                        {% set profession_index = loop.index0 % professions|length %}
+                        <div class="testimonial-card">
+                            <div class="testimonial-content">
+                                <div class="stars mb-2">
+                                    {% for i in range(review.rating) %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - review.rating) %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endfor %}
+                                </div>
+                                <p class="mb-3">"{{ review.review_text }}"</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        <i class="fas fa-user-circle fa-2x {{ colors[color_index] }}"></i>
+                                    </div>
+                                    <div class="author-info">
+                                        <h6 class="mb-0">{{ review.patient_name }}</h6>
+                                        <small class="text-muted">{{ professions[profession_index] }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                     
                     <div class="testimonial-card">
                         <div class="testimonial-content">
@@ -226,115 +258,7 @@
     </div>
 </section>
 
-<!-- Database Reviews Display -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-5 fade-in">
-                <h2>Recent Patient Reviews</h2>
-                <p class="lead">See what our recent patients have shared about their experience</p>
-            </div>
-        </div>
-        <div class="row">
-            {% if reviews %}
-                {% for review in reviews %}
-                <div class="col-lg-6 mb-4 fade-in">
-                    <div class="review-display-card p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="stars">
-                                {% for i in range(review.rating) %}
-                                    <i class="fas fa-star text-warning me-1"></i>
-                                {% endfor %}
-                                {% for i in range(5 - review.rating) %}
-                                    <i class="far fa-star text-warning me-1"></i>
-                                {% endfor %}
-                            </div>
-                            <span class="badge bg-primary rounded-pill">{{ review.rating }}/5</span>
-                        </div>
-                        <blockquote class="blockquote mb-3">
-                            <p class="mb-0 fst-italic">"{{ review.review_text }}"</p>
-                        </blockquote>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-0 text-primary">{{ review.patient_name }}</h6>
-                                <small class="text-muted">Verified Patient</small>
-                            </div>
-                            <small class="text-muted">
-                                <i class="far fa-calendar-alt me-1"></i>
-                                {{ review.created_at.strftime('%B %d, %Y') }}
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <!-- If no real reviews, show some of the testimonials as examples -->
-                <div class="col-lg-6 mb-4 fade-in">
-                    <div class="review-display-card p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="stars">
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                            </div>
-                            <span class="badge bg-primary rounded-pill">5/5</span>
-                        </div>
-                        <blockquote class="blockquote mb-3">
-                            <p class="mb-0 fst-italic">"Dr. Richa's expertise in pediatric eye care is exceptional. My daughter's vision improved significantly after her treatment."</p>
-                        </blockquote>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-0 text-primary">Priya Sharma</h6>
-                                <small class="text-muted">Patient Review</small>
-                            </div>
-                            <small class="text-muted">
-                                <i class="far fa-calendar-alt me-1"></i>
-                                Recent Patient
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6 mb-4 fade-in">
-                    <div class="review-display-card p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="stars">
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                                <i class="fas fa-star text-warning me-1"></i>
-                            </div>
-                            <span class="badge bg-primary rounded-pill">5/5</span>
-                        </div>
-                        <blockquote class="blockquote mb-3">
-                            <p class="mb-0 fst-italic">"Amazing experience! The clinic is well-equipped with modern technology and Dr. Richa's diagnosis was spot-on."</p>
-                        </blockquote>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-0 text-primary">Arun Patel</h6>
-                                <small class="text-muted">Patient Review</small>
-                            </div>
-                            <small class="text-muted">
-                                <i class="far fa-calendar-alt me-1"></i>
-                                Recent Patient
-                            </small>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-12 text-center mt-3">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Submit your own review below to share your experience with future patients!
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</section>
+
 
 <!-- Submit Review Form -->
 <section class="py-5">
