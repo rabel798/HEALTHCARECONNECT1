@@ -458,14 +458,25 @@ def assistant_login():
     if form.validate_on_submit():
         # Find assistant with this username
         assistant = Assistant.query.filter_by(username=form.username.data).first()
-
-        if assistant and assistant.check_password(form.password.data):
-            login_user(assistant)
-            session['user_role'] = 'assistant'  # Set role in session
-            flash('Login successful! Welcome, ' + assistant.full_name, 'success')
-            return redirect(url_for('assistant_dashboard'))
+        
+        print(f"Login attempt - Username: {form.username.data}")
+        print(f"Assistant found: {assistant is not None}")
+        
+        if assistant:
+            print(f"Assistant ID: {assistant.id}, Full name: {assistant.full_name}")
+            password_check = assistant.check_password(form.password.data)
+            print(f"Password check result: {password_check}")
+            
+            if password_check:
+                login_user(assistant)
+                session['user_role'] = 'assistant'  # Set role in session
+                print(f"Login successful for {assistant.full_name}")
+                flash('Login successful! Welcome, ' + assistant.full_name, 'success')
+                return redirect(url_for('assistant_dashboard'))
+            else:
+                flash('Invalid password.', 'danger')
         else:
-            flash('Invalid username or password.', 'danger')
+            flash('Invalid username.', 'danger')
 
     return render_template('assistant/login.html', form=form)
 
@@ -500,113 +511,35 @@ def assistant_dashboard():
         total_patients = Patient.query.count()
         prescriptions_count = OptometristPrescription.query.filter_by(assistant_id=current_user.id).count()
 
+        # Get today's appointments
+        today_appointments = Appointment.query.filter_by(appointment_date=today).all()
+
+        # Get all appointments (limited to recent 50 for performance)
+        all_appointments = Appointment.query.order_by(desc(Appointment.appointment_date)).limit(50).all()
+
+        # Get all patients
+        all_patients = Patient.query.order_by(Patient.full_name).all()
+
         # Get salary records
         salary_records = Salary.query.filter_by(
             assistant_id=current_user.id
         ).order_by(desc(Salary.payment_date)).all()
 
         return render_template(
-            'assistant/optometrist_dashboard.html',
+            'assistant/dashboard.html',
             upcoming_appointments=upcoming_appointments,
             total_appointments=total_appointments,
             total_patients=total_patients,
             prescriptions_count=prescriptions_count,
-            salary_records=salary_records
-        )
-    except Exception as e:
-        flash(f'Error loading dashboard: {str(e)}', 'danger')
-        return redirect(url_for('index'))
-
-    try:
-        # Create form for CSRF token
-        form = FlaskForm()
-
-        # Get all patients
-        all_patients = Patient.query.order_by(Patient.full_name).all()
-
-        # Get today's appointments
-        today = datetime.now().date()
-        today_appointments = Appointment.query.filter_by(appointment_date=today).all()
-
-        # Get all appointments
-        all_appointments = Appointment.query.order_by(desc(Appointment.appointment_date)).all()
-
-        # Get upcoming appointments count
-        upcoming_appointments = Appointment.query.filter(
-            Appointment.appointment_date >= today,
-            Appointment.status == 'scheduled'
-        ).count()
-
-        # Get total appointments
-        total_appointments = Appointment.query.count()
-
-        # Get total patients
-        total_patients = Patient.query.count()
-
-        # Get salary records
-        salary_records = Salary.query.filter_by(assistant_id=current_user.id).order_by(desc(Salary.payment_date)).all()
-
-        return render_template(
-            'assistant/dashboard.html',
-            form=form,
-            all_patients=all_patients,
             today_appointments=today_appointments,
             all_appointments=all_appointments,
-            upcoming_appointments=upcoming_appointments,
-            total_appointments=total_appointments,
-            total_patients=total_patients,
+            all_patients=all_patients,
             salary_records=salary_records
         )
     except Exception as e:
+        print(f'Error loading assistant dashboard: {str(e)}')
         flash(f'Error loading dashboard: {str(e)}', 'danger')
         return redirect(url_for('index'))
-
-    try:
-        # Get all patients
-        all_patients = db.session.query(
-            Patient.id, 
-            Patient.full_name, 
-            Patient.mobile_number, 
-            Patient.email, 
-            Patient.age, 
-            Patient.is_registered
-        ).all()
-
-        # Get today's appointments
-        today = datetime.now().date()
-        today_appointments = Appointment.query.filter_by(appointment_date=today).all()
-
-        # Get all appointments
-        all_appointments = Appointment.query.order_by(desc(Appointment.appointment_date)).all()
-
-        # Get upcoming appointments
-        upcoming_appointments = Appointment.query.filter(
-            Appointment.appointment_date >= today,
-            Appointment.status == 'scheduled'
-        ).count()
-
-        # Get total appointments
-        total_appointments = Appointment.query.count()
-
-        # Get total patients
-        total_patients = Patient.query.count()
-
-        # Get salary records for current assistant
-        salary_records = Salary.query.filter_by(assistant_id=current_user.id).order_by(desc(Salary.payment_date)).all()
-    except Exception as e:
-        flash(f'Error loading dashboard data: {str(e)}', 'danger')
-        return redirect(url_for('index'))
-
-    return render_template(
-        'assistant/dashboard.html',
-        all_patients=all_patients,
-        today_appointments=today_appointments,
-        all_appointments=all_appointments,
-        upcoming_appointments=upcoming_appointments,
-        total_appointments=total_appointments,
-        total_patients=total_patients,
-        salary_records=salary_records
-    )
 
 
 # Admin/Doctor Authentication Routes
