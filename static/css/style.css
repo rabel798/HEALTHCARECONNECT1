@@ -11,23 +11,15 @@
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
 
-  /* Dark mode variables */
-  --bg-color: #ffffff;
-  --text-color: #343a40;
-  --card-bg: #ffffff;
-  --border-color: #dee2e6;
-  --footer-bg: #343a40;
-  --footer-text: #ffffff;
-  --hero-overlay: rgba(0, 123, 255, 0.85);
+  
 }
 
 /* Global Styles */
 body {
   font-family: 'Roboto', sans-serif;
-  color: var(--text-color, var(--dark-color));
+  color: var(--dark-color);
   line-height: 1.6;
-  background-color: var(--bg-color, var(--white));
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--white);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -39,8 +31,7 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1.5rem 3rem;
-  background-color: var(--card-bg, var(--white));
-  transition: background-color 0.3s ease;
+  background-color: var(--white);
   min-height: 80px;
 }
 
@@ -231,10 +222,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 50%;
 }
 
-/* Dark mode adjustments */
-[data-theme="dark"] .navbar-toggler span {
-  background: var(--text-color);
-}
+
 
 /* Hero Section */
 .hero {
@@ -519,15 +507,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Dark mode adjustments for QR corner */
-[data-theme="dark"] .qr-corner-text {
-  background: rgba(30, 30, 30, 0.9);
-  color: #ccc;
-}
 
-[data-theme="dark"] .clinic-address {
-  background-color: var(--card-bg);
-}
 
 /* Footer */
 footer {
@@ -870,96 +850,7 @@ footer a:hover {
     transition: opacity 0.3s ease;
 }
 
-/* Dark Mode Styles */
-[data-theme="dark"] {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --card-bg: #1e1e1e;
-    --border-color: #333;
-    --hero-overlay: rgba(0, 80, 167, 0.9);
-    --light-color: #222;
-    --dark-color: #f8f9fa;
-    --light-blue: #162c46;
-}
 
-[data-theme="dark"] body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .navbar,
-[data-theme="dark"] .card,
-[data-theme="dark"] .appointment-form,
-[data-theme="dark"] .review-card,
-[data-theme="dark"] .service-card,
-[data-theme="dark"] .payment-method-card,
-[data-theme="dark"] .clinic-address {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .nav-link {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .hero {
-    background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('../img/setup.jpg');
-}
-
-[data-theme="dark"] .doctor-profile {
-    background-color: var(--light-blue);
-}
-
-[data-theme="dark"] footer {
-    background-color: #0a0a0a;
-}
-
-/* Dark Mode Toggle */
-.dark-mode-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: var(--transition);
-}
-
-.dark-mode-toggle i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    transition: var(--transition);
-}
-
-.dark-mode-toggle:hover {
-    transform: translateY(-3px);
-}
-
-[data-theme="dark"] .dark-mode-toggle i.fa-moon {
-    display: none;
-}
-
-[data-theme="dark"] .dark-mode-toggle i.fa-sun {
-    display: block;
-    color: #ffc107;
-}
-
-.dark-mode-toggle i.fa-sun {
-    display: none;
-}
-
-.dark-mode-toggle i.fa-moon {
-    display: block;
-}
 
 /* Service Page Cards */
 .services-page-card {
@@ -1019,10 +910,7 @@ footer a:hover {
     transform: translateX(10px);
 }
 
-/* Dark mode adjustments */
-[data-theme="dark"] .services-page-card .card-body {
-    background-color: rgba(30,30,30,0.95);
-}
+
 
 /* Additional Services Cards Styling */
 .services-page-card .card-body i {
@@ -1072,13 +960,7 @@ footer a:hover {
     transform: scale(1.2);
 }
 
-[data-theme="dark"] .highlight-credential {
-    background-color: rgba(0, 123, 255, 0.1);
-}
 
-[data-theme="dark"] .highlight-credential:hover {
-    background-color: rgba(0, 123, 255, 0.2);
-}
 
 /* Add any custom styles here */
 
