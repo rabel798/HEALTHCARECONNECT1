@@ -491,6 +491,12 @@ def assistant_logout():
 
     return redirect(url_for('auth_selection'))
 
+@app.route('/optometrist/logout')
+@login_required
+def optometrist_logout():
+    """Optometrist logout route (alias for assistant_logout)"""
+    return assistant_logout()
+
 @app.route('/assistant/dashboard')
 @login_required
 def assistant_dashboard():
@@ -1160,6 +1166,11 @@ def assistant_add_patient():
 
     return render_template('assistant/add_patient.html', form=form)
 
+@app.route('/optometrist/add-patient', methods=['GET', 'POST'])
+@login_required
+def optometrist_add_patient():
+    """Optometrist add patient route (alias for assistant_add_patient)"""
+    return assistant_add_patient()
 
 
 @app.route('/doctor/prescriptions')
@@ -1247,6 +1258,12 @@ def assistant_prescriptions():
 
     all_patients = Patient.query.order_by(Patient.full_name).all()
     return render_template('assistant/prescriptions.html', all_patients=all_patients)
+
+@app.route('/optometrist/prescriptions')
+@login_required
+def optometrist_prescriptions():
+    """Optometrist prescriptions route (alias for assistant_prescriptions)"""
+    return assistant_prescriptions()
 
 @app.route('/assistant/add-prescription/<int:patient_id>', methods=['GET', 'POST'])
 @login_required
