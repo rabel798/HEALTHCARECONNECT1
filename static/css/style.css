@@ -77,13 +77,15 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 20px;
   margin-left: 10px;
   text-decoration: none !important;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-brand:hover {
   transform: translateY(-2px);
 }
 
-.brand-container {
+.brand-text {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -115,6 +117,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile responsive brand */
 @media (max-width: 768px) {
+  .navbar-brand img {
+    height: 42px !important;
+  }
+  
   .clinic-name {
     font-size: 1.1rem;
   }
@@ -125,6 +131,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 576px) {
+  .navbar-brand img {
+    height: 35px !important;
+  }
+  
   .clinic-name {
     font-size: 1rem;
   }
@@ -132,7 +142,11 @@ h1, h2, h3, h4, h5, h6 {
   .tagline {
     font-size: 0.65rem;
   }
-}
+  
+  .brand-text {
+    display: none;
+  }
+}</media>
 
 /* Hide navbar on scroll up */
 .navbar {

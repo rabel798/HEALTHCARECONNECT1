@@ -82,7 +82,8 @@
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}" id="clinic-logo">
-                <div class="brand-container">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Dr. Richa's Eye Clinic" style="height: 50px; width: auto; max-width: 200px;">
+                <div class="brand-text ms-2">
                     <div class="clinic-name">Dr. Richa's Eye Clinic</div>
                     <div class="tagline">Eyes that Shine, Care that matters</div>
                 </div>
