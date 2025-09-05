@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if we have an SVG logo with the right ID
+    // Check if we have an SVG logo container
     const logoContainer = document.getElementById('interactive-logo-container');
     if (!logoContainer) return;
     
@@ -34,48 +34,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 topEyelid.style.display = 'block';
                 bottomEyelid.style.display = 'block';
                 
-                // Hide pupil and reflection during blink
-                pupil.style.display = 'none';
-                reflectionDot.style.display = 'none';
-                
-                // Open eye after short delay
+                // Hide eyelids after 150ms
                 setTimeout(() => {
                     topEyelid.style.display = 'none';
                     bottomEyelid.style.display = 'none';
-                    pupil.style.display = 'block';
-                    reflectionDot.style.display = 'block';
                 }, 150);
             }
             
-            // Function to animate splash
+            // Function to animate the splash
             function animateSplash() {
                 if (splash) {
-                    splash.style.transform = 'translate(30, 8) scale(1.2) rotate(10deg)';
-                    splash.style.transition = 'transform 0.3s ease';
+                    splash.style.opacity = '1';
+                    splash.style.transform = 'scale(1.2) rotate(10deg)';
+                    splash.style.transition = 'all 0.4s ease-out';
                     
                     setTimeout(() => {
-                        splash.style.transform = 'translate(30, 8) scale(1) rotate(0deg)';
-                    }, 300);
+                        splash.style.opacity = '0';
+                        splash.style.transform = 'scale(1) rotate(0deg)';
+                    }, 600);
                 }
             }
             
-            // Handle mouse movement for pupil tracking
-            document.addEventListener('mousemove', function(evt) {
-                // Calculate mouse position relative to the SVG
+            // Mouse tracking for pupil movement
+            svgElement.addEventListener('mousemove', function(e) {
                 const rect = svgElement.getBoundingClientRect();
-                const mouseX = evt.clientX - rect.left;
-                const mouseY = evt.clientY - rect.top;
+                const mouseX = (e.clientX - rect.left) * (120 / rect.width); // Scale to SVG coordinates
+                const mouseY = (e.clientY - rect.top) * (60 / rect.height);
                 
-                // Move pupil slightly to follow mouse (limit movement)
-                const eyeCenterX = 25; // Eye center position in the R
-                const eyeCenterY = 17.5;
+                // Eye center position
+                const eyeCenterX = 35;
+                const eyeCenterY = 20;
                 
                 // Calculate direction vector from eye center to mouse
-                let dx = mouseX - (eyeCenterX + 10); // Adjust for logo position
-                let dy = mouseY - (eyeCenterY + 5);
+                let dx = mouseX - eyeCenterX;
+                let dy = mouseY - eyeCenterY;
                 
-                // Limit movement to 2 units in any direction
-                const maxMove = 2;
+                // Limit movement to 1.5 units in any direction
+                const maxMove = 1.5;
                 const dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > maxMove) {
                     dx = dx * maxMove / dist;
@@ -86,9 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 pupil.setAttribute('cx', eyeCenterX + dx);
                 pupil.setAttribute('cy', eyeCenterY + dy);
                 
-                // Move reflection dot opposite to pupil movement
-                reflectionDot.setAttribute('cx', 26 - dx/2);
-                reflectionDot.setAttribute('cy', 16.5 - dy/2);
+                // Move reflection dot slightly opposite to pupil movement
+                reflectionDot.setAttribute('cx', 36 - dx/3);
+                reflectionDot.setAttribute('cy', 19 - dy/3);
             });
             
             // Blink when mouse enters the logo
@@ -100,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add hover effect to the R letter
             if (letterR) {
                 letterR.addEventListener('mouseenter', function() {
-                    letterR.style.filter = 'brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2))';
+                    letterR.style.filter = 'brightness(1.15) drop-shadow(0 3px 6px rgba(0,0,0,0.3))';
                     letterR.style.transition = 'filter 0.3s ease';
                 });
                 
@@ -109,11 +104,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // Continuous blinking every 4 seconds
-            setInterval(blinkEye, 4000);
+            // Continuous blinking every 5 seconds
+            setInterval(blinkEye, 5000);
             
-            // Animate splash every 6 seconds
-            setInterval(animateSplash, 6000);
+            // Animate splash every 8 seconds
+            setInterval(animateSplash, 8000);
             
             // Add click handler
             svgElement.addEventListener('click', function() {
@@ -121,8 +116,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 blinkEye();
                 animateSplash();
                 
-                // If the logo should link to the homepage or admin login
-                // We already have this handled in layout.html
+                // Add a small pulse effect
+                svgElement.style.transform = 'scale(1.05)';
+                svgElement.style.transition = 'transform 0.2s ease';
+                
+                setTimeout(() => {
+                    svgElement.style.transform = 'scale(1)';
+                }, 200);
             });
         })
         .catch(error => {
