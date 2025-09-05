@@ -76,11 +76,62 @@ h1, h2, h3, h4, h5, h6 {
   transition: var(--transition);
   margin-right: 20px;
   margin-left: 10px;
+  text-decoration: none !important;
 }
 
 .navbar-brand:hover {
   transform: translateY(-2px);
-  color: var(--primary-color) !important;
+}
+
+.brand-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.clinic-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  line-height: 1.2;
+}
+
+.tagline {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.navbar-brand:hover .clinic-name {
+  color: var(--primary-color);
+}
+
+.navbar-brand:hover .tagline {
+  color: var(--dark-color);
+}
+
+/* Mobile responsive brand */
+@media (max-width: 768px) {
+  .clinic-name {
+    font-size: 1.1rem;
+  }
+  
+  .tagline {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .clinic-name {
+    font-size: 1rem;
+  }
+  
+  .tagline {
+    font-size: 0.65rem;
+  }
 }
 
 /* Hide navbar on scroll up */
