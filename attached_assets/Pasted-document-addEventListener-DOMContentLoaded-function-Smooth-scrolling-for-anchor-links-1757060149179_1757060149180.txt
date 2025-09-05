@@ -1,0 +1,449 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Enhanced scroll animations with performance optimizations
+    function initScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Stop observing once animation is triggered for performance
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animation elements
+        const animationElements = document.querySelectorAll('.fade-in, .slide-up, .slide-up-delayed, .scale-in');
+        animationElements.forEach(el => observer.observe(el));
+
+        // Stagger animation for grouped elements
+        document.querySelectorAll('.slide-up-stagger').forEach((element, index) => {
+            element.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(element);
+        });
+
+        // Ensure doctor image container is observed for fade-in animation
+        const doctorImageContainer = document.querySelector('.doctor-image');
+        if (doctorImageContainer) {
+            // Add fade-in class if it doesn't exist
+            if (!doctorImageContainer.classList.contains('fade-in')) {
+                doctorImageContainer.classList.add('fade-in');
+                observer.observe(doctorImageContainer);
+            }
+        }
+    }
+
+    // Initialize scroll animations
+    initScrollAnimations();
+
+    // Payment method selection
+    const paymentMethods = document.querySelectorAll('.payment-method-card');
+    if (paymentMethods.length > 0) {
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                // Remove selected class from all methods
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+
+                // Add selected class to clicked method
+                this.classList.add('selected');
+
+                // Set the value in the hidden input
+                const methodValue = this.dataset.method;
+                const paymentMethodInput = document.getElementById('payment_method');
+                if (paymentMethodInput) {
+                    paymentMethodInput.value = methodValue;
+                }
+            });
+        });
+    }
+
+    // Appointment date picker functionality
+    const appointmentDateInput = document.getElementById('appointment_date');
+    const calendarTrigger = document.getElementById('calendar-trigger');
+
+    if (appointmentDateInput && calendarTrigger) {
+        calendarTrigger.addEventListener('click', function() {
+            appointmentDateInput.focus();
+            appointmentDateInput.click();
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        appointmentDateInput.setAttribute('min', today);
+
+        // Handle date change for time slot loading
+        appointmentDateInput.addEventListener('change', function() {
+            loadTimeSlots(this.value);
+        });
+    }
+
+    // Time slot selection
+    function loadTimeSlots(selectedDate) {
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        if (!timeSlotsContainer) return;
+
+        // Show loading
+        timeSlotsContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading available times...</div>';
+
+        // Simulate API call (replace with actual endpoint)
+        setTimeout(() => {
+            const timeSlots = generateTimeSlots(selectedDate);
+            renderTimeSlots(timeSlots);
+        }, 500);
+    }
+
+    function generateTimeSlots(date) {
+        const selectedDate = new Date(date);
+        const dayOfWeek = selectedDate.getDay();
+
+        // Sunday (0) has different hours: 10:00 AM - 1:00 PM
+        // Monday-Saturday (1-6): 5:00 PM - 8:00 PM
+
+        let slots = [];
+        if (dayOfWeek === 0) {
+            // Sunday slots
+            slots = ['10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'];
+        } else {
+            // Weekday slots
+            slots = ['5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM'];
+        }
+
+        // Mark some slots as unavailable (example logic)
+        return slots.map(slot => ({
+            time: slot,
+            available: Math.random() > 0.3 // Random availability for demo
+        }));
+    }
+
+    function renderTimeSlots(slots) {
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        if (!timeSlotsContainer) return;
+
+        const slotsHtml = slots.map(slot => `
+            <button type="button" class="time-slot ${!slot.available ? 'disabled' : ''}"
+                    data-time="${slot.time}" ${!slot.available ? 'disabled' : ''}>
+                ${slot.time}
+            </button>
+        `).join('');
+
+        timeSlotsContainer.innerHTML = `
+            <div class="time-slots">
+                ${slotsHtml}
+            </div>
+        `;
+
+        // Add click handlers to time slots
+        document.querySelectorAll('.time-slot:not(.disabled)').forEach(slot => {
+            slot.addEventListener('click', function() {
+                // Remove selected class from all slots
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+
+                // Add selected class to clicked slot
+                this.classList.add('selected');
+
+                // Set the value in the hidden input
+                const timeInput = document.getElementById('appointment_time');
+                if (timeInput) {
+                    timeInput.value = this.dataset.time;
+                }
+            });
+        });
+    }
+
+    // Star rating functionality
+    const starButtons = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('rating');
+
+    if (starButtons.length > 0 && ratingInput) {
+        // Make stars visible initially
+        starButtons.forEach((star, index) => {
+            const starIcon = star.querySelector('i');
+            starIcon.className = 'far fa-star text-warning';
+        });
+
+        starButtons.forEach((star, index) => {
+            star.addEventListener('click', function() {
+                const rating = index + 1;
+                ratingInput.value = rating;
+
+                // Update star display
+                starButtons.forEach((s, i) => {
+                    const starIcon = s.querySelector('i');
+                    if (i < rating) {
+                        starIcon.className = 'fas fa-star text-warning';
+                    } else {
+                        starIcon.className = 'far fa-star text-warning';
+                    }
+                });
+
+                // Update rating feedback text
+                const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                const feedbackElement = document.querySelector('.rating-feedback span');
+                if (feedbackElement) {
+                    feedbackElement.textContent = `${rating} star${rating > 1 ? 's' : ''} - ${ratingTexts[rating - 1]}`;
+                    feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
+                }
+
+                // Remove any existing validation error
+                const errorElement = document.getElementById('rating-error');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            });
+
+            // Hover effect with rating preview
+            star.addEventListener('mouseenter', function() {
+                const hoverRating = index + 1;
+                starButtons.forEach((s, i) => {
+                    const starIcon = s.querySelector('i');
+                    if (i < hoverRating) {
+                        starIcon.className = 'fas fa-star text-warning';
+                    } else {
+                        starIcon.className = 'far fa-star text-warning';
+                    }
+                });
+
+                // Show hover feedback
+                const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                const feedbackElement = document.querySelector('.rating-feedback span');
+                if (feedbackElement) {
+                    feedbackElement.textContent = `${hoverRating} star${hoverRating > 1 ? 's' : ''} - ${ratingTexts[hoverRating - 1]}`;
+                    feedbackElement.className = 'badge bg-secondary text-white px-3 py-2 rounded-pill';
+                }
+            });
+        });
+
+        // Reset to actual rating on mouse leave
+        const starContainer = document.querySelector('.star-rating');
+        if (starContainer) {
+            starContainer.addEventListener('mouseleave', function() {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                starButtons.forEach((s, i) => {
+                    const starIcon = s.querySelector('i');
+                    if (i < currentRating) {
+                        starIcon.className = 'fas fa-star text-warning';
+                    } else {
+                        starIcon.className = 'far fa-star text-warning';
+                    }
+                });
+
+                // Reset feedback text
+                const feedbackElement = document.querySelector('.rating-feedback span');
+                if (feedbackElement && currentRating > 0) {
+                    const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                    feedbackElement.textContent = `${currentRating} star${currentRating > 1 ? 's' : ''} - ${ratingTexts[currentRating - 1]}`;
+                    feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
+                } else if (feedbackElement) {
+                    feedbackElement.textContent = 'Click to rate your experience';
+                    feedbackElement.className = 'badge bg-light text-dark px-3 py-2 rounded-pill';
+                }
+            });
+        }
+    }
+
+    // Form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            // Check star rating specifically first
+            const ratingInput = form.querySelector('#rating');
+            const errorElement = document.getElementById('rating-error');
+
+            if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (errorElement) {
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = 'Please select a rating before submitting.';
+                }
+                form.classList.add('was-validated');
+                return false;
+            } else {
+                // Hide error if rating is selected
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    });
+
+
+
+    // Navbar hide/show on scroll
+    let lastScrollTop = 0;
+    const navbar = document.querySelector('.navbar');
+
+    if (navbar) {
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down & past 100px
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scrolling up
+                navbar.classList.remove('navbar-hidden');
+            }
+
+            lastScrollTop = scrollTop;
+        }, { passive: true });
+    }
+
+    // Lazy loading for images
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+
+    // Emergency ticker pause on mobile touch
+    const emergencyTicker = document.querySelector('.emergency-ticker-content');
+    if (emergencyTicker) {
+        let touchStartX = 0;
+
+        emergencyTicker.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            this.style.animationPlayState = 'paused';
+        }, { passive: true });
+
+        emergencyTicker.addEventListener('touchend', function() {
+            this.style.animationPlayState = 'running';
+        }, { passive: true });
+    }
+
+    // Testimonials animation controls
+    const testimonialsWrapper = document.querySelector('.testimonials-wrapper');
+    const testimonialRows = document.querySelectorAll('.testimonial-row');
+
+    if (testimonialsWrapper && testimonialRows.length > 0) {
+        // Pause on hover
+        testimonialsWrapper.addEventListener('mouseenter', function() {
+            testimonialRows.forEach(row => {
+                row.style.animationPlayState = 'paused';
+            });
+        });
+
+        // Resume on mouse leave
+        testimonialsWrapper.addEventListener('mouseleave', function() {
+            testimonialRows.forEach(row => {
+                row.style.animationPlayState = 'running';
+            });
+        });
+
+        // Pause/resume on touch for mobile
+        testimonialsWrapper.addEventListener('touchstart', function(e) {
+            testimonialRows.forEach(row => {
+                row.style.animationPlayState = 'paused';
+            });
+        }, { passive: true });
+
+        testimonialsWrapper.addEventListener('touchend', function() {
+            setTimeout(() => {
+                testimonialRows.forEach(row => {
+                    row.style.animationPlayState = 'running';
+                });
+            }, 2000); // Resume after 2 seconds
+        }, { passive: true });
+
+        // Add click interaction to testimonial cards
+        const testimonialCards = document.querySelectorAll('.testimonial-card');
+        testimonialCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Add a subtle click effect
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    }
+
+    // Add loading effect for reviews section
+    const reviewsSection = document.querySelector('.reviews-hero');
+    if (reviewsSection) {
+        // Add a subtle entrance animation delay for testimonials
+        const testimonialCardsStatic = document.querySelectorAll('.testimonial-card');
+        testimonialCardsStatic.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    }
+
+    // Initialize testimonials animation
+    if (document.querySelector('.testimonials-track')) {
+        initTestimonialsAnimation();
+    }
+
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.parentNode.removeChild(alert);
+                    }
+                }, 500);
+            }
+        }, 5000);
+    });
+
+    // Initialize navbar scroll effect
+    initNavbarScrollEffect();
+
+    // Initialize animations
+    initAnimations();
+
+    // Initialize appointment form
+    if (document.querySelector('#appointment-form')) {
+        initAppointmentForm();
+    }
+
+    // Initialize review form
+    if (document.querySelector('.review-form-container')) {
+        initReviewForm();
+    }
+});
