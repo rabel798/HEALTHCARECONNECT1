@@ -1,49 +1,26 @@
 
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
-  <defs>
-    <linearGradient id="rGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
-      <stop offset="25%" style="stop-color:#F7931E;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#E91E63;stop-opacity:1" />
-      <stop offset="75%" style="stop-color:#9C27B0;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#2196F3;stop-opacity:1" />
-    </linearGradient>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 70" width="350" height="70">
+  <!-- Background -->
+  <rect width="350" height="70" fill="#ffffff" stroke="#2196F3" stroke-width="2" rx="5"/>
+  
+  <!-- Letter R -->
+  <g transform="translate(15, 10)">
+    <path d="M0 45 L0 5 C0 2, 2 0, 5 0 L20 0 C28 0, 32 4, 32 12 C32 18, 28 22, 24 23 L34 45 L26 45 L18 28 L12 28 L12 45 Z M12 8 L12 20 L20 20 C24 20, 26 18, 26 14 C26 10, 24 8, 20 8 Z" 
+          fill="#2196F3" stroke="#ffffff" stroke-width="1"/>
     
-    <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
-      <stop offset="70%" style="stop-color:#4682B4;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
-    </radialGradient>
-  </defs>
-
-  <!-- White background for visibility -->
-  <rect width="400" height="80" fill="#ffffff" stroke="#e0e0e0" stroke-width="1" rx="8"/>
-
-  <!-- Letter R with colorful gradient -->
-  <g transform="translate(20, 15)">
-    <path d="M0 50 L0 5 C0 2, 2 0, 5 0 L25 0 C35 0, 40 5, 40 15 C40 22, 35 27, 30 28 L42 50 L32 50 L22 32 L15 32 L15 50 Z M15 12 L15 24 L25 24 C30 24, 32 20, 32 16 C32 12, 30 12, 25 12 Z" 
-          fill="url(#rGradient)" stroke="#ffffff" stroke-width="1"/>
+    <!-- Eye -->
+    <ellipse cx="21" cy="15" rx="8" ry="5" fill="#ffffff" stroke="#2196F3" stroke-width="2"/>
+    <circle cx="21" cy="15" r="3" fill="#2196F3"/>
+    <circle cx="22.5" cy="13.5" r="1" fill="#ffffff"/>
     
-    <!-- Eye integrated into R -->
-    <ellipse cx="26" cy="18" rx="12" ry="7" fill="#ffffff" stroke="#2196F3" stroke-width="2"/>
-    <circle cx="26" cy="18" r="5" fill="url(#eyeGradient)"/>
-    <circle cx="28" cy="16" r="2" fill="#ffffff"/>
-    <circle cx="29" cy="15" r="1" fill="#ffffff"/>
-    
-    <!-- Colorful splash elements -->
-    <g transform="translate(20, -5)">
-      <circle cx="5" cy="5" r="3" fill="#FF6B35"/>
-      <circle cx="12" cy="3" r="2.5" fill="#F7931E"/>
-      <circle cx="18" cy="6" r="2" fill="#E91E63"/>
-      <circle cx="8" cy="10" r="2.5" fill="#9C27B0"/>
-      <circle cx="15" cy="2" r="1.5" fill="#4CAF50"/>
-      <circle cx="22" cy="4" r="2" fill="#2196F3"/>
-    </g>
+    <!-- Colorful dots -->
+    <circle cx="28" cy="8" r="2" fill="#FF6B35"/>
+    <circle cx="32" cy="12" r="1.5" fill="#F7931E"/>
+    <circle cx="30" cy="5" r="1.8" fill="#E91E63"/>
   </g>
 
   <!-- Text -->
-  <text x="85" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2196F3">Dr. Richa's Eye Clinic</text>
-  <text x="85" y="46" font-family="Arial, sans-serif" font-size="11" font-weight="500" fill="#555555">Vision that shines, Care that matters</text>
-  <text x="85" y="60" font-family="Arial, sans-serif" font-size="11" font-weight="500" fill="#e83e8c">A hub for your family and kid's eyes</text>
+  <text x="70" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2196F3">Dr. Richa's Eye Clinic</text>
+  <text x="70" y="40" font-family="Arial, sans-serif" font-size="10" font-weight="500" fill="#666666">Vision that shines, Care that matters</text>
+  <text x="70" y="55" font-family="Arial, sans-serif" font-size="10" font-weight="500" fill="#e83e8c">A hub for your family and kid's eyes</text>
 </svg>
