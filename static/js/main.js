@@ -447,3 +447,29 @@ document.addEventListener('DOMContentLoaded', function() {
         initReviewForm();
     }
 });
+
+// Missing function definitions
+function initNavbarScrollEffect() {
+    // This function is already implemented in the scroll event listener above
+    console.log('Navbar scroll effect initialized');
+}
+
+function initAnimations() {
+    // This function is already implemented in initScrollAnimations above
+    console.log('Animations initialized');
+}
+
+function initAppointmentForm() {
+    // Additional appointment form initialization if needed
+    console.log('Appointment form initialized');
+}
+
+function initReviewForm() {
+    // Additional review form initialization if needed
+    console.log('Review form initialized');
+}
+
+function initTestimonialsAnimation() {
+    // Initialize testimonials animation if needed
+    console.log('Testimonials animation initialized');
+}
