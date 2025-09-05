@@ -11,7 +11,7 @@
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
 
-  
+
 }
 
 /* Global Styles */
@@ -120,11 +120,11 @@ h1, h2, h3, h4, h5, h6 {
   .navbar-brand img {
     height: 42px !important;
   }
-  
+
   .clinic-name {
     font-size: 1.1rem;
   }
-  
+
   .tagline {
     font-size: 0.7rem;
   }
@@ -134,19 +134,31 @@ h1, h2, h3, h4, h5, h6 {
   .navbar-brand img {
     height: 35px !important;
   }
-  
+
   .clinic-name {
     font-size: 1rem;
   }
-  
+
   .tagline {
     font-size: 0.65rem;
   }
-  
+
   .brand-text {
     display: none;
   }
-}</media>
+}
+
+/* Logo styling */
+.navbar-brand img {
+    height: 60px;
+    width: auto;
+    margin-right: 10px;
+    display: block !important;
+    object-fit: contain;
+    max-width: 200px;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
 
 /* Hide navbar on scroll up */
 .navbar {
@@ -507,7 +519,7 @@ h1, h2, h3, h4, h5, h6 {
   .clinic-address {
     padding-right: 2rem;
   }
-  
+
   .qr-corner-section {
     position: relative;
     top: auto;
@@ -1036,12 +1048,12 @@ footer a:hover {
     .testimonials-wrapper {
         height: 500px;
     }
-    
+
     .testimonial-card {
         width: 320px;
         padding: 1.5rem;
     }
-    
+
     .testimonial-row.moving-right,
     .testimonial-row.moving-left {
         animation-duration: 45s;
@@ -1052,12 +1064,12 @@ footer a:hover {
     .testimonials-wrapper {
         height: 450px;
     }
-    
+
     .testimonial-card {
         width: 280px;
         padding: 1.25rem;
     }
-    
+
     .testimonial-card p {
         font-size: 0.9rem;
     }
@@ -1335,13 +1347,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 25s linear infinite;
   }
-  
+
   .emergency-text {
     gap: 1.5rem;
     padding: 0 1rem;
     justify-content: space-evenly;
   }
-  
+
   .emergency-text .phone-number {
     padding: 0.25rem 0.75rem;
     font-size: 1rem;
@@ -1353,13 +1365,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 30s linear infinite;
   }
-  
+
   .emergency-text {
     gap: 1rem;
     padding: 0 0.5rem;
     font-size: 0.9rem;
   }
-  
+
   .emergency-text .phone-number {
     padding: 0.2rem 0.6rem;
     font-size: 0.95rem;
