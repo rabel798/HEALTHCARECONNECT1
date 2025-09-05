@@ -61,16 +61,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mouseX = (e.clientX - rect.left) * (120 / rect.width); // Scale to SVG coordinates
                 const mouseY = (e.clientY - rect.top) * (60 / rect.height);
                 
-                // Eye center position
-                const eyeCenterX = 35;
-                const eyeCenterY = 20;
+                // Eye center position (updated for new logo)
+                const eyeCenterX = 38;
+                const eyeCenterY = 22;
                 
                 // Calculate direction vector from eye center to mouse
                 let dx = mouseX - eyeCenterX;
                 let dy = mouseY - eyeCenterY;
                 
-                // Limit movement to 1.5 units in any direction
-                const maxMove = 1.5;
+                // Limit movement to 1.8 units in any direction
+                const maxMove = 1.8;
                 const dist = Math.sqrt(dx*dx + dy*dy);
                 if (dist > maxMove) {
                     dx = dx * maxMove / dist;
@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 pupil.setAttribute('cy', eyeCenterY + dy);
                 
                 // Move reflection dot slightly opposite to pupil movement
-                reflectionDot.setAttribute('cx', 36 - dx/3);
-                reflectionDot.setAttribute('cy', 19 - dy/3);
+                reflectionDot.setAttribute('cx', 39.5 - dx/3);
+                reflectionDot.setAttribute('cy', 20.5 - dy/3);
             });
             
             // Blink when mouse enters the logo
