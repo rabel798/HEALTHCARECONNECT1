@@ -174,6 +174,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const ratingInput = document.getElementById('rating');
     
     if (starButtons.length > 0 && ratingInput) {
+        // Make stars visible initially
+        starButtons.forEach((star, index) => {
+            const starIcon = star.querySelector('i');
+            starIcon.className = 'far fa-star text-warning';
+        });
+
         starButtons.forEach((star, index) => {
             star.addEventListener('click', function() {
                 const rating = index + 1;
@@ -185,9 +191,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (i < rating) {
                         starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'far fa-star text-warning';
                     }
                 });
+                
+                // Update rating feedback text
+                const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                const feedbackElement = document.querySelector('.rating-feedback span');
+                if (feedbackElement) {
+                    feedbackElement.textContent = `${rating} star${rating > 1 ? 's' : ''} - ${ratingTexts[rating - 1]}`;
+                    feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
+                }
                 
                 // Remove any existing validation error
                 const errorElement = document.getElementById('rating-error');
@@ -196,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Hover effect
+            // Hover effect with rating preview
             star.addEventListener('mouseenter', function() {
                 const hoverRating = index + 1;
                 starButtons.forEach((s, i) => {
@@ -204,9 +218,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (i < hoverRating) {
                         starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'far fa-star text-warning';
                     }
                 });
+                
+                // Show hover feedback
+                const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                const feedbackElement = document.querySelector('.rating-feedback span');
+                if (feedbackElement) {
+                    feedbackElement.textContent = `${hoverRating} star${hoverRating > 1 ? 's' : ''} - ${ratingTexts[hoverRating - 1]}`;
+                    feedbackElement.className = 'badge bg-secondary text-white px-3 py-2 rounded-pill';
+                }
             });
         });
         
@@ -220,9 +242,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (i < currentRating) {
                         starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star text-muted';
+                        starIcon.className = 'far fa-star text-warning';
                     }
                 });
+                
+                // Reset feedback text
+                const feedbackElement = document.querySelector('.rating-feedback span');
+                if (feedbackElement && currentRating > 0) {
+                    const ratingTexts = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                    feedbackElement.textContent = `${currentRating} star${currentRating > 1 ? 's' : ''} - ${ratingTexts[currentRating - 1]}`;
+                    feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
+                } else if (feedbackElement) {
+                    feedbackElement.textContent = 'Click to rate your experience';
+                    feedbackElement.className = 'badge bg-light text-dark px-3 py-2 rounded-pill';
+                }
             });
         }
     }
@@ -231,19 +264,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('.needs-validation');
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {
+            // Check star rating specifically first
+            const ratingInput = form.querySelector('#rating');
+            const errorElement = document.getElementById('rating-error');
+            
+            if (ratingInput && (!ratingInput.value || ratingInput.value === '')) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (errorElement) {
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = 'Please select a rating before submitting.';
+                }
+                form.classList.add('was-validated');
+                return false;
+            } else {
+                // Hide error if rating is selected
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+            
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
-                
-                // Check star rating specifically
-                const ratingInput = form.querySelector('#rating');
-                if (ratingInput && !ratingInput.value) {
-                    const errorElement = document.getElementById('rating-error');
-                    if (errorElement) {
-                        errorElement.style.display = 'block';
-                        errorElement.textContent = 'Please select a rating';
-                    }
-                }
             }
             form.classList.add('was-validated');
         });

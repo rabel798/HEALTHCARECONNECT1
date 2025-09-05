@@ -4,12 +4,12 @@
 
 {% block content %}
 <!-- Reviews Hero -->
-<section class="hero" style="background: linear-gradient(rgba(0, 123, 255, 0.85), rgba(0, 123, 255, 0.85)), url('https://images.unsplash.com/photo-1550792436-181701c71f63');">
+<section class="reviews-hero">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 offset-lg-2 fade-in">
-                <h1>Patient Reviews</h1>
-                <p>Read about experiences from our satisfied patients</p>
+            <div class="col-lg-8 offset-lg-2 text-center fade-in">
+                <h1 class="display-4 fw-bold mb-4">Patient Reviews & Testimonials</h1>
+                <p class="lead mb-0">Read about experiences from our satisfied patients and share your own</p>
             </div>
         </div>
     </div>
@@ -34,19 +34,30 @@
             {% if reviews %}
                 {% for review in reviews %}
                 <div class="col-lg-6 mb-4 fade-in">
-                    <div class="review-card">
-                        <div class="stars mb-3">
-                            {% for i in range(review.rating) %}
-                                <i class="fas fa-star text-warning"></i>
-                            {% endfor %}
-                            {% for i in range(5 - review.rating) %}
-                                <i class="far fa-star text-warning"></i>
-                            {% endfor %}
+                    <div class="review-display-card p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="stars">
+                                {% for i in range(review.rating) %}
+                                    <i class="fas fa-star text-warning me-1"></i>
+                                {% endfor %}
+                                {% for i in range(5 - review.rating) %}
+                                    <i class="far fa-star text-warning me-1"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ review.rating }}/5</span>
                         </div>
-                        <p class="review-text mb-3">"{{ review.review_text }}"</p>
+                        <blockquote class="blockquote mb-3">
+                            <p class="mb-0 fst-italic">"{{ review.review_text }}"</p>
+                        </blockquote>
                         <div class="d-flex justify-content-between align-items-center">
-                            <p class="patient-name mb-0">- {{ review.patient_name }}</p>
-                            <small class="text-muted">{{ review.created_at.strftime('%B %d, %Y') }}</small>
+                            <div>
+                                <h6 class="mb-0 text-primary">{{ review.patient_name }}</h6>
+                                <small class="text-muted">Verified Patient</small>
+                            </div>
+                            <small class="text-muted">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                {{ review.created_at.strftime('%B %d, %Y') }}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -72,8 +83,8 @@
         
         <div class="row">
             <div class="col-lg-8 offset-lg-2 fade-in">
-                <div class="card border-0 shadow">
-                    <div class="card-body p-4">
+                <div class="review-form-container">
+                    <div class="p-5">
                         <form method="POST" action="{{ url_for('reviews') }}" class="needs-validation" novalidate>
                             {{ form.csrf_token }}
                             
@@ -134,23 +145,33 @@
             <div class="col-lg-8 offset-lg-2 fade-in">
                 <h3 class="mb-4 text-center">Review Guidelines</h3>
                 
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">What to Include in Your Review</h5>
-                        <ul class="mb-0">
-                            <li>Your overall experience with our clinic</li>
-                            <li>Quality of care received</li>
-                            <li>Interactions with staff and doctors</li>
-                            <li>Clinic environment and cleanliness</li>
-                            <li>Wait times and appointment scheduling experience</li>
-                        </ul>
+                <div class="review-guidelines-card p-4 mb-4">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3">
+                            <i class="fas fa-lightbulb text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-primary mb-3">What to Include in Your Review</h5>
+                            <ul class="mb-0 list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Your overall experience with our clinic</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Quality of care received</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Interactions with staff and doctors</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Clinic environment and cleanliness</li>
+                                <li class="mb-0"><i class="fas fa-check text-success me-2"></i>Wait times and appointment scheduling experience</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary">Review Moderation</h5>
-                        <p class="mb-0">All reviews are moderated before being published to ensure they adhere to our guidelines. We value authentic feedback and aim to display a balanced representation of patient experiences. Please note that reviews containing personal information, offensive language, or unrelated content will not be published.</p>
+                <div class="review-guidelines-card p-4">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3">
+                            <i class="fas fa-shield-alt text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-primary mb-3">Review Moderation</h5>
+                            <p class="mb-0">All reviews are moderated before being published to ensure they adhere to our guidelines. We value authentic feedback and aim to display a balanced representation of patient experiences. Please note that reviews containing personal information, offensive language, or unrelated content will not be published.</p>
+                        </div>
                     </div>
                 </div>
             </div>
