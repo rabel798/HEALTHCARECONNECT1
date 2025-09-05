@@ -70,52 +70,17 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.5rem;
 }
 
-/* Interactive Logo Styles */
-#interactive-logo-container {
-  width: 350px;
-  height: 50px !important;
+/* Logo Styles */
+.navbar-brand {
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   transition: var(--transition);
   margin-right: 20px;
   margin-left: 10px;
 }
 
-#interactive-logo-container:hover {
+.navbar-brand:hover {
   transform: translateY(-2px);
-}
-
-#interactive-logo-container svg {
-  width: 100%;
-  height: auto;
-  max-height: 50px;
-}
-
-/* Mobile responsive logo */
-@media (max-width: 991px) {
-  #interactive-logo-container {
-    width: 280px;
-    height: 42px !important;
-    margin-right: 10px;
-  }
-
-  #interactive-logo-container svg {
-    max-height: 42px;
-  }
-}
-
-@media (max-width: 576px) {
-  #interactive-logo-container {
-    width: 220px;
-    height: 35px !important;
-    margin-right: 8px;
-  }
-
-  #interactive-logo-container svg {
-    max-height: 35px;
-  }
+  color: var(--primary-color) !important;
 }
 
 /* Hide navbar on scroll up */
