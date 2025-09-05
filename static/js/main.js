@@ -346,4 +346,68 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.animationPlayState = 'running';
         }, { passive: true });
     }
+
+    // Testimonials animation controls
+    const testimonialsWrapper = document.querySelector('.testimonials-wrapper');
+    const testimonialRows = document.querySelectorAll('.testimonial-row');
+    
+    if (testimonialsWrapper && testimonialRows.length > 0) {
+        // Pause on hover
+        testimonialsWrapper.addEventListener('mouseenter', function() {
+            testimonialRows.forEach(row => {
+                row.style.animationPlayState = 'paused';
+            });
+        });
+        
+        // Resume on mouse leave
+        testimonialsWrapper.addEventListener('mouseleave', function() {
+            testimonialRows.forEach(row => {
+                row.style.animationPlayState = 'running';
+            });
+        });
+        
+        // Pause/resume on touch for mobile
+        testimonialsWrapper.addEventListener('touchstart', function(e) {
+            testimonialRows.forEach(row => {
+                row.style.animationPlayState = 'paused';
+            });
+        }, { passive: true });
+        
+        testimonialsWrapper.addEventListener('touchend', function() {
+            setTimeout(() => {
+                testimonialRows.forEach(row => {
+                    row.style.animationPlayState = 'running';
+                });
+            }, 2000); // Resume after 2 seconds
+        }, { passive: true });
+        
+        // Add click interaction to testimonial cards
+        const testimonialCards = document.querySelectorAll('.testimonial-card');
+        testimonialCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Add a subtle click effect
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    }
+
+    // Add loading effect for reviews section
+    const reviewsSection = document.querySelector('.reviews-hero');
+    if (reviewsSection) {
+        // Add a subtle entrance animation delay for testimonials
+        const testimonialCardsStatic = document.querySelectorAll('.testimonial-card');
+        testimonialCardsStatic.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    }
 });
