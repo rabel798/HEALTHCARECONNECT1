@@ -45,7 +45,9 @@ app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'onlg iqtn eizf ve
 app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'drrichaeyeclinic@gmail.com')
 
-# Google OAuth configuration removed - patient authentication disabled  
+# Google OAuth configuration
+app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID')
+app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET')  
 
 
 # Configure the database - PostgreSQL
@@ -61,12 +63,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 csrf.init_app(app)
 login_manager.init_app(app)
-login_manager.login_view = 'auth_selection'
+login_manager.login_view = 'patient_login'
 
-# User loader function for Flask-Login - Patient authentication removed
+# User loader function for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
-    from models import Doctor, Assistant, Admin
+    from models import Doctor, Assistant, Admin, Patient
     try:
         if user_id.startswith('doctor_'):
             return Doctor.query.get(int(user_id.split('_')[1]))
@@ -75,8 +77,7 @@ def load_user(user_id):
         elif user_id.startswith('admin_'):
             return Admin.query.get(int(user_id.split('_')[1]))
         else:
-            # Patient authentication removed
-            return None
+            return Patient.query.get(int(user_id))
     except (ValueError, AttributeError):
         return None
 

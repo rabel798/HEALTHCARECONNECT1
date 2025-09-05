@@ -171,66 +171,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Star rating functionality
     const starButtons = document.querySelectorAll('.star-btn');
-    const ratingInput = document.querySelector('input[name="rating"]') || document.getElementById('rating');
+    const ratingInput = document.getElementById('rating');
     
     if (starButtons.length > 0 && ratingInput) {
-        // Initialize stars as visible but unselected
         starButtons.forEach((star, index) => {
-            const starIcon = star.querySelector('i');
-            starIcon.className = 'far fa-star';
-            starIcon.style.color = '#dee2e6';
-        });
-
-        starButtons.forEach((star, index) => {
-            star.addEventListener('click', function(e) {
-                e.preventDefault();
+            star.addEventListener('click', function() {
                 const rating = index + 1;
-                
-                // Set the rating value in the hidden input
                 ratingInput.value = rating;
-                
-                // Also set the attribute for form validation
-                ratingInput.setAttribute('value', rating);
-                
-                console.log('Rating set to:', rating); // Debug log
                 
                 // Update star display
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < rating) {
-                        starIcon.className = 'fas fa-star';
-                        starIcon.style.color = '#ffc107';
+                        starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star';
-                        starIcon.style.color = '#dee2e6';
+                        starIcon.className = 'far fa-star text-muted';
                     }
                 });
                 
-                // Mark the input as valid and remove any form validation styling
-                ratingInput.setCustomValidity('');
-                const form = ratingInput.closest('form');
-                if (form) {
-                    form.classList.remove('was-validated');
+                // Remove any existing validation error
+                const errorElement = document.getElementById('rating-error');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
                 }
             });
             
-            // Hover effect with better tooltip functionality
+            // Hover effect
             star.addEventListener('mouseenter', function() {
                 const hoverRating = index + 1;
-                const descriptions = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
-                
-                // Set tooltip attribute
-                this.setAttribute('title', `${descriptions[index]} (${hoverRating} star${hoverRating > 1 ? 's' : ''})`);
-                
-                // Visual feedback on hover
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < hoverRating) {
-                        starIcon.className = 'fas fa-star';
-                        starIcon.style.color = '#ffc107';
+                        starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star';
-                        starIcon.style.color = '#dee2e6';
+                        starIcon.className = 'far fa-star text-muted';
                     }
                 });
             });
@@ -244,11 +218,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 starButtons.forEach((s, i) => {
                     const starIcon = s.querySelector('i');
                     if (i < currentRating) {
-                        starIcon.className = 'fas fa-star';
-                        starIcon.style.color = '#ffc107';
+                        starIcon.className = 'fas fa-star text-warning';
                     } else {
-                        starIcon.className = 'far fa-star';
-                        starIcon.style.color = '#dee2e6';
+                        starIcon.className = 'far fa-star text-muted';
                     }
                 });
             });
@@ -262,12 +234,36 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
+                
+                // Check star rating specifically
+                const ratingInput = form.querySelector('#rating');
+                if (ratingInput && !ratingInput.value) {
+                    const errorElement = document.getElementById('rating-error');
+                    if (errorElement) {
+                        errorElement.style.display = 'block';
+                        errorElement.textContent = 'Please select a rating';
+                    }
+                }
             }
             form.classList.add('was-validated');
         });
     });
 
-    
+    // Dark mode toggle
+    const darkModeToggle = document.querySelector('.dark-mode-toggle');
+    if (darkModeToggle) {
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
+        darkModeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
 
     // Navbar hide/show on scroll
     let lastScrollTop = 0;
