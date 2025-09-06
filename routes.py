@@ -19,25 +19,6 @@ from forms import (
 import requests
 from urllib.parse import urlencode
 
-# Initialize Flask-Login
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-# User loader function for Flask-Login
-@login_manager.user_loader
-def load_user(user_id):
-    """Load user by ID"""
-    from models import Patient, Doctor, Assistant, Admin
-    if Patient.query.get(user_id):
-        return Patient.query.get(user_id)
-    elif Doctor.query.get(user_id):
-        return Doctor.query.get(user_id)
-    elif Assistant.query.get(user_id):
-        return Assistant.query.get(user_id)
-    elif Admin.query.get(user_id):
-        return Admin.query.get(user_id)
-    return None
-
 # Set the login view to the authentication selection page
 login_manager.login_view = 'auth_selection'
 
