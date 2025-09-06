@@ -11,7 +11,7 @@
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
 
-  
+
 }
 
 /* Global Styles */
@@ -20,6 +20,7 @@ body {
   color: var(--dark-color);
   line-height: 1.6;
   background-color: var(--white);
+  transition: opacity 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -33,6 +34,11 @@ h1, h2, h3, h4, h5, h6 {
   padding: 1.5rem 3rem;
   background-color: var(--white);
   min-height: 80px;
+  transition: transform 0.4s ease-in-out;
+}
+
+.navbar-hidden {
+  transform: translateY(-100%);
 }
 
 /* Mobile navbar adjustments */
@@ -68,6 +74,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   color: var(--primary-color);
   font-size: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Interactive Logo Styles */
@@ -118,12 +125,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Hide navbar on scroll up */
-.navbar {
-  transition: transform 0.4s ease-in-out;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
 .navbar-hidden {
   transform: translateY(-100%);
 }
@@ -134,10 +135,12 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0.5rem;
   position: relative;
   transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-link:hover {
   color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
 .nav-link::after {
@@ -257,11 +260,14 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 2rem;
   background-color: var(--white);
   height: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .service-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .service-card img {
@@ -274,11 +280,72 @@ h1, h2, h3, h4, h5, h6 {
 
 .service-card .card-body {
   padding: 1.5rem;
+  transition: all 0.5s ease;
+  transform-origin: center;
+}
+
+.service-card:hover .card-body {
+  transform: translateX(-10px);
+  box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .service-card .card-title {
   color: var(--primary-color);
   font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.service-card .card-title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.4s ease;
+}
+
+.service-card:hover .card-title:after {
+  width: 100%;
+}
+
+.service-card ul {
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.service-card:hover ul {
+  opacity: 1;
+  transform: translateX(10px);
+}
+
+/* Additional Services Cards Styling */
+.service-card .card-body i {
+  transition: transform 0.3s ease, color 0.3s ease;
+  transform-origin: center;
+}
+
+.service-card:hover .card-body i {
+  transform: scale(1.2);
+  color: var(--accent-color);
+}
+
+.service-card .card-body.text-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transform: translateY(0);
+}
+
+.service-card:hover .card-body.text-center {
+  transform: translateY(-10px);
 }
 
 /* Doctor Profile */
@@ -314,10 +381,13 @@ h1, h2, h3, h4, h5, h6 {
   padding: 1.5rem;
   margin-bottom: 2rem;
   transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .review-card:hover {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .review-card .stars {
@@ -376,9 +446,11 @@ h1, h2, h3, h4, h5, h6 {
   padding: 2rem;
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
 }
 
 .btn-primary {
@@ -477,7 +549,7 @@ h1, h2, h3, h4, h5, h6 {
   .clinic-address {
     padding-right: 2rem;
   }
-  
+
   .qr-corner-section {
     position: relative;
     top: auto;
@@ -1006,12 +1078,12 @@ footer a:hover {
     .testimonials-wrapper {
         height: 500px;
     }
-    
+
     .testimonial-card {
         width: 320px;
         padding: 1.5rem;
     }
-    
+
     .testimonial-row.moving-right,
     .testimonial-row.moving-left {
         animation-duration: 45s;
@@ -1022,12 +1094,12 @@ footer a:hover {
     .testimonials-wrapper {
         height: 450px;
     }
-    
+
     .testimonial-card {
         width: 280px;
         padding: 1.25rem;
     }
-    
+
     .testimonial-card p {
         font-size: 0.9rem;
     }
@@ -1305,13 +1377,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 25s linear infinite;
   }
-  
+
   .emergency-text {
     gap: 1.5rem;
     padding: 0 1rem;
     justify-content: space-evenly;
   }
-  
+
   .emergency-text .phone-number {
     padding: 0.25rem 0.75rem;
     font-size: 1rem;
@@ -1323,13 +1395,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 30s linear infinite;
   }
-  
+
   .emergency-text {
     gap: 1rem;
     padding: 0 0.5rem;
     font-size: 0.9rem;
   }
-  
+
   .emergency-text .phone-number {
     padding: 0.2rem 0.6rem;
     font-size: 0.95rem;
@@ -1368,5 +1440,176 @@ footer a:hover {
   .emergency-ticker {
     margin: 2rem 0 0.5rem 0;
     border-radius: 10px;
+  }
+}
+
+/* Interactive Elements */
+.page-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.loading-content {
+  text-align: center;
+  color: var(--primary-color);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Enhanced Button Interactions */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Form Enhancements */
+.form-control, .form-select {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.form-control:focus, .form-select:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+}
+
+/* Card Hover Effects */
+.card, .service-card, .review-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover, .service-card:hover, .review-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth Page Transitions */
+/* body transition is already defined at the top */
+
+/* Interactive Links */
+a:not(.btn) {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+a:not(.btn):hover {
+  transform: translateX(2px);
+}
+
+/* Improved Focus States */
+*:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Loading Spinner */
+.spinner-grow-custom {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+  animation: spinner-grow 1s ease-in-out infinite;
+}
+
+/* Micro-interactions */
+.nav-link, .navbar-brand {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover {
+  transform: translateY(-1px);
+}
+
+/* Enhanced Shadows */
+.shadow-custom {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-custom:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* Ripple Effect for Buttons */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn-ripple:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn {
+    border: 2px solid currentColor;
+  }
+
+  .card, .service-card, .review-card {
+    border: 2px solid var(--dark-color);
   }
 }

@@ -1,20 +1,253 @@
+
 {% extends 'layout.html' %}
 
 {% block title %}Server Error - Dr. Richa's Eye Clinic{% endblock %}
 
 {% block content %}
-<section class="py-5">
-    <div class="container text-center">
+<section class="error-page py-5">
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <h1 class="display-1 text-danger mb-3">500</h1>
-                <h2 class="mb-4">Internal Server Error</h2>
-                <p class="lead mb-5">Something went wrong on our servers. We're working to fix the issue and will be back soon.</p>
-                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
-                    <i class="fas fa-home me-2"></i>Back to Home
-                </a>
+                <div class="error-card text-center fade-in">
+                    <div class="error-icon-container mb-4">
+                        <div class="error-icon pulse-animation">
+                            <i class="fas fa-tools text-danger"></i>
+                        </div>
+                    </div>
+                    
+                    <h1 class="display-1 text-danger mb-3 slide-up">500</h1>
+                    <h2 class="mb-4 slide-up-delayed">Internal Server Error</h2>
+                    <p class="lead mb-4 slide-up-delayed">Oops! Something went wrong on our servers. Our technical team has been notified and is working to fix the issue.</p>
+                    
+                    <div class="error-status mb-4 slide-up-stagger">
+                        <div class="status-indicator">
+                            <div class="status-light blinking"></div>
+                            <span class="ms-2">Our team is investigating...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="error-suggestions mb-5 slide-up-stagger">
+                        <h5 class="mb-3">What you can try:</h5>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-refresh text-primary me-2"></i> Refresh the page in a few minutes</li>
+                            <li class="mb-2"><i class="fas fa-clock text-info me-2"></i> Wait a moment and try again</li>
+                            <li class="mb-2"><i class="fas fa-home text-success me-2"></i> Return to the homepage</li>
+                            <li class="mb-2"><i class="fas fa-phone text-warning me-2"></i> Contact us if the problem persists</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="error-actions scale-in">
+                        <button onclick="window.location.reload()" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-refresh me-2"></i>Try Again
+                        </button>
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                    
+                    <div class="contact-emergency mt-4 slide-up-stagger">
+                        <p class="mb-2">Need immediate assistance?</p>
+                        <a href="tel:8792595004" class="btn btn-success">
+                            <i class="fas fa-phone-alt me-2"></i>Emergency: 8792595004
+                        </a>
+                    </div>
+                    
+                    <div class="error-id mt-3">
+                        <small class="text-muted">Error ID: {{ moment().format('YYYYMMDD-HHmmss') }}-500</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+.error-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffe6e6 100%);
+}
+
+.error-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--danger-color), #ff6b6b);
+}
+
+.error-icon-container {
+    position: relative;
+}
+
+.error-icon {
+    font-size: 4rem;
+    display: inline-block;
+    padding: 1.5rem;
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: 50%;
+    border: 3px solid rgba(220, 53, 69, 0.3);
+}
+
+.pulse-animation {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(220, 53, 69, 0.05);
+    padding: 1rem;
+    border-radius: 15px;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.status-light {
+    width: 12px;
+    height: 12px;
+    background: var(--danger-color);
+    border-radius: 50%;
+}
+
+.blinking {
+    animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
+    }
+}
+
+.error-suggestions {
+    background: rgba(0, 123, 255, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.error-actions .btn {
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+}
+
+.error-actions .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contact-emergency {
+    background: rgba(40, 167, 69, 0.05);
+    border-radius: 15px;
+    padding: 1rem;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.error-id {
+    font-family: 'Courier New', monospace;
+    background: rgba(108, 117, 125, 0.1);
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+@media (max-width: 768px) {
+    .error-card {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .error-actions .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .error-actions .me-3 {
+        margin-right: 0 !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-refresh functionality
+    let refreshCount = 0;
+    const maxRefreshAttempts = 3;
+    
+    // Check if this is an auto-refresh
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auto_refresh')) {
+        refreshCount = parseInt(urlParams.get('refresh_count')) || 0;
+    }
+    
+    // Add countdown timer for auto-refresh
+    if (refreshCount < maxRefreshAttempts) {
+        let countdown = 30;
+        const countdownElement = document.createElement('div');
+        countdownElement.className = 'auto-refresh-countdown mt-3';
+        countdownElement.innerHTML = `
+            <small class="text-muted">
+                Auto-refresh in <span id="countdown">${countdown}</span> seconds
+                <button onclick="clearAutoRefresh()" class="btn btn-sm btn-link p-0 ms-2">Cancel</button>
+            </small>
+        `;
+        
+        document.querySelector('.error-id').parentNode.appendChild(countdownElement);
+        
+        const timer = setInterval(() => {
+            countdown--;
+            document.getElementById('countdown').textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = window.location.pathname + 
+                    `?auto_refresh=true&refresh_count=${refreshCount + 1}`;
+            }
+        }, 1000);
+        
+        // Store timer globally so it can be cleared
+        window.autoRefreshTimer = timer;
+    }
+});
+
+function clearAutoRefresh() {
+    if (window.autoRefreshTimer) {
+        clearInterval(window.autoRefreshTimer);
+        const countdownElement = document.querySelector('.auto-refresh-countdown');
+        if (countdownElement) {
+            countdownElement.remove();
+        }
+    }
+}
+</script>
 {% endblock %}

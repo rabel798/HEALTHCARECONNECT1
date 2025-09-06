@@ -1,0 +1,151 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}Bad Request - Dr. Richa's Eye Clinic{% endblock %}
+
+{% block content %}
+<section class="error-page py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="error-card text-center fade-in">
+                    <div class="error-icon-container mb-4">
+                        <div class="error-icon bounce-animation">
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
+                        </div>
+                    </div>
+                    
+                    <h1 class="display-1 text-warning mb-3 slide-up">400</h1>
+                    <h2 class="mb-4 slide-up-delayed">Bad Request</h2>
+                    <p class="lead mb-4 slide-up-delayed">The request you sent couldn't be understood by our server. This might be due to invalid data or a malformed request.</p>
+                    
+                    <div class="error-suggestions mb-5 slide-up-stagger">
+                        <h5 class="mb-3">What you can try:</h5>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Check if all required fields are filled correctly</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Ensure your internet connection is stable</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Try refreshing the page and submitting again</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Clear your browser cache and cookies</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="error-actions scale-in">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                        <button onclick="window.history.back()" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Go Back
+                        </button>
+                    </div>
+                    
+                    <div class="contact-help mt-4 slide-up-stagger">
+                        <p class="mb-2">Still having trouble?</p>
+                        <a href="tel:8792595004" class="btn btn-success">
+                            <i class="fas fa-phone me-2"></i>Call Us: 8792595004
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.error-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.error-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.error-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--warning-color), #ff9800);
+}
+
+.error-icon-container {
+    position: relative;
+}
+
+.error-icon {
+    font-size: 4rem;
+    display: inline-block;
+    padding: 1.5rem;
+    background: rgba(255, 193, 7, 0.1);
+    border-radius: 50%;
+    border: 3px solid rgba(255, 193, 7, 0.3);
+}
+
+.bounce-animation {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.error-suggestions {
+    background: rgba(40, 167, 69, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--success-color);
+}
+
+.error-actions .btn {
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+}
+
+.error-actions .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.contact-help {
+    background: rgba(0, 123, 255, 0.05);
+    border-radius: 15px;
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .error-card {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .error-actions .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .error-actions .me-3 {
+        margin-right: 0 !important;
+    }
+}
+</style>
+{% endblock %}

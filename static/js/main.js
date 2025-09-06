@@ -473,6 +473,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
 
+    // Interactive button effects
+    initInteractiveButtons();
+
+    // Loading states for forms
+    initLoadingStates();
+
+    // Tooltip initialization
+    initTooltips();
+
+    // Page transition effects
+    initPageTransitions();
+
     // Initialize navbar scroll effect
     initNavbarScrollEffect();
 
@@ -541,3 +553,110 @@ function initTestimonialsAnimation() {
     // Initialize testimonials animation if needed
     console.log('Testimonials animation initialized');
 }
+
+// Interactive button effects
+function initInteractiveButtons() {
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+        
+        button.addEventListener('mousedown', function() {
+            this.style.transform = 'translateY(0) scale(0.98)';
+        });
+        
+        button.addEventListener('mouseup', function() {
+            this.style.transform = 'translateY(-2px) scale(1)';
+        });
+    });
+}
+
+// Loading states for forms
+function initLoadingStates() {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitBtn) {
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                submitBtn.disabled = true;
+                
+                // Re-enable if form validation fails
+                setTimeout(() => {
+                    if (form.querySelector('.is-invalid')) {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                }, 100);
+            }
+        });
+    });
+}
+
+// Tooltip initialization
+function initTooltips() {
+    // Add tooltips to elements with title attributes
+    const tooltipElements = document.querySelectorAll('[title]');
+    tooltipElements.forEach(element => {
+        if (element.title) {
+            element.setAttribute('data-bs-toggle', 'tooltip');
+            element.setAttribute('data-bs-placement', 'top');
+        }
+    });
+}
+
+// Page transition effects
+function initPageTransitions() {
+    // Add loading overlay for page navigation
+    const links = document.querySelectorAll('a[href]:not([href^="#"]):not([href^="tel:"]):not([href^="mailto:"]):not([target="_blank"])');
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.href && !this.href.includes('#') && !this.download) {
+                // Create loading overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'page-loading-overlay';
+                overlay.innerHTML = `
+                    <div class="loading-content">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading...</p>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+                
+                // Remove overlay after 3 seconds (fallback)
+                setTimeout(() => {
+                    if (overlay.parentNode) {
+                        overlay.remove();
+                    }
+                }, 3000);
+            }
+        });
+    });
+}
+
+// Error page specific functions
+function showErrorDetails() {
+    const details = document.getElementById('error-details');
+    if (details) {
+        details.style.display = details.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+// Accessibility improvements
+document.addEventListener('keydown', function(e) {
+    // Escape key to close modals, overlays, etc.
+    if (e.key === 'Escape') {
+        const overlay = document.querySelector('.page-loading-overlay');
+        if (overlay) {
+            overlay.remove();
+        }
+    }
+});
