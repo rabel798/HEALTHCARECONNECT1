@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     feedbackElement.className = 'badge bg-primary text-white px-3 py-2 rounded-pill';
                 }
 
-                
+
             });
 
             // Hover effect with rating preview
@@ -253,6 +253,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+    }
+
+    // Handle rating selection
+    const starRatings = document.querySelectorAll('.star-rating .star');
+    if (starRatings.length > 0) {
+        starRatings.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.dataset.rating;
+                const container = this.closest('.star-rating');
+
+                // Update hidden input
+                const ratingInput = container.querySelector('input[name="rating"]');
+                if (ratingInput) {
+                    ratingInput.value = rating;
+                }
+
+                // Update visual state
+                container.querySelectorAll('.star').forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('selected');
+                        s.innerHTML = '<i class="fas fa-star"></i>';
+                    } else {
+                        s.classList.remove('selected');
+                        s.innerHTML = '<i class="far fa-star"></i>';
+                    }
+                });
+            });
+        });
     }
 
     // Form validation
@@ -430,9 +458,29 @@ function initNavbarScrollEffect() {
     console.log('Navbar scroll effect initialized');
 }
 
+// Animation initialization
 function initAnimations() {
-    // This function is already implemented in initScrollAnimations above
-    console.log('Animations initialized');
+    try {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        });
+
+        // Observe all animated elements
+        const animatedElements = document.querySelectorAll('.fade-in, .slide-up, .slide-up-delayed, .slide-up-stagger, .scale-in');
+        if (animatedElements.length > 0) {
+            animatedElements.forEach((el) => {
+                observer.observe(el);
+            });
+        }
+
+        console.log('Animations initialized');
+    } catch (error) {
+        console.error('Error initializing animations:', error);
+    }
 }
 
 function initAppointmentForm() {
