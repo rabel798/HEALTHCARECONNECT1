@@ -1,0 +1,69 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 60" width="350" height="60">
+  <defs>
+    <!-- Gradient for the R letter -->
+    <linearGradient id="rGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#F7931E;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E91E63;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#9C27B0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3F51B5;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradient for the splash -->
+    <linearGradient id="splashGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFC107;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#FF9800;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E91E63;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#00BCD4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4CAF50;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Rectangle -->          
+  <rect width="350" height="60" rx="8" fill="#ffffff"/>
+
+  <!-- Logo Group -->
+  <g id="logo-group" transform="translate(10, 5)">
+    <!-- Letter R with gradient -->
+    <path id="letter-r" d="M5 45 L5 5 L25 5 Q35 5 35 15 Q35 20 30 22.5 L35 35 L25 35 L22 22.5 L15 22.5 L15 45 Z M15 15 L15 12.5 L25 12.5 Q25 15 25 17.5 L15 17.5 Z" 
+          fill="url(#rGradient)" stroke="#ffffff" stroke-width="1"/>
+    
+    <!-- Eye integrated into R -->
+    <g id="eye-container">
+      <!-- Eye outline -->
+      <ellipse id="eye-outline" cx="25" cy="17.5" rx="8" ry="4" fill="#ffffff" stroke="#1976D2" stroke-width="1.5"/>
+      <!-- Pupil -->
+      <circle id="pupil" cx="25" cy="17.5" r="2.5" fill="#1976D2"/>
+      <!-- Reflection dot -->
+      <circle id="reflectionDot" cx="26" cy="16.5" r="1" fill="#ffffff"/>
+      
+      <!-- Eyelids (initially hidden) -->
+      <path id="topEyelid" d="M17,17.5 Q25,13.5 33,17.5" fill="#ffffff" stroke="#1976D2" stroke-width="1.5" style="display:none;"/>
+      <path id="bottomEyelid" d="M17,17.5 Q25,21.5 33,17.5" fill="#ffffff" stroke="#1976D2" stroke-width="1.5" style="display:none;"/>
+    </g>
+    
+    <!-- Decorative splash -->
+    <g id="splash" transform="translate(30, 8)">
+      <path d="M0 0 L3 -2 L5 1 L2 3 L4 5 L1 4 L-1 6 L-2 3 L-4 4 L-3 1 L-5 0 L-2 -1 Z" 
+            fill="url(#splashGradient)"/>
+      <circle cx="6" cy="-1" r="1.5" fill="#FF5722"/>
+      <circle cx="-4" cy="2" r="1" fill="#4CAF50"/>
+      <circle cx="2" cy="6" r="1" fill="#2196F3"/>
+      <circle cx="-6" cy="-2" r="1" fill="#FF9800"/>
+    </g>
+  </g>
+
+  <!-- Text Group -->
+  <g id="text-group">
+    <!-- Text: Dr. Richa's Eye Clinic -->
+    <text x="60" y="25" font-family="Montserrat, sans-serif" font-size="16" font-weight="700" fill="#007bff">Dr. Richa's Eye Clinic</text>
+
+    <!-- Vision Tagline -->
+    <text x="60" y="38" font-family="Montserrat, sans-serif" font-size="9" font-weight="500" fill="#333333">Vision that shines, Care that matters</text>
+
+    <!-- Family Tagline (pink) -->
+    <text x="60" y="50" font-family="Montserrat, sans-serif" font-size="9" font-weight="500" fill="#e83e8c">A hub for your family and kid's eyes</text>
+  </g>
+</svg>

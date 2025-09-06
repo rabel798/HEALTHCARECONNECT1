@@ -11,7 +11,7 @@
   --light-blue: #e6f2ff;
   --transition: all 0.3s ease;
 
-
+  
 }
 
 /* Global Styles */
@@ -70,94 +70,52 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.5rem;
 }
 
-/* Logo Styles */
-.navbar-brand {
+/* Interactive Logo Styles */
+#interactive-logo-container {
+  width: 350px;
+  height: 50px !important;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   transition: var(--transition);
   margin-right: 20px;
   margin-left: 10px;
-  text-decoration: none !important;
-  display: flex;
-  align-items: center;
 }
 
-.navbar-brand:hover {
+#interactive-logo-container:hover {
   transform: translateY(-2px);
 }
 
-.brand-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+#interactive-logo-container svg {
+  width: 100%;
+  height: auto;
+  max-height: 50px;
 }
 
-.clinic-name {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--dark-color);
-  line-height: 1.2;
-}
-
-.tagline {
-  font-size: 0.75rem;
-  color: var(--primary-color);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1;
-  margin-top: 2px;
-}
-
-.navbar-brand:hover .clinic-name {
-  color: var(--primary-color);
-}
-
-.navbar-brand:hover .tagline {
-  color: var(--dark-color);
-}
-
-/* Mobile responsive brand */
-@media (max-width: 768px) {
-  .navbar-brand img {
+/* Mobile responsive logo */
+@media (max-width: 991px) {
+  #interactive-logo-container {
+    width: 280px;
     height: 42px !important;
+    margin-right: 10px;
   }
 
-  .clinic-name {
-    font-size: 1.1rem;
-  }
-
-  .tagline {
-    font-size: 0.7rem;
+  #interactive-logo-container svg {
+    max-height: 42px;
   }
 }
 
 @media (max-width: 576px) {
-  .navbar-brand img {
+  #interactive-logo-container {
+    width: 220px;
     height: 35px !important;
+    margin-right: 8px;
   }
 
-  .clinic-name {
-    font-size: 1rem;
+  #interactive-logo-container svg {
+    max-height: 35px;
   }
-
-  .tagline {
-    font-size: 0.65rem;
-  }
-
-  .brand-text {
-    display: none;
-  }
-}
-
-/* Logo styling */
-.navbar-brand img {
-    height: 60px;
-    width: auto;
-    margin-right: 10px;
-    display: block !important;
-    object-fit: contain;
-    max-width: 200px;
-    opacity: 1 !important;
-    visibility: visible !important;
 }
 
 /* Hide navbar on scroll up */
@@ -519,7 +477,7 @@ h1, h2, h3, h4, h5, h6 {
   .clinic-address {
     padding-right: 2rem;
   }
-
+  
   .qr-corner-section {
     position: relative;
     top: auto;
@@ -1048,12 +1006,12 @@ footer a:hover {
     .testimonials-wrapper {
         height: 500px;
     }
-
+    
     .testimonial-card {
         width: 320px;
         padding: 1.5rem;
     }
-
+    
     .testimonial-row.moving-right,
     .testimonial-row.moving-left {
         animation-duration: 45s;
@@ -1064,12 +1022,12 @@ footer a:hover {
     .testimonials-wrapper {
         height: 450px;
     }
-
+    
     .testimonial-card {
         width: 280px;
         padding: 1.25rem;
     }
-
+    
     .testimonial-card p {
         font-size: 0.9rem;
     }
@@ -1347,13 +1305,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 25s linear infinite;
   }
-
+  
   .emergency-text {
     gap: 1.5rem;
     padding: 0 1rem;
     justify-content: space-evenly;
   }
-
+  
   .emergency-text .phone-number {
     padding: 0.25rem 0.75rem;
     font-size: 1rem;
@@ -1365,13 +1323,13 @@ footer a:hover {
   .emergency-ticker-content {
     animation: scroll-right 30s linear infinite;
   }
-
+  
   .emergency-text {
     gap: 1rem;
     padding: 0 0.5rem;
     font-size: 0.9rem;
   }
-
+  
   .emergency-text .phone-number {
     padding: 0.2rem 0.6rem;
     font-size: 0.95rem;
