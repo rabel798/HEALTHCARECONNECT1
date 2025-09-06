@@ -1,17 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+    try {
+        initNavbar();
+        initAnimations();
+        initAppointmentForm();
+        initReviewForm();
+        initScrollAnimations();
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                // Skip empty or invalid hrefs
+                if (!href || href === '#' || href.length <= 1) {
+                    return;
+                }
+
+                e.preventDefault();
+                try {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Invalid selector:', href, error);
+                }
+            });
         });
-    });
+    } catch (error) {
+        console.error('Error during DOM initialization:', error);
+    }
 
     // Enhanced scroll animations with performance optimizations
     function initScrollAnimations() {
@@ -284,16 +304,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Form validation
-    const forms = document.querySelectorAll('.needs-validation');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
+    try {
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                try {
+                    const requiredFields = form.querySelectorAll('[required]');
+                    let isValid = true;
+
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            field.classList.add('is-invalid');
+                        } else {
+                            field.classList.remove('is-invalid');
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        const firstInvalid = form.querySelector('.is-invalid');
+                        if (firstInvalid) {
+                            firstInvalid.focus();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Form validation error:', error);
+                }
+            });
         });
-    });
+    } catch (error) {
+        console.error('Error setting up form validation:', error);
+    }
 
 
 
@@ -453,6 +495,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Missing function definitions
+function initNavbar() {
+    // This function might be intended for navbar initialization but is not defined.
+    // Based on context, it might be related to the scroll effect.
+    console.log('initNavbar called, but function is not defined.');
+}
+
 function initNavbarScrollEffect() {
     // This function is already implemented in the scroll event listener above
     console.log('Navbar scroll effect initialized');

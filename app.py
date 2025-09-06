@@ -162,6 +162,24 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def internal_server_error(e):
+    # Log the error for debugging
+    print(f"Internal server error: {str(e)}")
+    try:
+        # Try to rollback any pending database transactions
+        db.session.rollback()
+    except:
+        pass
+    return render_template('500.html'), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log any unhandled exceptions
+    print(f"Unhandled exception: {str(e)}")
+    try:
+        db.session.rollback()
+    except:
+        pass
+    # Return 500 error page for any unhandled exceptions
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
