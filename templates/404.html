@@ -4,63 +4,54 @@
 {% block title %}Page Not Found - Dr. Richa's Eye Clinic{% endblock %}
 
 {% block content %}
-<section class="error-page py-5">
+<section class="modern-error-page">
+    <div class="error-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <div class="error-card text-center fade-in">
-                    <div class="error-icon-container mb-4">
-                        <div class="error-icon float-animation">
-                            <i class="fas fa-search text-primary"></i>
-                        </div>
-                    </div>
+                <div class="error-content text-center">
+                    <div class="error-number fade-in">404</div>
+                    <h1 class="error-title slide-up">Page Not Found</h1>
+                    <p class="error-description slide-up-delayed">
+                        The page you're looking for doesn't exist or has been moved.
+                    </p>
                     
-                    <h1 class="display-1 text-primary mb-3 slide-up">404</h1>
-                    <h2 class="mb-4 slide-up-delayed">Page Not Found</h2>
-                    <p class="lead mb-4 slide-up-delayed">The page you're looking for seems to have taken a wrong turn. Don't worry, it happens to the best of us!</p>
-                    
-                    <div class="search-suggestion mb-4 slide-up-stagger">
-                        <h5 class="mb-3">Looking for something specific?</h5>
-                        <div class="quick-links">
-                            <a href="{{ url_for('appointment') }}" class="btn btn-outline-primary btn-sm me-2 mb-2">
-                                <i class="fas fa-calendar-alt me-1"></i>Book Appointment
-                            </a>
-                            <a href="{{ url_for('services') }}" class="btn btn-outline-primary btn-sm me-2 mb-2">
-                                <i class="fas fa-eye me-1"></i>Our Services
-                            </a>
-                            <a href="{{ url_for('location') }}" class="btn btn-outline-primary btn-sm me-2 mb-2">
-                                <i class="fas fa-map-marker-alt me-1"></i>Location
-                            </a>
-                            <a href="{{ url_for('reviews') }}" class="btn btn-outline-primary btn-sm mb-2">
-                                <i class="fas fa-star me-1"></i>Reviews
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="error-suggestions mb-5 slide-up-stagger">
-                        <h5 class="mb-3">What you can try:</h5>
-                        <ul class="list-unstyled text-start">
-                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Check the URL for typos</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Use the navigation menu above</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Start fresh from our homepage</li>
-                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Try one of the quick links above</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="error-actions scale-in">
-                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg me-3">
-                            <i class="fas fa-home me-2"></i>Back to Home
+                    <div class="error-actions slide-up-stagger">
+                        <a href="{{ url_for('index') }}" class="btn-modern btn-primary">
+                            <i class="fas fa-home"></i>
+                            Go Home
                         </a>
-                        <button onclick="window.history.back()" class="btn btn-outline-secondary btn-lg">
-                            <i class="fas fa-arrow-left me-2"></i>Go Back
-                        </button>
+                        <a href="{{ url_for('appointment') }}" class="btn-modern btn-secondary">
+                            <i class="fas fa-calendar-alt"></i>
+                            Book Appointment
+                        </a>
                     </div>
                     
-                    <div class="contact-help mt-4 slide-up-stagger">
-                        <p class="mb-2">Still can't find what you're looking for?</p>
-                        <a href="tel:8792595004" class="btn btn-success">
-                            <i class="fas fa-phone me-2"></i>Call Us: 8792595004
-                        </a>
+                    <div class="quick-links slide-up-stagger">
+                        <p class="mb-3">Looking for something specific?</p>
+                        <div class="link-grid">
+                            <a href="{{ url_for('services') }}" class="quick-link">
+                                <i class="fas fa-eye"></i>
+                                <span>Services</span>
+                            </a>
+                            <a href="{{ url_for('location') }}" class="quick-link">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Location</span>
+                            </a>
+                            <a href="{{ url_for('reviews') }}" class="quick-link">
+                                <i class="fas fa-star"></i>
+                                <span>Reviews</span>
+                            </a>
+                            <a href="tel:8792595004" class="quick-link">
+                                <i class="fas fa-phone"></i>
+                                <span>Call Us</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,121 +60,324 @@
 </section>
 
 <style>
-.error-page {
-    min-height: 80vh;
+.modern-error-page {
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #e6f2ff 0%, #f8f9fa 100%);
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.error-card {
-    background: white;
-    border-radius: 20px;
-    padding: 3rem 2rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 123, 255, 0.1);
+.error-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.7;
+    animation: float 20s ease-in-out infinite;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #ff6b6b, #ffa500);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    top: 60%;
+    right: 10%;
+    animation-delay: -10s;
+}
+
+.orb-3 {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(45deg, #a8edea, #fed6e3);
+    bottom: 20%;
+    left: 50%;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+    }
+    33% {
+        transform: translateY(-30px) translateX(20px) scale(1.1);
+    }
+    66% {
+        transform: translateY(20px) translateX(-20px) scale(0.9);
+    }
+}
+
+.error-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.error-number {
+    font-size: 8rem;
+    font-weight: 900;
+    background: linear-gradient(45deg, #fff, rgba(255,255,255,0.8));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+    line-height: 1;
+}
+
+.error-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.error-description {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
     position: relative;
     overflow: hidden;
 }
 
-.error-card::before {
+.btn-modern::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
 }
 
-.error-icon-container {
-    position: relative;
+.btn-modern:hover::before {
+    transform: translateX(100%);
 }
 
-.error-icon {
-    font-size: 4rem;
-    display: inline-block;
-    padding: 1.5rem;
-    background: rgba(0, 123, 255, 0.1);
-    border-radius: 50%;
-    border: 3px solid rgba(0, 123, 255, 0.3);
+.btn-primary {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
-.float-animation {
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-.search-suggestion {
-    background: rgba(0, 123, 255, 0.05);
-    border-radius: 15px;
-    padding: 1.5rem;
-    border: 1px solid rgba(0, 123, 255, 0.2);
-}
-
-.quick-links .btn {
-    transition: all 0.3s ease;
-    border-radius: 20px;
-}
-
-.quick-links .btn:hover {
+.btn-primary:hover {
+    background: rgba(255,255,255,0.3);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: white;
 }
 
-.error-suggestions {
-    background: rgba(40, 167, 69, 0.05);
-    border-radius: 15px;
-    padding: 1.5rem;
-    border-left: 4px solid var(--success-color);
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.5);
 }
 
-.error-actions .btn {
-    transition: all 0.3s ease;
-    border-radius: 25px;
-    padding: 0.75rem 2rem;
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: white;
 }
 
-.error-actions .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+.quick-links {
+    margin-top: 2rem;
 }
 
-.contact-help {
-    background: rgba(40, 167, 69, 0.05);
-    border-radius: 15px;
+.quick-links p {
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+}
+
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.quick-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
     padding: 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
+.quick-link:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-5px);
+    color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.quick-link i {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+.quick-link span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-    .error-card {
-        padding: 2rem 1.5rem;
-        margin: 1rem;
+    .error-number {
+        font-size: 6rem;
     }
     
-    .error-actions .btn {
-        display: block;
+    .error-title {
+        font-size: 2rem;
+    }
+    
+    .error-description {
+        font-size: 1.1rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-modern {
         width: 100%;
-        margin-bottom: 0.5rem;
+        max-width: 250px;
+        justify-content: center;
     }
     
-    .error-actions .me-3 {
-        margin-right: 0 !important;
+    .gradient-orb {
+        filter: blur(40px);
     }
     
-    .quick-links .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        margin-right: 0 !important;
+    .orb-1, .orb-2, .orb-3 {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .error-content {
+        padding: 1rem;
+    }
+    
+    .error-number {
+        font-size: 4.5rem;
+    }
+    
+    .error-title {
+        font-size: 1.8rem;
+    }
+    
+    .link-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Animation classes */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+}
+
+.slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.slide-up-delayed {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s ease forwards;
+    animation-delay: 0.6s;
+}
+
+.slide-up-stagger {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.8s ease forwards;
+    animation-delay: 0.9s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .gradient-orb {
+        animation: none;
+    }
+    
+    .fade-in, .slide-up, .slide-up-delayed, .slide-up-stagger {
+        animation: none;
+        opacity: 1;
+        transform: none;
     }
 }
 </style>
