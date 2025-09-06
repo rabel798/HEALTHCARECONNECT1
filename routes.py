@@ -14,7 +14,7 @@ from wtforms.validators import DataRequired, Email
 from app import app, db
 from models import Patient, Appointment, MedicalRecord, Payment, Review, Admin, OTP, Doctor, Assistant, Salary, Treatment, DoctorPrescription, OptometristPrescription
 from forms import (
-    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PatientLoginForm, PatientRegistrationForm, OTPVerificationForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm, ProfileCompletionForm, PatientEditForm
+    AppointmentForm, PaymentForm, ReviewForm, DoctorLoginForm, AssistantLoginForm, AdminLoginForm, PrescriptionForm, DoctorPrescriptionForm, OptometristPrescriptionForm, SalaryForm, FindAppointmentForm
 )
 import requests
 from urllib.parse import urlencode
