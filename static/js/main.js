@@ -1,37 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        initNavbar();
-        initAnimations();
-        initAppointmentForm();
-        initReviewForm();
-        initScrollAnimations();
+    // Initialize navbar functionality
+    initAnimations();
+    initAppointmentForm();
+    initReviewForm();
+    initScrollAnimations();
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                // Skip empty or invalid hrefs
-                if (!href || href === '#' || href.length <= 1) {
-                    return;
-                }
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            // Skip empty or invalid hrefs
+            if (!href || href === '#' || href.length <= 1) {
+                return;
+            }
 
-                e.preventDefault();
-                try {
-                    const target = document.querySelector(href);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                } catch (error) {
-                    console.error('Invalid selector:', href, error);
+            e.preventDefault();
+            try {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
-            });
+            } catch (error) {
+                console.error('Invalid selector:', href, error);
+            }
         });
-    } catch (error) {
-        console.error('Error during DOM initialization:', error);
-    }
+    });
 
     // Enhanced scroll animations with performance optimizations
     function initScrollAnimations() {

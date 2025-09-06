@@ -295,8 +295,9 @@ def send_beautiful_reminder_email(patient_email, patient_name, appointment_date,
 
 def check_and_send_reminders():
     """Check for appointments that need reminder emails"""
-    with app.app_context():
-        try:
+    try:
+        from app import app
+        with app.app_context():
             # Calculate the target time (7-8 hours before appointment)
             now = datetime.now()
             target_start = now + timedelta(hours=7)
@@ -312,7 +313,7 @@ def check_and_send_reminders():
                 Appointment.appointment_time <= target_end.time()
             ).all()
 
-            print(f"Found {len(appointments_needing_reminders)} appointments needing reminders")
+            print(f"Found {len(appointments_needing_reminders)} appointments needing reminders")nders)} appointments needing reminders")
 
             for appointment in appointments_needing_reminders:
                 if appointment.patient.email:
@@ -349,13 +350,19 @@ def start_reminder_service():
 # Manual trigger function for testing
 def send_test_reminder(appointment_id):
     """Send a test reminder for a specific appointment"""
-    with app.app_context():
-        appointment = Appointment.query.get(appointment_id)
-        if appointment and appointment.patient.email:
-            return send_beautiful_reminder_email(
-                appointment.patient.email,
-                appointment.patient.full_name,
-                appointment.appointment_date,
-                appointment.appointment_time
+    try:
+        from app import app
+        with app.app_context():
+            appointment = Appointment.query.get(appointment_id)
+            if appointment and appointment.patient.email:
+                return send_beautiful_reminder_email(
+                    appointment.patient.email,
+                    appointment.patient.full_name,
+                    appointment.appointment_date,
+                    appointment.appointment_time
+                )
+    except Exception as e:
+        print(f"Error sending test reminder: {str(e)}")
+        return False_time
             )
         return False
