@@ -116,55 +116,7 @@
                         <a class="nav-link {% if request.path == url_for('reviews') %}active{% endif %}" href="{{ url_for('reviews') }}">Reviews</a>
                     </li>
 
-                    {% if current_user.is_authenticated %}
-                        {% if current_user.__class__.__name__ == 'Patient' %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user me-1"></i> {{ current_user.full_name }}
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="{{ url_for('patient_dashboard') }}">Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('patient_appointments') }}">My Appointments</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('patient_medical_records') }}">Medical Records</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('patient_logout') }}">Logout</a></li>
-                                </ul>
-                            </li>
-                        {% else %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user-md me-1"></i> {{ current_user.full_name }}
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    {% if current_user.__class__.__name__ == 'Assistant' %}
-                                        <li><a class="dropdown-item" href="{{ url_for('assistant_dashboard') }}">Dashboard</a></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('assistant_prescriptions') }}">Prescriptions</a></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('admin_appointments') }}">Appointments</a></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('admin_patients') }}">Manage Patients</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('assistant_logout') }}">Logout</a></li>
-                                    {% elif current_user.__class__.__name__ == 'Doctor' %}
-                                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('admin_appointments') }}">Manage Appointments</a></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('admin_patients') }}">Patients</a></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('admin_reviews') }}">Reviews</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ url_for('doctor_logout') }}">Logout</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        {% endif %}
-                    {% else %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user-circle me-1"></i> Account
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ url_for('patient_login') }}">Patient Login</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('patient_register') }}">Register</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
+                    
 
                     <li class="nav-item">
                         <a class="nav-link btn btn-primary text-white px-3 ms-lg-2 mt-2" href="{{ url_for('appointment') }}">Book Appointment</a>
