@@ -7,7 +7,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from sqlalchemy import desc
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user, login_required, LoginManager
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Email
@@ -18,6 +18,28 @@ from forms import (
 )
 import requests
 from urllib.parse import urlencode
+
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# User loader function for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    """Load user by ID"""
+    from models import Patient, Doctor, Assistant, Admin
+    if Patient.query.get(user_id):
+        return Patient.query.get(user_id)
+    elif Doctor.query.get(user_id):
+        return Doctor.query.get(user_id)
+    elif Assistant.query.get(user_id):
+        return Assistant.query.get(user_id)
+    elif Admin.query.get(user_id):
+        return Admin.query.get(user_id)
+    return None
+
+# Set the login view to the authentication selection page
+login_manager.login_view = 'auth_selection'
 
 # Add context processor to make current datetime available to all templates
 @app.context_processor
@@ -126,23 +148,23 @@ def appointment():
             # Send appointment application email
             subject = "Appointment Application Submitted - Dr. Richa's Eye Clinic"
             message = f"""
-            Dear {patient.full_name},
+Dear {patient.full_name},
 
-            Thank you for submitting your appointment application. Your request has been received and is pending confirmation from our medical team.
+Thank you for submitting your appointment application. Your request has been received and is pending confirmation from our medical team.
 
-            Appointment Details:
-            - Date: {new_appointment.appointment_date.strftime('%d %B, %Y')}
-            - Time: {new_appointment.appointment_time.strftime('%I:%M %p')}
-            - Primary Issue: {new_appointment.primary_issue}
+Appointment Details:
+- Date: {new_appointment.appointment_date.strftime('%d %B, %Y')}
+- Time: {new_appointment.appointment_time.strftime('%I:%M %p')}
+- Primary Issue: {new_appointment.primary_issue}
 
-            We will send you a confirmation email once your appointment is approved by Dr. Richa.
+We will send you a confirmation email once your appointment is approved by Dr. Richa.
 
-            Location: First floor, DVR Town Centre, near to IGUS private limited, 
-            Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
+Location: First floor, DVR Town Centre, near to IGUS private limited, 
+Mandur, Budigere Road (New Airport Road), Bengaluru, Karnataka 560049
 
-            Best regards,
-            Dr. Richa's Eye Clinic
-            """
+Best regards,
+Dr. Richa's Eye Clinic
+"""
             send_email_notification(patient.email, subject, message)
 
             return redirect(url_for('payment'))
@@ -1956,7 +1978,7 @@ def patient_print_combined_prescription(patient_id):
                          doctor_prescription=doctor_prescription,
                          optometrist_prescription=optometrist_prescription)
 
-@app.route('/delete-prescription/<string:type>/<int:prescription_id>', methods=['POST'])
+@app.route('/delete-prescription/<string:type>/<int:prescription_id>')
 @login_required
 def delete_prescription(type, prescription_id):
     """Delete prescription route"""

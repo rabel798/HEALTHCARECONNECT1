@@ -90,41 +90,7 @@ class AdminLoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=128)])
     submit = SubmitField('Login')
 
-class PatientLoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=100)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=128)])
-    submit = SubmitField('Login')
-
-class PatientRegistrationForm(FlaskForm):
-    full_name = StringField('Full Name', validators=[DataRequired(), Length(min=3, max=100)])
-    mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
-    email = StringField('Email', validators=[Optional(), Length(max=100)])  # Removed Email() validator
-    age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
-    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
-    primary_issue = TextAreaField('Primary Issue', validators=[Optional()])
-    password = PasswordField('Password', validators=[Optional(), Length(min=8, max=128)])  # Made optional for walk-ins
-    confirm_password = PasswordField('Confirm Password', validators=[Optional(), EqualTo('password')])  # Made optional
-    submit = SubmitField('Register')
-
-class OTPVerificationForm(FlaskForm):
-    email = HiddenField('Email')
-    otp = StringField('OTP Code', validators=[DataRequired(), Length(min=6, max=6)])
-    submit = SubmitField('Verify OTP')
-
-class ProfileCompletionForm(FlaskForm):
-    mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
-    age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
-    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
-    primary_issue = TextAreaField('Primary Eye Concern', validators=[Optional(), Length(max=500)])
-    submit = SubmitField('Complete Profile')
-
-class PatientEditForm(FlaskForm):
-    full_name = StringField('Full Name', validators=[DataRequired(), Length(min=3, max=100)])
-    mobile_number = StringField('Mobile Number', validators=[DataRequired(), Length(min=10, max=15)])
-    email = StringField('Email', validators=[Optional(), Email(), Length(max=100)])
-    age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=1, max=120)])
-    sex = SelectField('Sex', choices=[('', 'Select Sex'), ('male', 'Male'), ('female', 'Female'), ('others', 'Others')], validators=[DataRequired()])
-    submit = SubmitField('Update Profile')
+# Patient authentication forms removed
 
 class PrescriptionForm(FlaskForm):
     diagnosis = TextAreaField('Diagnosis', validators=[DataRequired()])

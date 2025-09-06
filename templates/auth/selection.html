@@ -15,9 +15,9 @@
                             <p class="text-muted">Select login type</p>
                         </div>
 
-                        <div class="row g-4 py-3">
+                        <div class="row g-4 py-3 justify-content-center">
                             <!-- Doctor Login Option -->
-                            <div class="col-md-4">
+                            <div class="col-md-5"></div>
                                 <div class="card h-100 border auth-card" id="doctor-login-card">
                                     <div class="card-body text-center p-4">
                                         <div class="mb-3">
@@ -35,7 +35,7 @@
                             </div>
 
                             <!-- Optometrist Login Option -->
-                            <div class="col-md-4">
+                            <div class="col-md-5"></div>
                                 <div class="card h-100 border auth-card" id="assistant-login-card">
                                     <div class="card-body text-center p-4">
                                         <div class="mb-3">
@@ -52,23 +52,7 @@
                                 </div>
                             </div>
 
-                            <!-- Patient Login Option -->
-                            <div class="col-md-4">
-                                <div class="card h-100 border auth-card" id="patient-login-card">
-                                    <div class="card-body text-center p-4">
-                                        <div class="mb-3">
-                                            <i class="fas fa-user fa-3x text-success"></i>
-                                        </div>
-                                        <h4 class="card-title">Patient</h4>
-                                        <p class="card-text text-muted">Access your records</p>
-                                        <div class="mt-3">
-                                            <a href="{{ url_for('patient_login') }}" class="btn btn-outline-success">
-                                                Enter as Patient
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="text-center mt-4">
@@ -90,7 +74,6 @@
         // Add hover effect to the cards
         const doctorCard = document.getElementById('doctor-login-card');
         const assistantCard = document.getElementById('assistant-login-card');
-        const patientCard = document.getElementById('patient-login-card');
 
         function addHoverEffect(card) {
             if (card) {
@@ -109,7 +92,6 @@
 
         addHoverEffect(doctorCard);
         addHoverEffect(assistantCard);
-        addHoverEffect(patientCard);
     });
 </script>
 {% endblock %}
